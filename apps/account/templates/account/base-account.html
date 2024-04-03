@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+    <div class="page">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="breadcrumbs">
+                        <ul itemscope="itemscope" itemtype="http://schema.org/BreadcrumbList">
+                            <li>
+                                <span itemscope="itemscope" itemprop="itemListElement" itemtype="http://schema.org/ListItem">
+                                    <a itemprop="item" title="Главная" href="/">
+                                        <span itemprop="name">Главная</span>
+                                        <meta itemprop="position" content="1"/>
+                                    </a>
+                                </span>
+                            </li>
+                            <li>
+                                <span itemscope="itemscope" itemprop="itemListElement" itemtype="http://schema.org/ListItem">
+                                    <span itemprop="name">{% block breadcrumb %}Личный кабинет{% endblock %}</span>
+                                    <meta itemprop="position" content="2"/>
+                                </span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="page_info">
+                        <h1 class="page-title">{% block page_name %}Личный кабинет{% endblock %}</h1>
+                        {% block extra_title %}{% endblock %}
+                    </div>
+
+                </div>
+                {% block account_sidebar %}
+                    <div class="col-12 col-lg-4 col-xl-3">
+                        <ul class="sidebar">
+                            <li class="sidebar-item{% block orders_class %}{% if current_page == 'natural_person' %} current-sidebar-item{% endif %}{% endblock %}">
+                                <a class="sidebar-link" href="{% url 'accounts:account-orders' %}">Мои заказы</a>
+                            </li>
+                            {% if account.jurical %}
+                            {% comment %} Джанговский темлпейт рендерер игнорирует if block else different_block endif и включает оба блока {% endcomment %}
+                                <li class="sidebar-item {% block jurical_orders_class %} {% if current_page == 'jurical' %} current-sidebar-item{% endif %}{% endblock %}">
+                                    <a class="sidebar-link" href="{% url 'accounts:account-orders-jurical' %}">Заказы компании</a>
+                                </li>
+                            {% endif %}
+                            <li class="sidebar-item{% block data_class %}{% endblock %}">
+                                <a class="sidebar-link" href="{% url 'accounts:account-data' %}">Личные данные</a>
+                            </li>
+                            <li class="sidebar-item{% block password_class %}{% endblock %}">
+                                <a class="sidebar-link" href="{% url 'accounts:account-password' %}">Изменить пароль</a>
+                            </li>
+                            <li class="sidebar-item{% block favorites_class %}{% endblock %}">
+                                <a class="sidebar-link" href="{% url 'accounts:account-favorites' %}">Избранные товары </a>
+                            </li>
+                            {% comment %}
+                                <li class="sidebar-item{% block waiting_class %}{% endblock %}">
+                                    <a class="sidebar-link" href="{% url 'account-waiting' %}">Лист ожидания</a>
+                                </li>
+                                <li class="sidebar-item{% block bonus_class %}{% endblock %}">
+                                    <a class="sidebar-link" href="">Бонусный счет</a>
+                                </li>
+                            <li class="sidebar-item{% block subscribe_class %}{% endblock %}">
+                                <a class="sidebar-link" href="{% url 'account-subscribe' %}">Упраление подписками</a>
+                            </li>
+                            {% endcomment %}
+
+                            <li class="sidebar-item">
+                                <a class="sidebar-link" href="{% url 'accounts:account-logout' %}">Выход</a>
+                            </li>
+                        </ul>
+
+                        {% block extra_sidebar %}
+
+                        {% endblock  %}
+                    </div>
+                {% endblock %}
+
+                <div class="{% block account_class %}col-12 col-lg-8 col-xl-9{% endblock %}">
+                    {% block content_account %}{% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    {% load static %}
+     <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+    <script src="{% static 'js/account.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,16 @@
+[uwsgi]
+chdir = /path/to/project/
+virtualenv = /path/to/venv/
+master = true
+processes = 2
+
+socket = /tmp/project.sock
+pidfile = /tmp/project.pid
+chmod-socket = 666
+wsgi-file = system/wsgi.py
+vacuum = true
+uid = user
+gid = www-data
+touch-reload=/path/to/file.ini
+
+die-on-term = true

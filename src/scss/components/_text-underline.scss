@@ -1,0 +1,23 @@
+.text-underline {
+	padding: 12px 0;
+	p {
+		border-bottom: 2px solid $color-general;
+		padding: 0 0 11px;
+		color: #373a3c;
+		font-size: 24px;
+		font-weight: 700;
+	}
+}
+
+@media(max-width: 767px) {
+	@import "../media-mixins";
+
+	.text-underline {
+		padding: 10px 0 5px;
+		p {
+			@include font-h2;
+			line-height: 24px;
+			padding: 0 0 2px;
+		}
+	}
+}

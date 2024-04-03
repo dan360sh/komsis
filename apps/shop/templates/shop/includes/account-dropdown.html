@@ -1,0 +1,51 @@
+<div class="shop-dropdown shop-dropdown_theme_account account-dropdown">
+    <div class="shop-dropdown__head">
+        {% if account %}
+            <p class="shop-dropdown__title">{{ account }}</p>
+        {% else %}
+            <p class="shop-dropdown__title">Личный кабинет</p>
+        {% endif %}
+        <svg class="shop-dropdown__icon" role="img"><use xlink:href="/static/images/sprite.svg#user"></use></svg>
+    </div>
+    <div class="shop-dropdown__body shop-dropdown__body_list">
+        <ul class="dropdown-list">
+            {% if account %}
+                <li class="dropdown-list__item">
+                    <a class="dropdown-list__link" href="{% url 'accounts:account-orders' %}">Мои заказы</a>
+                </li>
+                <li class="dropdown-list__item">
+                    <a class="dropdown-list__link" href="{% url 'accounts:account-data' %}">Личные данные</a>
+                </li>
+                <li class="dropdown-list__item">
+                    <a class="dropdown-list__link" href="{% url 'accounts:account-password' %}">Изменить пароль</a>
+                </li>
+                <li class="dropdown-list__item">
+                    <a class="dropdown-list__link" href="{% url 'accounts:account-favorites' %}">Избранные товары</a>
+                </li>
+                <li class="dropdown-list__item">
+                    <a class="dropdown-list__link" href="{% url 'accounts:account-waiting' %}">Лист ожидания</a>
+                </li>
+                {% comment %}
+                    <li class="dropdown-list__item">
+                        <a class="dropdown-list__link" href="{% url 'account-orders' %}">Бонусный счет</a>
+                    </li>
+                {% endcomment %}
+                <li class="dropdown-list__item">
+                    <a class="dropdown-list__link" href="{% url 'account-subscribe' %}">Управление подписками</a>
+                </li>
+                <li class="dropdown-list__item">
+                    <a class="dropdown-list__link dropdown-list__link_theme_exit" href="">
+                        <span>Выход</span><svg class="dropdown-list__icon" role="img"><use xlink:href="/static/images/sprite.svg#exit"></use></svg>
+                    </a>
+                </li>
+            {% else %}
+                <li class="dropdown-list__item">
+                    <a class="dropdown-list__link modal_trigger" href="#custom_modal-1">Войти</a>
+                </li>
+                <li class="dropdown-list__item">
+                    <a class="dropdown-list__link" href="">Регистрация</a>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+</div>

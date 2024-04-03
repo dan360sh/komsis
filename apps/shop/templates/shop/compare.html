@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="page compare-page">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="breadcrumbs">
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li> <span>Сравнение товаров</span></li>
+                    </ul>
+                </div>
+                <h1 class="page-title">Сравнение товаров</h1>
+                <div class="compare-component">
+                    <div class="row">
+                        <div class="col-12">
+                            {% if compare.count %}
+                                <div class="compare-component__main">
+                                    <div class="row">
+                                        <div class="col-12 col-lg-3">
+                                            <div class="compare-component__controlls">
+                                                <div class="compare-component__categories">
+                                                    {% for cat in categories_comare %}
+                                                    <a class="compare-component__categories-item {% if cat == category %}active{% endif %}" href="?cat={{ cat.id }}">{{ cat.title }}<span></span></a>
+                                                    {% endfor %}
+                                                </div>
+                                                <label class="compare-component__toggle-button toggle-button show-different">
+                                                    <input class="toggle-button__input" type="checkbox"/><span class="toggle-button__custom-button"></span><span class="toggle-button__text">Только различающиеся параметры</span>
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-lg-9">
+                                            <div class="compare-component__product-scroller-wrapper">
+                                                <div class="compare-component__product-scroller">
+                                                    {% for product in compare_products %}
+                                                            {% include "catalog/compare-card.html" %}
+                                                    {% endfor %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="compare-component__params-wrapper">
+                                                <div class="compare-component__compare-table compare-table"><a class="compare-table__title collapsed" href="#compare-table-1" data-toggle="collapse" role="button" aria-expanded="true" aria-controls="compare-table-1">Группа характеристик развернутая</a>
+                                                    <div class="compare-table__body collapse show" id="compare-table-1">
+                                                        {% for attr in attributes %}
+                                                        <div class="compare-table__row clearfix">
+                                                            <div class="compare-table__row-title">{{ attr.title }}</div>
+                                                            <div class="compare-table__row-wrapper">
+                                                                <div class="compare-table__fixed-container">
+                                                                    {% for product in compare_products %}
+                                                                    <div class="compare-table__row-item">
+                                                                        {% for a in attrs_prods %}
+                                                                            {% if a.product == product and a.group == attr%}
+                                                                                {{ a.value }}
+                                                                            {% endif %}
+                                                                        {% endfor %}
+                                                                    </div>
+                                                                    {% endfor %}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        {% endfor %}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="notify">
+                                    <div class="notify-body">
+                                        <svg class="notify-icon" role="img">
+                                            <use xlink:href="/static/images/sprite.svg#cart"></use>
+                                        </svg>
+                                        <div class="notify-text">
+                                            <p class="notify-title">Нет товаров для сравнения</p>
+                                            <p class="notify-desc">Для добавления товаров в сравниваемые перейдите в каталог</p>
+                                        </div>
+                                    </div>
+                                    <a class="notify-button btn btn-primary" href="{% url 'catalog' %}">Перейти в каталог</a>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

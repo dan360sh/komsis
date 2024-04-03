@@ -1,0 +1,336 @@
+.product-card {
+    $this: &;
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 360px;
+    margin: 15px auto;
+
+    &-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
+        border-radius: 6px;
+        border: 1px solid $color-border;
+        background-color: #fff;
+        overflow: hidden;
+        transition: border-color 200ms ease;
+    }
+
+    &-thumb {
+        flex: 0 0 auto;
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 180px;
+        padding: 12px 15px;
+
+        &::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba($color-general, 0.85);
+            opacity: 0;
+            transition: opacity 200ms ease;
+        }
+
+        &_no-photo {
+            background-color: #dbdbdb;
+        }
+
+        &__image {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        &__icon {
+            width: 30px;
+            height: 30px;
+            fill: #efefef;
+        }
+    }
+
+    &-badges {
+        position: absolute;
+        z-index: 5;
+        top: 7px;
+        left: 12px;
+    }
+
+    &-badge {
+        color: #fff;
+        border: 1px solid transparent;
+        padding: .45em .5em;
+        margin: 0 5px 0 0;
+        transition: border-color 200ms ease, background-color 200ms ease;
+    }
+    &-overlay{
+        display: block;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        z-index: 9;
+    }
+    &-actions {
+        position: absolute;
+        top: 20px;
+        right: 15px;
+        display: flex;
+        flex-direction: column;
+        transition: opacity 200ms ease;
+    }
+
+    &-body {
+		flex: 1 1 auto;
+		max-height: 85px;
+        padding: 15px 15px 5px;
+        transition: border-color 200ms ease;
+    }
+
+    &-title {
+        display: block;
+        color: #333;
+		font-size: 16px;
+		line-height: 22px;
+        transition: color 200ms ease;
+        max-height: 44px;
+        overflow: hidden;
+    }
+
+    &-desc {
+        font-size: 15px;
+        line-height: 20px;
+        color: #999;
+        margin-top: 4px;
+    }
+
+    &-footer {
+        flex: 0 0 auto;
+        padding: 0 15px 20px;
+        position: relative;
+        z-index: 99;
+	}
+	
+	&-status{
+		display: block;
+		font-size: 14px;
+		&_color{
+
+			&_gray{
+				color: #b1b1b1;
+			}
+			&_green{
+				color: #5cb85c;
+			}
+		}
+	}
+
+    &-price {
+		display: inline-block;
+		color: #333;
+		font-size: 18px;
+		font-weight: 700;
+		line-height: 22px;
+		transition: color 200ms ease;
+		&_new{
+			color: #d9534f;
+		}
+    }
+
+    &-old-price {
+        color: #909090;
+		font-size: 14px;
+		line-height: 22px;
+        text-decoration: line-through;
+        margin-bottom: 5px;
+    }
+
+    &-no-price {
+        display: block;
+		color: #333;
+		font-size: 18px;
+		font-weight: 700;
+		line-height: 22px;
+        transition: color 200ms ease;
+    }
+
+    &-form {
+        display: flex;
+        justify-content: flex-end;
+        padding-top: 15px;
+	}
+	
+	&-button{
+		flex: 1 0 auto;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        height: 38px;
+        color: $color-blue-light;
+		font-size: 13px;
+		font-weight: 700;
+		text-transform: uppercase;
+        border-radius: 6px;
+        border: 1px solid $color-blue-light;
+		background-color: #fff;
+        padding: 0 14px;
+        transition: color 100ms ease, background-color 100ms ease;
+        cursor: pointer;
+
+        &:hover, &:disabled {
+            color: #fff;
+            background-color: $color-blue-light;
+        }
+
+        &_inverse {
+            color: #333;
+            border: none;
+            background-color: $color-yellow;
+
+            &:hover {
+                color: #fff;
+                background-color: $color-blue-light;
+            }
+        }
+
+        + #{$this}-action {
+            margin-left: 10px !important;
+        }
+	}
+
+    &-action {
+        flex: 0 0 auto;
+        margin-left: 5px;
+    }
+
+    &-remove, &-restore {
+        position: absolute;
+        z-index: 20;
+        top: 9px;
+        right: 9px;
+    }
+
+    &-remove {
+        width: 18px;
+        height: 18px;
+        border: 1px solid #fff;
+        border-radius: 100%;
+        background-color: transparent;
+        transition: 200ms;
+        cursor: pointer;
+
+        &::before, &::after {
+            content: "";
+            position: absolute;
+            top: 7px;
+            left: 4px;
+            width: 8px;
+            height: 1px;
+            background-color: #fff;
+        }
+
+        &::before {
+            transform: rotate(-45deg);
+        }
+
+        &::after {
+            transform: rotate(45deg);
+        }
+    }
+
+    &-restore {
+        display: none;
+        width: 20px;
+        height: 19px;
+        border: none;
+        background: none;
+        outline: none;
+        transition: 200ms;
+        cursor: pointer;
+
+        &__icon {
+            width: 100%;
+            height: 100%;
+            fill: #b5b5b5;
+        }
+    }
+
+    &:hover & {
+        // &-title, &-price, &-no-price {
+        //     color: $color-general;
+        // }
+
+        &-container, &-body {
+            border-color: $color-general;
+        }
+
+        // &-thumb::after {
+        //     opacity: 1;
+        // }
+
+        // &-badge {
+        //     background-color: transparent;
+        //     border-color: #fff;
+        // }
+    }
+
+    &.removed {
+        &::after {
+            content: "";
+            position: absolute;
+            z-index: 6;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+    }
+
+    &.removed & {
+        &-remove {
+            display: none;
+        }
+
+        &-restore {
+            display: block;
+        }
+    }
+
+    .loading-blocks &:after {
+        content: "";
+        position: absolute;
+        z-index: 99;
+        top: -1px;
+        left: -1px;
+        height: calc(100% + 2px);
+        width: calc(100% + 2px);
+        background-image: url("../images/card_big.jpg");
+        background-size: 100% 100%;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

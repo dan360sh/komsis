@@ -1,0 +1,53 @@
+{% if navigation %}
+
+    <ul class="header__nav">
+        {% for object in navigation %}
+            {% if object.apps %}
+                <li>
+                    <a href="#">{{ object.name }}</a>
+                    {% if object.apps %}
+                        <ul class="sub-menu">
+                            {% for app in object.apps %}
+                                {% if app %}
+                                    <li>
+                                        <a href="{{ app.app_url }}">{{ app.name }}</a>
+                                        {% if app.models %}
+                                            <ul class="sub-menu">
+                                                {% for model in app.models %}
+                                                    <li><a href="{{ model.admin_url }}">{{ model.name }}</a></li>
+                                                {% endfor %}
+                                            </ul>
+                                        {% endif %}
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </li>
+            {% else %}
+                {% if object %}
+                    <li>
+                        <a href="{{ object.app_url }}">{{ object.name }}</a>
+                        <ul class="sub-menu">
+                            {% for model in object.models %}
+                                <li><a href="{{ model.admin_url }}">{{ model.name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+    </ul>
+
+    <ul class="header__nav">
+        <li>
+            <a href="#">Прочее</a>
+            <ul class="sub-menu">
+                {% for item in other %}
+                    <li><a href="{{ item.app_url }}">{{ item.name }}</a></li>
+                {% endfor %}
+            </ul>
+        </li>
+    </ul>
+
+{% endif %}

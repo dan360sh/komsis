@@ -1,0 +1,163 @@
+.compare-table{
+	&.empty{
+		display: none;
+	}
+	&__title{
+		display: block;
+		position: relative;
+		padding: 10px 0;
+		letter-spacing: 0.4px;
+		color: #373a3c;
+		font-size: 16px;
+		font-weight: 500;
+		line-height: 20px;
+		transition: .3s;
+		&:hover{
+			color: $color-general;
+			&:after{
+				border-bottom-color: $color-general;
+			}
+		}
+		&:after{
+			content: "";
+			display: inline-block;
+			border: 3px solid transparent;
+			border-bottom: 4px solid #373a3c;
+			margin: 0 0 2px 8px;
+			transition: .3s;
+		}
+		&.collapsed{
+			&:after{
+				transform: rotate(180deg);
+				margin: 0 0 0 8px;
+			}
+		}
+	}
+	&__body{
+		border-top: 1px solid #e5e5e5;
+	}
+	&__row{
+		display: block;
+		border-bottom: 1px solid #e5e5e5;
+		transition: .3s;
+		&.not-unique{
+			display: none;
+		}
+		&:hover{
+			background-color: #f5f7f9;
+		}
+		&-title{
+			float: left;
+			width: calc(25% + 7px);
+			padding: 10px 20px;
+			color: #999;
+			font-size: 13px;
+			font-weight: 700;
+		}
+		
+		&-wrapper{
+			float: left;
+			width: calc(100% - 25% - 8px);
+			&:not(.os-host){
+				visibility: hidden;
+				height: 40px;
+			}
+			.os-content{
+				display: block;
+				margin: 0 -30px 0 0;
+			}
+		}
+		
+		&-item{
+			float: left;
+			width: 270px;
+			margin: 0 30px 0 0;
+			padding: 8px 0;
+			color: #3a372e;
+			font-size: 16px;
+		}
+	}
+}
+
+
+@media (max-width : 991px) {
+	.compare-table{
+		&__body{
+			position: relative;
+			border: none;
+			&:before{
+				content: "";
+				position: absolute;
+				z-index: 5;
+				top: 0;
+				left: -15px;
+				width: calc(100% + 30px);
+				height: 1px;
+				background-color: #e5e5e5;
+			}
+		}
+		&__row{
+			position: relative;
+			padding: 0 15px;
+			margin: 0 -15px;
+			&-wrapper{
+				width: 100%;
+				.os-content{
+					margin: 0;
+				}
+			}
+			&-title{
+				position: absolute;
+				z-index: 1;
+				top: 0;
+				left: 0;
+				width: calc(100%);
+				padding: 10px 15px;
+			}
+			&-item{
+				position: relative;
+				z-index: 2;
+				// -23 стоит вместо положенных -25 для грубого выравнивания погрешности дробных чисел, 
+				// ( когда ширина получается 270.333333 при делении ширины на 3 )
+				// width: calc((100vw - 30px - 23px) / 3 ); 
+				margin: 0 10px 0 0;
+				padding: 40px 0 0;
+			}
+		}
+	}
+}
+
+@media (max-width : 767px) {
+	// .compare-table{
+	// 	&__row{
+	// 		&-item{
+	// 			width: calc((100vw - 30px - 18px) / 2 );
+	// 		}
+	// 	}
+	// }
+}
+
+@media (max-width : 575px) {
+	.compare-table{
+		&__title{
+			font-size: 14px;
+			padding: 5px;
+			margin: 0 -15px;
+		}
+
+		&__row{
+			padding: 0 5px;
+			margin: 0 -15px;
+			&-title{
+				padding: 5px 5px;
+			}
+			&-item{
+				padding: 30px 0 5px;
+				font-size: 14px;
+				line-height: 18px;
+				width: calc(100vw / 2 - 10px);
+				// width: calc((100vw - 30px - 18px) / 2 );
+			}
+		}
+	}
+}

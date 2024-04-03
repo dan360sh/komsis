@@ -1,0 +1,84 @@
+{% extends './base-account.html' %}
+
+{% load static recaptcha %}
+
+{% block page_name %}Регистрация{% endblock %}
+
+{% block account_sidebar %}{% endblock  %}
+
+{% block content_account %}
+    <form class="form sn-account-data-form reg-form" action="{% url 'accounts:account-register' %}", method="POST">
+        {% csrf_token %}
+
+        <div class="form-group required">
+            <label class="form-group__title" for="data-surname">Фамилия</label>
+            <input class="form-control" type="text" name="surname" id="data-surname" />
+        </div>
+        <div class="form-group required">
+            <label class="form-group__title" for="data-name">Имя</label>
+            <input class="form-control" type="text" name="name" id="data-name" />
+        </div>
+        <div class="form-group">
+            <label class="form-group__title" for="data-middle_name">Отчество</label>
+            <input class="form-control" type="text" name="middle_name" id="data-middle_name" />
+        </div>
+
+        <div class="form-group required">
+            <label class="form-group__title" for="data-phone">Телефон</label>
+            <input class="form-control" type="tel" name="phone" id="data-phone" />
+        </div>
+        <div class="form-group required">
+            <label class="form-group__title" for="data-email">Email</label>
+            <input class="form-control" type="email" name="email" id="data-email" />
+        </div>
+        <div class="form-group required">
+            <label class="form-group__title" for="password">Пароль</label>
+            <input class="form-control" type="password" name="password" id="password"/>
+        </div>
+        <div class="form-group required">
+            <label class="form-group__title" for="password">Подтверждение пароля</label>
+            <input class="form-control" type="password" name="password_repeat" id="password_repeat"/>
+        </div>
+
+        <label class="acceptance_checkbox">
+			<input type="checkbox" name="jurical" id="jurical"/>
+			<s class="new_checkbox">
+				<svg role="img" width="8" height="6">
+					<use xlink:href="/static/images/sprite.svg#checkbox_arrow"></use>
+				</svg>
+			</s>
+			<span class="normal-text"> Я являюсь юридическим лицом</span>
+		</label>
+
+        <div class="form-group__block" style="max-height: 0px; overflow: hidden;" id="jurical-block">
+            <div class="form-group required">
+                <label class="form-group__title" for="data-company-title">Название компании</label>
+                <input class="form-control" type="text" name="company_title" id="data-company-title" />
+            </div>
+            <div class="form-group required">
+                <label class="form-group__title" for="data-company-inn">ИНН</label>
+                <input class="form-control" type="number" name="company_inn" id="data-company-inn" />
+            </div>
+        </div>
+        <div class="form-group g-recaptcha" data-sitekey="{% recaptcha_site_key %}"></div>
+
+        <label class="acceptance_checkbox">
+			<input type="checkbox" name="acceptance" checked="checked"/>
+			<s class="new_checkbox">
+				<svg role="img" width="8" height="6">
+					<use xlink:href="/static/images/sprite.svg#checkbox_arrow"></use>
+				</svg>
+			</s>
+			<span class="text">Согласен на
+				<a href="{% url 'personal-data' %}">обработку данных</a>
+			</span>
+		</label>
+        <div class="controls">
+            <button class="btn btn-primary btn-lg" type="submit" aria-labelledby="register">
+                <span>Зарегистрироваться</span>
+            </button>
+            <span class='title'><a href='#' class='modal_trigger login-link' data-target='#custom_modal-1'>Авторизоваться</a>, если у вас уже есть аккаунт</span>
+        </div>
+
+    </form>
+{% endblock %}

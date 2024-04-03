@@ -1,0 +1,50 @@
+{% extends "base-page.html" %}
+{% load navs %}
+
+
+{% block breadcrumbs %}
+    <div class="breadcrumbs">
+        <ul itemscope="itemscope" itemtype="http://schema.org/BreadcrumbList">
+            <li>
+                <span itemscope="itemscope" itemprop="itemListElement" itemtype="http://schema.org/ListItem">
+                    <a itemprop="item" title="Главная" href="/">
+                        <span itemprop="name">Главная</span>
+                        <meta itemprop="position" content="1"/>
+                    </a>
+                </span>
+            </li>
+            <li>
+                <span itemscope="itemscope" itemprop="itemListElement" itemtype="http://schema.org/ListItem">
+                    <a itemprop="item" title="Акции" href="{% url 'offers' %}">
+                        <span itemprop="name">Акции</span>
+                        <meta itemprop="position" content="2"/>
+                    </a>
+                </span>
+            </li>
+            <li>
+                <span itemscope="itemscope" itemprop="itemListElement" itemtype="http://schema.org/ListItem">
+                    <span itemprop="name">{{ object.title }}</span>
+                    <meta itemprop="position" content="3"/>
+                </span>
+            </li>
+        </ul>
+    </div>
+{% endblock %}
+
+{% block page_content %}
+    {{ object.content.render }}
+{% endblock %}
+
+{% block page_sidebar %}
+    {% get_nav 'sidebar-menu' as sidebar %}
+    {% url 'offers' as offers_url %}
+    <div class="sidebar">
+        <ul>
+            {% for item in sidebar %}
+                <li class="{% if offers_url == item.get_url %}current-menu-item{% endif %}">
+                    <a href="{{ item.get_url }}">{{ item.title }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+{% endblock page_sidebar %}

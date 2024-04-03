@@ -1,0 +1,21 @@
+{% extends "account/base-account.html" %}
+
+
+{% block waiting_class %} current-sidebar-item{% endblock %}
+
+{% block content_account %}
+
+    <h2 class="page-title page-title_small">Лист ожидания</h2>
+    <div class="products-container">
+        <div class="row">
+            {% for item in waiting %}
+                {% with product=item.product %}
+                    <div class="col-12 col-md-6 col-xl-4">
+                        {% include "catalog/product-card.html" %}
+                    </div>
+                {% endwith %}
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}

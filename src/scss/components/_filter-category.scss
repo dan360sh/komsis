@@ -1,0 +1,16 @@
+.filter-category{
+	//display: block;
+	padding: 5px 0;
+	color: #373a3c;
+	font-size: 16px;
+	line-height: 18px;
+	transition: .3s;
+    display: flex;
+    width: 100%;
+	&:hover, &.active{
+		color: $color-blue-light;
+	}	
+	&:first-child{
+		padding-top: 0;
+	}
+}

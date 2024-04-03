@@ -1,0 +1,23 @@
+{% extends "./base-account.html" %}
+
+
+{% block subscribe_class %} current-sidebar-item{% endblock %}
+
+{% block content_account %}
+    <h2 class="page-title page-title_small">Управление подписками</h2>
+    <div class="subscribe-container">
+        <div class="subscribe-desc">
+            <img class="subscribe-desc-icon" src="/static/images/akcii.svg" alt="">
+            <p class="subscribe-desc-title">Узнавайте первым об акциях и скидках на сайте</p>
+        </div>
+        <div class="subscribe-desc">
+            <img class="subscribe-desc-icon" src="/static/images/subscribers.svg" alt="">
+            <p class="subscribe-desc-title">Выгодные предложения для подписчиков</p>
+        </div>
+        <div class="subscribe-desc">
+            <img class="subscribe-desc-icon" src="/static/images/notific.svg" alt="">
+            <p class="subscribe-desc-title">Новинки и скидки, интересные именно вам</p>
+        </div>
+    </div>
+    <button class="simple-button simple-button_reverse simple-button_default-size sn-subscribe-button" data-action="{% url 'account-subscribe-add' %}">Подписаться</button>
+{% endblock %}

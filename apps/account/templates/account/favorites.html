@@ -1,0 +1,30 @@
+{% extends "account/base-account.html" %}
+
+
+{% block favorites_class %} current-sidebar-item{% endblock %}
+
+{% block content_account %}
+
+    <h2 class="page-title page-title_small">Избранные товары</h2>
+
+    {% comment %}
+        <div class="product_categories">
+            <a class="active" href="#">Все товары</a>
+            <a href="#">В наличии</a>
+            <a href="#">Нет в наличии</a>
+        </div>
+    {% endcomment %}
+
+    <div class="products-container">
+        <div class="row">
+            {% for item in favorites.items %}
+                {% with product=item.product %}
+                    <div class="col-12 col-md-6 col-xl-4">
+                        {% include "catalog/favorite-card.html" %}
+                    </div>
+                {% endwith %}
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}

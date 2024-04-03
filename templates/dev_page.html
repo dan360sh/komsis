@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load navs %}
+
+
+{% block content %}
+				<div class="page">
+					<div class="container">
+						<div class="row">
+							<div class="col-12">
+								<div class="breadcrumbs">
+									<ul>
+										<li><a href="/">Главная</a></li>
+										<li> <span>Корзина</span></li>
+									</ul>
+								</div>
+								<p class="page_title">Корзина</p>
+								<div class="notification_block">
+									<div class="wrapper_left">
+										<div class="icon_wrapper">
+											<svg class="gray" role="img" width="59" height="64">
+												<use xlink:href="/static/images/sprite.svg#cart"></use>
+											</svg>
+										</div>
+										<div class="text"><b>Ваша корзина пуста</b><span>Для добавления товаров в корзину перейдите в каталог</span></div>
+									</div><a class="button" href="#"><span class="theme_button">Перейти в каталог</span></a>
+								</div>
+								<div class="notification_block">
+									<div class="wrapper_left">
+										<div class="icon_wrapper">
+											<svg role="img" width="57" height="57">
+												<use xlink:href="/static/images/sprite.svg#done_icon"></use>
+											</svg>
+										</div>
+										<div class="text"><b>Заказ №192 успешно оформлен</b><span>Ожидайте звонка менеджера для подтверждения заказа</span></div>
+									</div>
+								</div>
+								<div class="notification_block">
+									<div class="wrapper_left">
+										<div class="icon_wrapper">
+											<svg role="img" width="57" height="54">
+												<use xlink:href="/static/images/sprite.svg#message"></use>
+											</svg>
+										</div>
+										<div class="text"><b>Проверьте почту</b><span>На ваш электронный адрес отправлено письмо с информацией и восстановление пароля</span></div>
+									</div>
+								</div>
+								<div class="notification_block">
+									<div class="wrapper_left">
+										<div class="icon_wrapper">
+											<svg role="img" width="57" height="57">
+												<use xlink:href="/static/images/sprite.svg#done_icon"></use>
+											</svg>
+										</div>
+										<div class="text"><b>Готово</b><span>Пароль успешно изменен</span></div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+{% endblock %}

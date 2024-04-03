@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
+<div class="page">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="breadcrumbs">
+                        <ul>
+                            <li>
+                                <a href="/">Главная</a>
+                            </li>
+                            <li> 
+                                <span>Бренды</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <h1 class="page-title">Бренды</h1>
+                </div>
+        <section class="section-brands">
+            <div class="container">
+                <div class="row">
+                    <div class="letter-filter__wrapper">
+                        <div class="letter-filter hidden" id="en-al">
+                            {% for letter in english_alphabet %}
+                                <div class="letter-filter__item {% if not letter in active_letters %}disabled{% endif %}" data-value="{{ letter }}">{{ letter }}</div>
+                            {% endfor %}
+                        </div>
+                        <div class="letter-filter" id="ru-al">
+                            {% for letter in russian_alphabet %}
+                                <div class="letter-filter__item {% if not letter in active_letters %}disabled{% endif %}" data-value="{{ letter }}">{{ letter }}</div>
+                            {% endfor %}
+                        </div>
+                        <div class="letter-filter-controls">
+                            <div class="letter-filter-controls__item" data-target="#en-al">A-Z</div>
+                            <div class="letter-filter-controls__item hidden" data-target="#ru-al">А-Я</div>
+                        </div>
+                    </div>
+                    <div class="col-12">
+                        <div class="section-brands__container">
+                            <div class="row" id="brand-list-container">
+                                {% include "catalog/includes/brand-items.html" %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+                
+
+{% endblock content %}
+
+{% block scripts %}
+    <script src="{% static 'js/brands.js' %}"></script>
+{% endblock scripts %}

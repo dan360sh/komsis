@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+    <section class="page">
+        <div class="container">
+            <div class="breadcrumbs">
+                <ul itemscope="itemscope" itemtype="http://schema.org/BreadcrumbList">
+                    <li>
+                        <span itemscope="itemscope" itemprop="itemListElement" itemtype="http://schema.org/ListItem">
+                            <a itemprop="item" title="Главная" href="/">
+                                <span itemprop="name">Главная</span>
+                                <meta itemprop="position" content="1"/>
+                            </a>
+                        </span>
+                    </li>
+                    {% for item in object.category.get_family %}
+                        <li>
+                            <span itemscope="itemscope" itemprop="itemListElement" itemtype="http://schema.org/ListItem">
+                                <a itemprop="item" title="{{ item.title }}" href="{{ item.get_absolute_url }}">
+                                    <span itemprop="name">{{ item.title }}</span>
+                                    <meta itemprop="position" content="1"/>
+                                </a>
+                            </span>
+                        </li>
+                    {% endfor %}
+                    <li>
+                        <span itemscope="itemscope" itemprop="itemListElement" itemtype="http://schema.org/ListItem">
+                            <span itemprop="name">{{ object.title }}</span>
+                            <meta itemprop="position" content="2"/>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+
+            <h1 class="x_title">{{ object.title }}</h1>
+
+            <div class="row">
+                {% for item in object.get_children %}
+                    <div class="col-xl-3 col-lg-4 col-sm-6 col-12">
+                        {{ item.the_product-card }}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    {% if object.seo_text %}
+        <section class="seo">
+            <div class="container">
+                <div class="row flex-xl-row-reverse">
+                    {% if object.seo_img %}
+                        <div class="col-xl-6 col-12">
+                            <div class="seo__thumbnail">
+                                <img src="{{ object.seo_img.url }}" title="{{ object.seo_img.name }}" alt="{{ object.seo_img.default_alt_text }}">
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div class="{% if object.seo_img %}col-xl-6 {% endif %}col-12">
+                        <div class="seo__content nano">
+                            <div class="nano-content">
+                                <div class="content-text">
+                                    {{ object.seo_text|safe }}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    {% endif %}
+
+{% endblock %}

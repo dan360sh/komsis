@@ -1,0 +1,804 @@
+{% extends "base.html" %}
+{% load date_shipping utils %}
+
+{% block head %}
+<link href="https://cdn.jsdelivr.net/npm/suggestions-jquery@18.6.0/dist/css/suggestions.min.css" type="text/css" rel="stylesheet" />
+<script src="//api-maps.yandex.ru/2.1/?lang=ru_RU"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="base-page">
+        {% if cart.count %}
+            <div class="container orderContainer">
+                <div class="breadcrumbs">
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><span>Оформление заказа</span></li>
+                    </ul>
+                </div>
+                <h1 class="page-title">Оформление заказа</h1>
+                <div class="row">
+                    <div class="col-12 col-xl-7 removeSuccess">
+                        <form class="checkout-form sn-order-form" action="{% url 'order-create' %}" method="POST"
+                              data-ym="send"  enctype="multipart/form-data"
+                              {% if saved_order %}data-order="{{ saved_order.id }}"{% endif %}>
+                            {% csrf_token %}
+                            <input type="hidden" name="shipping_price">
+
+                            <div class="checkout-form__form-part">
+                                <div class="checkout-form__form-part-title">
+                                    <span>1.</span>
+                                    <b>Данные получателя</b>
+                                </div>
+                                {% if request.user.is_authenticated %}
+                                    {% include 'shop/includes/auth_order_form.html' %}
+                                {% else %}
+                                    {% include 'shop/includes/unauth_order_form.html' %}
+                                {% endif %}
+                            </div>
+                            <input id="shipping" type="hidden" name="shipping" value="{{types_shipping.0.title}}">
+                            <div class="checkout-form__form-part">
+                                <div class="checkout-form__form-part-title">
+                                    <span>2.</span>
+                                    <b>Способ доставки</b>
+                                </div>
+                                <div class="checkout-form__delivery-types delivery_types">
+                                    <ul class="nav nav-tabs" id="tabs" role="tablist">
+                                    {% count_cart as cart_total %}
+                                        {% for item in types_shipping %}
+                                        <li class="nav-item">
+                                            {% if not saved_order %}
+
+                                                {% if forloop.first %}
+                                                    <a class="nav-link active {{ item.code }}"
+                                                    {% if item.calculation == "price_fix" and item.price_fix == 0 %} data-price="0" data-price_str="Бесплатно"
+                                                    {% elif item.calculation == "price_fix" %} data-price="{{ item.price_fix }}" data-price_str="{{ item.price_fix }} руб."
+                                                    {% else %} data-price="0" data-price_str="Уточняйте у оператора"
+                                                    {% endif %}
+                                                    id="tab-{{ forloop.counter }}" data-toggle="tab" href="#tab_content-{{ forloop.counter }}"
+                                                    data-shipping="{{item.title}}" role="tab" aria-selected="true"
+                                                    data-type-shipping="{{ item.id }}" >
+                                                    {{item.title}}
+                                                    </a>
+                                                {% else %}
+                                                <a class="nav-link {{ item.code }} {% if cart_total < 3000 %}disabled{% endif %}"
+                                                    {% if item.calculation == "price_fix" and item.price_fix == 0 %} data-price="0" data-price_str="Бесплатно"
+                                                    {% elif item.calculation == "price_fix" %} data-price="{{ item.price_fix }}" data-price_str="{{ item.price_fix }} руб."
+                                                    {% else %} data-price="0" data-price_str="Уточняйте у оператора"
+                                                    {% endif %}
+                                                    data-type-shipping="{{ item.id }}"
+                                                    id="tab-{{ forloop.counter }}" data-toggle="tab" href="#tab_content-{{ forloop.counter }}" data-shipping="{{item.title}}" role="tab" aria-selected="false">{{item.title}}</a>
+                                                {% endif %}
+                                            {% else  %}
+                                                    <a class="nav-link {% if item.code == saved_order.shipping %}active{% endif %} {{ item.code }}"
+                                                    {% if item.calculation == "price_fix" and item.price_fix == 0 %} data-price="0" data-price_str="Бесплатно"
+                                                    {% elif item.calculation == "price_fix" %} data-price="{{ item.price_fix }}" data-price_str="{{ item.price_fix }} руб."
+                                                    {% else %} data-price="0" data-price_str="Уточняйте у оператора"
+                                                    {% endif %}
+                                                    data-type-shipping="{{ item.id }}"
+                                                    id="tab-{{ forloop.counter }}" data-toggle="tab" href="#tab_content-{{ forloop.counter }}" data-shipping="{{item.title}}" role="tab" aria-selected="false">{{item.title}}</a>
+                                            {% endif %}
+                                        </li>
+                                        {% endfor %}
+                                        {% comment %} <li class="nav-item">
+                                            <a class="nav-link" id="tab-2" data-toggle="tab" href="#tab_content-2" data-shipping="transport" role="tab" aria-selected="false">Транспортной компанией</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="tab-3" data-toggle="tab" href="#tab_content-3" data-shipping="post" role="tab" aria-selected="false">Почтой России</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link" id="tab-4" data-toggle="tab" href="#tab_content-4" data-shipping="courier" role="tab" aria-selected="false">Курьером</a>
+                                        </li> {% endcomment %}
+                                    </ul>
+                                    {% for item in excluded_shippings %}
+                                        <span class="available_notify block motivational_msg {% if cart_total > 7000 %}hidden{% endif %}">{{ item.motivational_message }}</span>
+                                    {% endfor %}
+                                    <div class="tab-content" id="content_container">
+                                        {% for item in types_shipping %}
+                                            {% if not item.show_address %}
+                                                <div
+                                                {% if not saved_order %}
+                                                    class="tab-pane {{ item.code }} fade {% if forloop.first %}show active{%endif %}"
+                                                    id="tab_content-{{ forloop.counter }}"
+                                                    role="tabpanel" data-type-shipping="{{ item.id }}">
+                                                {% else %}
+                                                    class="tab-pane fade {% if item.code == saved_order.shipping %}show active{% endif %}"
+                                                    id="tab_content-{{ forloop.counter }}"
+                                                    role="tabpanel" data-type-shipping="{{ item.id }}">
+                                                {% endif %}
+                                                    <div class="checkout-form__courier-info">
+                                                        <div class="checkout-form__courier-info-row">
+                                                            <span class="title">Адрес магазина</span>
+                                                            <span style="display: inline-table;">
+                                                                <select name="shop_address" id="shop_address">
+                                                                    {% for shop in storages %}
+                                                                    <option value="{{ shop.pk }}">{{ shop.address }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </span>
+                                                        </div>
+                                                        <div class="checkout-form__courier-info-row">
+                                                            <span class="title">Самовывоз возможен</span>
+                                                            <span>{% date_shipping %}</span>
+                                                        </div>
+                                                        <div class="checkout-form__courier-info-row">
+                                                            <span class="title">Стоимость</span>
+                                                            <span>Бесплатно</span>
+                                                        </div>
+                                                        <div class="checkout-form__courier-info-row available_notify" style="display: none;" id='available_problem'>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% elif item.cities %}
+                                                <div
+                                                    {% if not saved_order %}
+                                                        class="tab-pane sn-autocomplete-address-container fade {% if forloop.first %}show active{%endif %}"
+                                                        id="tab_content-{{ forloop.counter }}" role="tabpanel" data-type-shipping="{{ item.id }}">
+                                                    {% else %}
+                                                        class="tab-pane sn-autocomplete-address-container fade {% if item.code == saved_order.shipping %}show active{%endif %}"
+                                                        id="tab_content-{{ forloop.counter }}" role="tabpanel" data-type-shipping="{{ item.id }}">
+                                                    {% endif %}
+                                                    <div class="form-row">
+                                                        <div class="col-12">
+                                                            <div class="form-group">
+                                                                <label for="courier-city">Выберите город доставки</label>
+                                                                <select class="custom-select mr-sm-2"  disabled name="city" id="courier-city">
+                                                                    {% for city in item.get_cities %}
+                                                                    <option value="{{city}}">{{city}}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-group">
+                                                                <label for="courier-street">Улица</label>
+                                                                <input class="form-control sn-autocomplete-address"  disabled name="street" type="text" id="courier-street" />
+                                                                <div class="valid-feedback">Готово!</div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <div class="form-row">
+                                                                <div class="col-md-4">
+                                                                    <div class="form-group">
+                                                                        <label for="courier-house">Дом</label>
+                                                                        <input class="form-control sn-autocomplete-address" disabled name="house" type="text" id="courier-house" />
+                                                                        <div class="valid-feedback">Готово!</div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <div class="form-group">
+                                                                        <label for="courier-housing">Корпус</label>
+                                                                        <input class="form-control sn-autocomplete-address" disabled name="housing" type="text" id="courier-housing" />
+                                                                        <div class="valid-feedback">Готово!</div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-md-4">
+                                                                    <div class="form-group">
+                                                                        <label for="courier-apartment">Квартира</label>
+                                                                        <input class="form-control" disabled name="apartment" type="text" id="courier-apartment" />
+                                                                        <div class="valid-feedback">Готово!</div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-12">
+                                                            <div class="form-group">
+                                                                <label for="courier-comment">Комментарий</label>
+                                                                <textarea class="form-control" name="comment" disabled id="courier-comment" placeholder="Напишите дополнительную информацию по доставке" ></textarea>
+                                                                <div class="valid-feedback">Готово!</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {% comment %}
+                                                    <div class="checkout-form__map-container map_container sn-autocomplete-address-map" id="map-{{ forloop.counter }}" >
+                                                        <div data-lat="{{ settings.coord_x }}" data-lng="{{ settings.coord_y }}" data-message="{{ settings.name }}" data-popup="{{ settings.name }}"></div>
+                                                    </div>
+                                                    {% endcomment %}
+                                                </div>
+                                            {% else %}
+                                                <div
+                                                    {% if not saved_order %}
+                                                    class="tab-pane sn-autocomplete-address-container fade {% if forloop.first %}show active {%endif %}"
+                                                    id="tab_content-{{ forloop.counter }}" role="tabpanel" data-type-shipping="{{ item.id }}">
+                                                    {% else %}
+                                                    class="tab-pane sn-autocomplete-address-container fade {% if item.code == saved_order.shipping %}show active {%endif %}"
+                                                    id="tab_content-{{ forloop.counter }}" role="tabpanel" data-type-shipping="{{ item.id }}">
+                                                    {% endif %}
+                                                    <div class="form-row">
+                                                        <div class="col-12">
+                                                            {% if request.user.is_authenticated %}
+                                                                 <div class="form-group ">
+                                                                    <span for="user_phone" class='title'>Телефон</span>
+                                                                    <span>{{ account.phone }}</span>
+                                                                    <div class="invalid-feedback">Обязательное поле для заполнение</div>
+                                                                </div>
+                                                            {% else %}
+                                                                <div class="form-group required">
+                                                                    <label for="phone">Телефон</label>
+                                                                    <input name="phone" class="form-control" {% if item.code != saved_order.shipping %}disabled{%endif %} type="tel" id="phone" value="{{ request.user.account.phone }}"   required="required"/>
+                                                                    <div class="invalid-feedback">Обязательное поле для заполнение</div>
+                                                                </div>
+                                                            {% endif %}
+
+                                                        </div>
+                                                        <div class="col-md-8 col-12">
+                                                            <div class="form-group required">
+                                                                <label for="trans-region">Адрес</label>
+                                                                <input class="form-control autocomplete-address" {% if item.code != saved_order.shipping %}disabled{%endif %} autocomplete="off"
+                                                                    name="region" type="text" id="trans-region"
+                                                                    {% if saved_order.region %}value="{{ saved_order.region }}"{% endif %} />
+                                                                <div class="valid-feedback">Готово!</div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-4 col-12">
+                                                            <div class="form-group required">
+                                                                <label for="input-11">Подъезд</label>
+                                                                <input class="form-control"  name="entrance" {% if item.code != saved_order.shipping %}disabled{%endif %} type="number" id="input-11"
+                                                                    {% if saved_order.entrance %}value="{{ saved_order.entrance }}"{% endif %} />
+                                                                <div class="valid-feedback">Готово!</div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-12">
+                                                            <div class="form-group">
+                                                                <label for="trans-comment">Комментарий</label>
+                                                                <textarea class="form-control" name="comment" {% if item.code != saved_order.shipping %}disabled{%endif %} id="trans-comment" placeholder="Напишите дополнительную информацию по доставке" ></textarea>
+                                                                <div class="valid-feedback">Готово!</div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {% comment %}
+                                                    <div class="checkout-form__map-container map_container sn-autocomplete-address-map" id="map-{{ forloop.counter }}" data-id="0">
+                                                        <div data-lat="{{ settings.coord_x }}" data-lng="{{ settings.coord_y }}" data-message="{{ settings.name }}" data-popup="Котлас0"></div>
+                                                    </div>
+                                                    {% endcomment %}
+                                                </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="checkout-form__form-part">
+                                <div class="checkout-form__form-part-title">
+                                    <span>3.</span>
+                                    <b>Способ оплаты</b>
+                                </div>
+                                <div class="checkout-form__payment-type payment_type">
+                                    <label class="payment_checkbox" for="payment-1">
+                                        {% if saved_order %}
+                                            <input type="radio" name="payment" id="payment-1" value="bank" {% if saved_order.jurical %}disabled{% endif %} />
+                                        {% else %}
+                                            <input
+                                                type="radio" name="payment"
+                                                id="payment-1" value="bank"
+                                                {% if request.user.account.jurical or cart.has_overflow_items %}disabled{% endif %} />
+                                        {% endif %}
+                                        <s class="new_checkbox">Онлайн оплата</s>
+                                    </label>
+                                    <label class="payment_checkbox" for="payment-3">
+                                        <input type="radio" name="payment" value="receiving" id="payment-3" checked="checked"/>
+                                        <s class="new_checkbox">Оплата при получении</s>
+                                    </label>
+                                    <label class="payment_checkbox" for="payment-2">
+                                        <input type="radio" name="payment" value="bill" id="payment-2"/>
+                                        <s class="new_checkbox">Оплата по счету</s>
+                                    </label>
+                                </div>
+                            </div>
+
+                            {% if saved_order and account.discount_card %}
+                                <div class="checkout-form__form-part {% if not saved_order.jurical %}active{% endif %}" id="discount-part">
+                                    <div class="checkout-form__form-part-title has-checkbox">
+                                        <label for="bonus_system_active" class="form-part-title-checkbox">
+                                            <span class="title">
+                                                <span>4.</span>
+                                                <b>Бонусная система</b>
+                                            </span>
+                                            <input type="checkbox" class="_checkbox" name="bonus_system_active" id="bonus_system_active" checked="checked" />
+                                            <div class="_status"></div>
+                                        </label>
+                                    </div>
+                                    <div class="checkout-form__payment-type bonus_type">
+                                        <div class="form-group">
+                                            <span class='title'>
+                                                {% if account.points_total > 1 %}Количество накопленных баллов {% else %}Вы еще не начали копить баллы с покупок{% endif %}
+                                            </span>
+                                            <span>
+                                                {% if account.points_total > 1 %}{{ account.points_total }}{% endif %}
+                                            </span>
+                                        </div>
+                                        {% if account.points_total > 1 %}
+                                            <div class="panel-use {% if account.points_total > 1 %}active{% endif %}">
+                                                <label for="point-value" class='title'>Баллов к списанию</label>
+                                                <input type="text" class="points-input"
+                                                    id="points-value" name="points-value"
+                                                    min="0" max="{% get_max_points %}"
+                                                    value={% get_default_points %}>
+                                            </div>
+                                        {% endif %}
+                                        <div class="panel-response">
+                                            <span class="title"></span>
+                                            <span class="value"></span>
+                                            <span class="extra-title"></span>
+                                        </div>
+                                        {% if account.points_total > 1 %}
+                                            <label class="payment_checkbox" for="use">
+                                                <input type="radio" name="discount" id="use" class='discount-btn' value="use" checked="checked"/>
+                                                <s class="new_checkbox">Списать бонусы</s>
+                                            </label>
+                                        {% endif %}
+                                        <label class="payment_checkbox" for="collect">
+                                            <input type="radio" name="discount"
+                                                class='discount-btn' value="collect" id="collect"
+                                                {% if not account.points_total > 0 %}checked="checked"{% endif %}
+                                                data-target="collect"/>
+                                            <s class="new_checkbox">Копить бонусы</s>
+                                        </label>
+                                    </div>
+                                </div>
+                            {% else %}
+
+                                {% if account.discount_card %}
+                                    <div class="checkout-form__form-part {% if not account.jurical %}active{% endif %}" id="discount-part">
+                                        <div class="checkout-form__form-part-title has-checkbox">
+                                            <label for="bonus_system_active" class="form-part-title-checkbox">
+                                                <span class="title">
+                                                    <span>4.</span>
+                                                    <b>Бонусная система</b>
+                                                </span>
+                                                <input type="checkbox" class="_checkbox" name="bonus_system_active" id="bonus_system_active" checked="checked" />
+                                                <div class="_status"></div>
+                                            </label>
+                                        </div>
+                                        <div class="checkout-form__payment-type bonus_type">
+                                            <div class="form-group">
+                                                <span class='title'>
+                                                    {% if account.points_total > 1 %}Количество накопленных баллов {% else %}Вы еще не начали копить баллы с покупок{% endif %}
+                                                </span>
+                                                <span>
+                                                    {% if account.points_total > 1 %}{{ account.points_total }}{% endif %}
+                                                </span>
+                                            </div>
+                                            {% if account.points_total > 1 %}
+                                                <div class="panel-use {% if account.points_total > 1 %}active{% endif %}">
+                                                    <label for="point-value" class='title'>Баллов к списанию</label>
+                                                    <input type="text" class="points-input"
+                                                        id="points-value" name="points-value"
+                                                        min="0" max="{% get_max_points %}"
+                                                        value={% get_default_points %}>
+                                                </div>
+                                            {% endif %}
+                                            <div class="panel-response">
+                                                <span class="title"></span>
+                                                <span class="value"></span>
+                                                <span class="extra-title"></span>
+                                            </div>
+                                            {% if account.points_total > 1 %}
+                                                <label class="payment_checkbox" for="use">
+                                                    <input type="radio" name="discount" id="use" class='discount-btn' value="use" checked="checked"/>
+                                                    <s class="new_checkbox">Списать бонусы</s>
+                                                </label>
+                                            {% endif %}
+                                            <label class="payment_checkbox" for="collect">
+                                                <input type="radio" name="discount"
+                                                    class='discount-btn' value="collect" id="collect"
+                                                    {% if not account.points_total > 0 %}checked="checked"{% endif %}
+                                                    data-target="collect"/>
+                                                <s class="new_checkbox">Копить бонусы</s>
+                                            </label>
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                            {% endif %}
+
+                            <div class="checkout-form__footer">
+                                <div class="policy">Нажимая «Оформить заказ» я соглашаюсь на
+                                    <a target="_blank" href="{% url 'personal-data'%}">обработку персональных данных</a>
+                                </div>
+                                {% if request.user.is_authenticated %}
+                                    <div class="button">
+                                        <input
+                                            class="simple-button simple-button_inverse submit-button order-stash"
+                                            type="submit" value="Сохранить расчет" />
+                                    </div>
+                                {% endif %}
+                                <div class="button">
+                                    <input class="simple-button simple-button_inverse submit-button" type="submit" value="Оформить заказ"/>
+                                    {% comment %} <span class="error_text">Одно или несколько полей заполнены неправильно.</span> {% endcomment %}
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-12 col-xl-5 removeSuccess">
+                        <div class="order-items">
+							<b class="order-items__title modal_trigger modal_trigger_title"  data-target='#update_cart'>
+                                Состав заказа (изменить)
+                            </b>
+                            {% for item in cart.items %}
+                                <div class="order-items__item order-cart-item" id="order-item-{{ item.product.id }}"
+                                    {% if item.is_count_overflowed %}is_overflowed{% endif %}
+                                >
+                                    <div class="order-items__item-info">
+                                        {# <b>{{ item.product.brand.title }}</b> #}
+                                        <div class="order-items__item-images">
+                                            {% if item.product.thumbnail %}
+                                                <img src="https://komsis.su/{{ item.product.thumbnail.url }}"
+                                                    alt="Изображение товара {{ item.product.title }}"
+                                                    class="">
+                                            {% else %}
+                                                <svg class="product-card-thumb__icon" role="img" width="64" height="64">
+                                                    <use xlink:href="/static/images/sprite.svg#no_photo"></use>
+                                                </svg>
+                                            {% endif %}
+                                        </div>
+                                        {% comment %} {% if item.product.code %}<span>Арт.{{ item.product.code }}</span>{% endif %} {% endcomment %}
+                                        <span>{{ item.product.title }} {% if item.option %}{{ item.option.title }}{% endif %}</span>
+                                    </div>
+                                    <div class="order-items__item-price">
+                                        {% if item.option %}
+                                            {% get_option_price as option_price %}
+                                            <span><span style="display: inline;" id="order-item-count-{{ item.option.id }}">{{ item.count }}</span> х <b id="order-item-price-{{ item.id }}">{{ option_price }}</b> <b>руб.</b></span>
+                                        {% else %}
+                                            {% get_product_price as price %}
+                                            <span><span style="display: inline;" id="order-item-count-{{ item.product.id }}">{{ item.count }}</span> х <b id="order-item-price-{{ item.id }}">{{ price }}</b> <b>руб.</b></span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            <div class="order-items__final-price">
+                                <span>Итого:</span>
+                                {% count_cart as cart_total %}
+                                <b data-order_total="{{ cart_total }}"><b class="order_total">{{ cart_total|format_number }}</b> руб.</b>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <div class='test-message' style="display: none;">
+        {{ message }}
+        </div>
+        {% else %}
+            <div class="container">
+                <div class="breadcrumbs">
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><span>Корзина</span></li>
+                    </ul>
+                </div>
+                <p class="page-title">Корзина</p>
+                {% include "./includes/cart-empty.html" %}
+            </div>
+        {% endif %}
+        <div id="order-page"></div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-ajaxtransport-xdomainrequest/1.0.1/jquery.xdomainrequest.min.js"></script>
+<script type="text/javascript" src="https://cdn.jsdelivr.net/npm/suggestions-jquery@18.6.0/dist/js/jquery.suggestions.min.js"></script>
+<script type="text/javascript" src="/static/js/order.js"></script>
+<script>
+    $('.delivery_types').on('click','.nav-link',function(e){
+        let price = $(e.target).attr('data-price')
+        let price_str = $(e.target).attr('data-price_str')
+
+        $('.shipping_price').text(price_str)
+        $('[name="shipping"]').val($(e.target).attr('data-shipping'))
+    })
+</script>
+
+<script>
+
+var bonusSystemCheckbox = document.querySelector("._checkbox");
+if (bonusSystemCheckbox) {
+    bonusSystemCheckbox.checked = true;
+}
+
+// подсказки для ввода адреса
+function join(arr /*, separator */) {
+    var separator = arguments.length > 1 ? arguments[1] : ", ";
+    return arr.filter(function(n){return n}).join(separator);
+  }
+
+  function formatCity(suggestion) {
+    var address = suggestion.data;
+    if (address.city_with_type === address.region_with_type) {
+        return address.settlement_with_type || "";
+      } else {
+        return join([
+          address.city_with_type,
+          address.settlement_with_type]);
+      }
+  }
+
+/**
+ * Показывает индекс в отдельном поле
+ */
+function showPostalCode(suggestion) {
+    $("#input-4").val(suggestion.data.postal_code);
+  }
+
+  /**
+   * Очищает индекс
+   */
+  function clearPostalCode() {
+    $("#input-4").val("");
+  }
+
+  var
+  token = "09e1dd759ae1f618e6e233dbd7d757f813bed4bd",
+      type  = "ADDRESS",
+      $region = $("#input-5"),
+      $area   = $("#input-6"),
+      $settlement   = $("#input-7"),
+      $street = $("#input-8"),
+      $house  = $("#input-9");
+
+      $region_1 = $("#input-51"),
+      $area_1   = $("#input-61"),
+      $settlement_1   = $("#input-71"),
+      $street_1 = $("#input-81"),
+      $house_1  = $("#input-91");
+
+  // регион и район
+  $region.suggestions({
+    token: token,
+    type: type,
+    hint: false,
+    bounds: "region"
+  });
+
+  $area.suggestions({
+    token: token,
+    type: type,
+    hint: false,
+    bounds: "area",
+    constraints: $region
+  });
+
+
+  // город и населенный пункт
+  $settlement.suggestions({
+    token: token,
+    type: type,
+    hint: false,
+    bounds: "city-settlement",
+    constraints: $region,
+    onSelect: showPostalCode,
+    onSelectNothing: clearPostalCode
+  });
+
+  // улица
+  $street.suggestions({
+    token: token,
+    type: type,
+    hint: false,
+    bounds: "street",
+    constraints: $settlement,
+    onSelect: showPostalCode,
+    onSelectNothing: clearPostalCode
+  });
+
+  // дом
+  $house.suggestions({
+    token: token,
+    type: type,
+    hint: false,
+    bounds: "house",
+    constraints: $street,
+    onSelect: showPostalCode,
+    onSelectNothing: clearPostalCode
+  });
+
+
+
+  //// почтой
+
+  $region_1.suggestions({
+    token: token,
+    type: type,
+    hint: false,
+    bounds: "region"
+  });
+
+  $area_1.suggestions({
+    token: token,
+    type: type,
+    hint: false,
+    bounds: "area",
+    constraints: $region
+  });
+
+
+  // город и населенный пункт
+  $settlement_1.suggestions({
+    token: token,
+    type: type,
+    hint: false,
+    bounds: "city-settlement",
+    constraints: $region,
+    onSelect: showPostalCode,
+    onSelectNothing: clearPostalCode
+  });
+
+  // улица
+  $street_1.suggestions({
+    token: token,
+    type: type,
+    hint: false,
+    bounds: "street",
+    constraints: $settlement,
+    onSelect: showPostalCode,
+    onSelectNothing: clearPostalCode
+  });
+
+  // дом
+  $house_1.suggestions({
+    token: token,
+    type: type,
+    hint: false,
+    bounds: "house",
+    constraints: $street,
+    onSelect: showPostalCode,
+    onSelectNothing: clearPostalCode
+  });
+
+
+  console.log($house.suggestions())
+
+  function checkAvailable() {
+    let store = $('select[name=shop_address]').val();
+
+    $.ajax({
+        url: '/api/shop/cart/available/',
+        type: 'GET',
+        dataType: 'json',
+        data: 'store=' + store,
+        success: function (data) {
+            if(!data.products){
+                $('#available_problem').css('display','none');
+                return;
+            }
+
+            if (data.products.length > 0){
+                message = 'На выбранном складе недостаточно товаров, поэтому часть товара будет доставлена с другого. Сроки доставки уточняйте у менеджера.'
+                data.products.forEach( item => {
+                    message += '<br>';
+                    message += item.title;
+                    item.storages.forEach(storage => {
+                        message += '<br>';
+                        message += storage;
+                    });
+                    message += '<br>';
+                    message += item.current_price_message;
+                });
+                message += '<br>';
+                message += data.manager_message;
+                console.log(message);
+                $('#available_problem').html(message);
+                $('#available_problem').css('display','block');
+
+            }
+            else {
+                $('#available_problem').css('display','none');
+            }
+        },
+        error: function (error) {
+            console.log(error);
+        }
+    });
+}
+
+function toggleShippingForm(targetId, isDisabled) {
+    var target = $(targetId);
+    var inputs = target.find('input, select, textarea')
+    for (let key in inputs) {
+        inputs[key].disabled = isDisabled
+    }
+}
+
+
+$('body').on('change', 'select[name=shop_address]', checkAvailable);
+$(document).ready(function() {
+    // TODO: REF
+    $('.order_total').on('DOMSubtreeModified', function(event) {
+        checkAvailable();
+        var cartTotal = parseFloat($('.order_total').text().replace(/\s/g, ''));
+        if (isNaN(cartTotal)) {
+            return;
+        }
+        var dostavkaShippingItem = $(".dostavka");
+        var dostavkaTabPanel = $(dostavkaShippingItem.attr("href"));
+        var targetId = dostavkaShippingItem.attr("href");
+        console.log(cartTotal)
+        if (cartTotal > 7000) {
+            // показываем возможность достаки
+            $('.motivational_msg').addClass("hidden");
+            dostavkaShippingItem.removeClass("disabled");
+        } else {
+            var selfShippingItem = $(".self");
+            if (dostavkaShippingItem.hasClass("active")) {
+                toggleShippingForm(targetId, true);
+                $(targetId).removeClass("show");
+                $(targetId).removeClass("active");
+            }
+            if (!selfShippingItem.hasClass("active")) {
+                toggleShippingForm(selfShippingItem.attr("href"), false)
+            }
+            $('.motivational_msg').removeClass("hidden");
+            selfShippingItem.addClass("show");
+            selfShippingItem.addClass("active");
+            dostavkaShippingItem.removeClass("show");
+            dostavkaShippingItem.removeClass("active");
+            dostavkaShippingItem.addClass("disabled");
+        }
+
+    })
+})
+checkAvailable();
+
+</script>
+
+{% endblock %}
+
+{% block modals %}
+    <div class="custom_modal" id="checkout_result">
+        <a class="modal_close" href="#"></a>
+        <b class="modal_title" style="color: #156dbc;">Превышение остатка товаров</b>
+        <b class="vacancy-message" style="padding: 0 25px; display: block; width: 100%; text-align: center; ">
+            Не все товары есть на складе, свяжитесь с менеджером по срокам поставки!
+        </b>
+    </div>
+
+    <div class="custom_modal" id="online_payment_error">
+        <a class="modal_close" href="#"></a>
+        <b class="modal_title" style="color: #156dbc;">Ошибка обработки заказа банком</b>
+        <b class="vacancy-message" style="padding: 0 25px; display: block; width: 100%; text-align: center; ">
+            Банковская система не смогла обработать ваш запрос, пожалуйста, попробуйте позже.
+        </b>
+    </div>
+
+    <div class="custom_modal wide_modal" id="update_cart">
+        <a class="modal_close" href="#"></a>
+        <b class="modal_title" style="color: #156dbc;">Корзина</b>
+        <div class="cart">
+            <div class="cart-container">
+                <div class="cart-table">
+                    <div class="cart-table-head">
+                        <div class="cart-table-row">
+                            <div class="cart-table-col cart-table-col_product">
+                                <span class="cart-table-head__title">Ваш заказ</span>
+                            </div>
+                            <div class="cart-table-col cart-table-col_price">
+                                <span class="cart-table-head__title">Цена</span>
+                            </div>
+                            <div class="cart-table-col cart-table-col_count">
+                                <span class="cart-table-head__title">Количество</span>
+                            </div>
+                            <div class="cart-table-col cart-table-col_total">
+                                <span class="cart-table-head__title">Сумма</span>
+                            </div>
+                            <div class="cart-table-col cart-table-col_delete"></div>
+                        </div>
+                    </div>
+                    <div class="cart-table-body">
+                        {% include "shop/includes/cart-items.html" %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-6 col-12">
+                        <p class="cart-desc">После оформления заявки на сайте мы свяжемся с вами. Уточним цены на интересующие товары, рассчитаем сроки и стоимость доставки.</p>
+                    </div>
+                    <div class="col-xl-6 col-12">
+                        <div class="cart-order">
+                            {% count_cart as cart_total %}
+                            <p class="cart-text">Итого: <span class="cart-total">{{ cart_total|format_number }}</span><span class="cart-currency">руб.</span></p>
+                            <a class="modal_close cart-close cart-order-btn simple-button simple-button_inverse" >ОК</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

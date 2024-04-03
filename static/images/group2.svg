@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="225px" height="268px" viewBox="0 0 225 268" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
+    <title>Group</title>
+    <desc>Created with Sketch.</desc>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="225" height="268" rx="5"></rect>
+    </defs>
+    <g id="Symbols" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Group-Copy" transform="translate(-104.000000, -50.000000)">
+            <g id="Group" transform="translate(104.000000, 50.000000)">
+                <g id="Rectangle">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <use id="Mask" fill="#E7E7E7" xlink:href="#path-1"></use>
+                    <rect fill="#CFCFCF" mask="url(#mask-2)" x="0" y="0" width="225" height="114"></rect>
+                </g>
+                <rect id="Rectangle" fill="#CFCFCF" x="22" y="134" width="157" height="18" rx="5"></rect>
+                <rect id="Rectangle-Copy" fill="#CFCFCF" x="22" y="172" width="91" height="18" rx="5"></rect>
+            </g>
+        </g>
+    </g>
+</svg>

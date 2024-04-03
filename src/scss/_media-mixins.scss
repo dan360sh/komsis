@@ -1,0 +1,21 @@
+@mixin font-h1 {
+	font-size: 26px;
+	line-height: 32px;
+}
+
+@mixin font-h2 {
+	font-size: 18px;
+}
+
+@mixin font-h3 {
+	font-size: 14px;
+}
+
+@mixin font-p {
+	font-size: 15px;
+	line-height: 23px;
+}
+
+@mixin font-sign {
+	font-size: 11px;
+}

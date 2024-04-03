@@ -1,0 +1,232 @@
+{% load utils thumbnail %}
+
+<div class="product-card-wide" data-product="{{ product.id }}" itemscope itemtype="http://schema.org/Product">
+    <!--link itemprop="itemType" href="http://schema.org/Product"/-->
+    <meta itemprop="description" content="{{ product.title }}"/>
+    <a class="product-card-wide-body" href="{{ product.get_absolute_url }}">
+        {% if product.thumbnail %}
+        <div class="product-card-wide-thumb">
+            <img class="product-card-wide-thumb__image" src="https://komsis.su/{{ product.thumbnail.url }}"
+                alt="{{ product.title }}" />
+            <div class="product-card-wide-preview">
+                <img class="product-card-wide-preview__image" src="https://komsis.su/{{ product.thumbnail.url }}"
+                    alt="{{ product.title }}" />
+            </div>
+            <p itemprop="name" class="product-card-wide-title">{{ product.title }}</p>
+        </div>
+        {% else %}
+        <div class="product-card-wide-thumb product-card-wide-thumb_no-photo">
+            <svg class="product-card-wide-thumb__icon" role="img">
+                <use xlink:href="/static/images/sprite.svg#no_photo"></use>
+            </svg>
+            <p itemprop="name" class="product-card-wide-title">{{ product.title }}</p>
+        </div>
+        {% endif %}
+<!--        <p itemprop="name" class="product-card-wide-title">{{ product.title }}</p>-->
+        <div class="product-card-wide-prices" itemprop="offers" itemscope itemType="http://schema.org/Offer">
+            <meta itemprop="priceCurrency" content="RUB"/>
+            {% if not product.exist_options %} {% comment  %} Если у товара не существует опций {% endcomment %}
+                {% if product.has_count %}
+                    <span class="product-card-wide-status product-card-wide-status_color_green">В наличии</span>
+                {% else %}
+                    {% if product.display_price %}
+                        <span class="product-card-wide-status product-card-wide-status_color_orange">Ожидается</span>
+                    {% else %}
+                        <span class="product-card-wide-status product-card-wide-status_color_gray">Нет в наличии</span>
+                    {% endif %}
+                {% endif %}
+                <span class="price-wrap">
+                    {% if product.display_price %}
+                        <span class="price-text">Цена</span>
+                        {% on_sale as sale %}
+                        {% if sale %}
+                            <span class="price-wrap-wrap">
+                                <p class="product-card-wide-price product-card-wide-price_sale">
+                                    {% get_product_price as price %}
+                                    {{ price|format_number }} руб.
+                                </p>
+                                <meta itemprop="price" content="{{ product.price }}"/>
+                                {% get_old_price as old_price %}
+                                <p class="product-card-wide-old-price">{{ old_price|format_number }} руб.</p>
+                            </span>
+                        {% else %}
+                            <p class="product-card-wide-price">
+                                {% get_product_price as price %}
+                                {{ price|format_number }} руб.
+                            </p>
+                            <meta itemprop="price" content="{{ price }}"/>
+                        {% endif %}
+                    {% else %}
+                        <p class="product-card-wide-no-price">Цена по запросу</p>
+                        <meta itemprop="price" content="По запросу"/>
+                    {% endif %}
+                </span>
+            {% else %}
+                {% if product.exist_options_stock and product.price > 0 %}
+                    <span class="product-card-wide-status product-card-wide-status_color_green">
+                        В наличии
+                    </span>
+                    {% if product.min_price %}
+
+                        {% get_min_option_price as option_price %}
+                        <p class="product-card-wide-price">от {{ option_price|format_number }} руб.</p>
+                        <meta itemprop="loWprice" content="{{ option_price }}"/>
+                    {% else %}
+                        <p class="product-card-wide-no-price">Цена по запросу</p>
+                        <meta itemprop="price" content="По запросу"/>
+                    {% endif %}
+                {% else %}
+                    <span class="product-card-wide-status product-card-wide-status_color_grey">
+                        Нет в наличии
+                    </span>
+                {% endif %}
+            {% endif %}
+        </div>
+    </a>
+
+    <form class="product-card-wide-form" action="{% url 'cart-add' %}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="product-id" value="{{ product.id }}" />
+        {% comment %}
+        {% if product.colors.all %}
+        <input type="hidden" name="product-color" value="{{ product.first_color.id }}" />
+        {% endif %}
+        {% endcomment %}
+        <div class="badges">
+            {% if not product.exist_options %}
+                {% if product.has_on_sale_badge or product.is_shock_sale %}
+                    <span class="badge badge-danger">Спеццена</span>
+                {% endif %}
+            {% else %}
+                {% if product.sale or product.is_shock_sale %} <span class="badge badge-danger">Спеццена</span> {% endif %}
+            {% endif %}
+            {% if product.hit %} <span class="badge badge-warning">Хит!</span> {% endif %}
+            {% if product.new %} <span class="badge badge-success">Новинка</span> {% endif %}
+        </div>
+        {% if product.count >= product.step %}
+        <div class="amount">
+            <div class="product-counter">
+                <div class="product-counter__button product-counter__button_minus">
+                    <svg role="img" width="4" height="6">
+                        <use xlink:href="/static/images/sprite.svg#product-amount-arrow"></use>
+                    </svg>
+                </div>
+                <div class="product-counter__field-wrapper">
+                    <input class="product-counter__original-input" type="number" name="product-count"
+                        min="{{ product.step|floatformat }}"
+                        max="{{ product.get_available_count|floatformat }}"
+                        data-step="{{ product.step }}" value="{{ product.step|floatformat }}" data-unit=""/>
+                    <span class="product-counter__fake-input">{{ product.step|floatformat }}</span>
+                </div>
+                <div class="product-counter__button product-counter__button_plus">
+                    <svg role="img" width="4" height="6">
+                        <use xlink:href="/static/images/sprite.svg#product-amount-arrow"></use>
+                    </svg>
+                </div>
+                <span class="product-counter__notification product-counter__notification_min">Выбрано минимальное
+                    значение</span>
+                <span class="product-counter__notification product-counter__notification_max">Выбрано максимальное
+                    значение</span>
+            </div>
+
+            <!-- <div class="product-amount">
+                    <div class="product-amount__button product-amount__button_minus">
+						<svg role="img" width="4" height="6">
+							<use xlink:href="/static/images/sprite.svg#product-amount-arrow"></use>
+						</svg>
+					</div>
+                    <div class="product-amount__field">
+                        <input type="number" name="product-count" min="1" max="100" value="1"/>
+                    </div>
+					<div class="product-amount__button product-amount__button_plus">
+						<svg role="img" width="4" height="6">
+							<use xlink:href="/static/images/sprite.svg#product-amount-arrow"></use>
+						</svg>
+					</div>
+					<span class="product-amount__notification product-amount__notification_min">Выбрано минимальное значение</span>
+					<span class="product-amount__notification product-amount__notification_max">Выбрано максимальное значение</span>
+                </div> -->
+        </div>
+        {% endif %}
+        <div class="product-card-wide-actions">
+            {% if product.code %}
+            <button
+                class="product-card-wide-action-btn copy-btn" type="button" data-clipboard-text="{{ product.code }}">
+                    <svg height="16px" viewBox="-40 0 512 512" width="14px"
+                         xmlns="http://www.w3.org/2000/svg">
+                        <path
+                                d="m271 512h-191c-44.113281 0-80-35.886719-80-80v-271c0-44.113281 35.886719-80 80-80h191c44.113281 0 80 35.886719 80 80v271c0 44.113281-35.886719 80-80 80zm-191-391c-22.054688 0-40 17.945312-40 40v271c0 22.054688 17.945312 40 40 40h191c22.054688 0 40-17.945312 40-40v-271c0-22.054688-17.945312-40-40-40zm351 261v-302c0-44.113281-35.886719-80-80-80h-222c-11.046875 0-20 8.953125-20 20s8.953125 20 20 20h222c22.054688 0 40 17.945312 40 40v302c0 11.046875 8.953125 20 20 20s20-8.953125 20-20zm0 0"/>
+                    </svg>
+                    <div class="copy-dropdown">
+                        <div class="copy-dropdown__success" style="display: none;">Артикул скопирован!</div>
+                        <div class="copy-dropdown__default">
+                            <p>Артикул: <span class="copy-text">{{ product.code }}</span></p>
+                            <p>Нажмите, чтобы скопировать</p>
+                        </div>
+                    </div>
+            </button>
+            {% endif %}
+            <button
+                class="product-card-wide-action-btn sn-add-to-favorites {% if product.id in additional.favorites_list or product.id in favorites_list %}active{% endif %}"
+                data-url="{% url 'favorites-add' %}" type="button">
+                <svg class="product-card-wide-action-btn__icon" role="img">
+                    <use xlink:href="/static/images/sprite.svg#heart"></use>
+                </svg>
+            </button>
+            {% comment %}
+            {% if product.status == 1 and product.count %}
+                {% if not product.exist_options %}
+                <div class="product-card-wide-add-cart-wrap">
+                    <button
+                        class="product-card-wide-add-cart product-card-wide-button product-card-wide-button_inverse add-to-cart sn-add-to-cart"
+                        type="submit" onclick="ym(56972323, 'reachGoal', 'plus'); return true;">В корзину</button>
+                    <div class="go-to-cart">
+                        <span>Товар добавлен в корзину</span>
+                        <a class="btn btn-primary" onclick="event.stopPropagation()" href="{% url 'cart' %}">Перейти в
+                            корзину</a>
+                    </div>
+                </div>
+                {% else %}
+                <div class="product-card-wide-add-cart-wrap">
+                    <a href="{{ product.get_absolute_url }}"
+                        class="product-card-wide-button product-card-wide-button_inverse">Смотреть все</a>
+                </div>
+                {% endif %}
+            {% else %}
+                {% if product.exist_options %}
+                <div class="product-card-wide-add-cart-wrap">
+                    <a href="{{ product.get_absolute_url }}"
+                        class="product-card-wide-button product-card-wide-button_inverse">Смотреть все</a>
+                </div>
+                {% else %}
+                <div class="product-card-wide-add-cart-wrap">
+                    <div class="product-card-add product-card-wide-button modal_product_trigger modal_trigger"
+                        data-target="#product-nutify">Запросить</div>
+                </div>
+                {% endif %}
+            {% endif %}
+            {% endcomment %}
+            {% if product.exist_options and product.price > 0 %}
+                <div class="product-card-wide-add-cart-wrap">
+                    <a href="{{ product.get_absolute_url }}"
+                        class="product-card-wide-button product-card-wide-button_inverse">Смотреть все</a>
+                </div>
+            {% elif product.count and product.price %}
+                <div class="product-card-wide-add-cart-wrap">
+                    <button
+                        class="product-card-wide-add-cart product-card-wide-button product-card-wide-button_inverse add-to-cart sn-add-to-cart"
+                        type="button" onclick="ym(56972323, 'reachGoal', 'plus'); return true;">В корзину</button>
+                    <div class="go-to-cart">
+                        <span>Товар добавлен в корзину</span>
+                        <a class="btn btn-primary" onclick="event.stopPropagation()" href="{% url 'cart' %}">Перейти в корзину</a>
+                    </div>
+                </div>
+            {% else %}
+                <div class="product-card-wide-add-cart-wrap">
+                    <div class="product-card-add product-card-wide-button modal_product_trigger modal_trigger"
+                        data-target="#product-nutify">Запросить</div>
+                </div>
+            {% endif %}
+        </div>
+    </form>
+</div>

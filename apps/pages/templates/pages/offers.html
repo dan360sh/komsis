@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+<div class="page order_page">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="breadcrumbs">
+                                    <ul>
+                                        <li><a href="/">Главная</a></li>
+                                        <li> <span>{{ object.title }}</span></li>
+                                    </ul>
+                                </div>
+                                <p class="page_title">{{ object.title }}</p>
+                            </div>
+        {% for item in object_list %}
+                            <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                                <a class="news-block" href="{{ item.get_absolute_url }}">
+                                    {% if not item.thumbnail %}
+                                    <span class="news-block__img-wrapper no_photo">
+                                        <svg role="img" width="54" height="54">
+                                            <use xlink:href="static/images/sprite.svg#no_photo"></use>
+                                        </svg>
+                                    </span>
+                                    {% else %}
+                                    <span class="news-block__img-wrapper ">
+                                        <img src="{{ item.thumbnail.url }}" alt="{{ item.thumbnail }}">
+                                    </span>                                    
+                                    
+                                    {% endif %}
+                                    <span class="news-block__info">
+                                        <span class="news-block__title">{{ item.title }}</span>
+                                        <span class="news-block__desc">{{ item.description }}</span>
+<!--                                         <span class="news-block__date">
+                                            <svg role="img" width="11" height="12">
+                                                <use xlink:href="static/images/sprite.svg#calendar"></use>
+                                            </svg>{{ item.date }}
+                                        </span> -->
+                                    </span>
+                                </a>
+                            </div>
+          
+        {% endfor %}
+    </div>   
+     </div>   
+      </div>
+
+{% endblock content %}
+
+
+
+
+
+
+
+
+{% comment %} {% extends "base-page.html" %}
+
+
+{% block page_content %}
+
+    <p class="page-title">{{ object.title }}</p>
+
+    <div class="row">
+        {% for item in object_list %}
+            <div class="col-12 col-md-6">
+                <a class="news_block" href="{{ item.get_absolute_url }}">
+                    <div class="img_wrapper lazy_bg" data-src="{{ item.thumbnail.url }}"></div>
+                    <div class="info">
+                        {% if item.date_to %}
+                            <div class="label">Акция действительна до {{ item.date_to }}</div>
+                        {% endif %}
+                        <b>{{ item.title }}</b>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock page_content %} {% endcomment %}

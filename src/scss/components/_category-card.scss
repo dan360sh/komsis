@@ -1,0 +1,113 @@
+.category-card {
+    $this: &;
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 90px;
+    margin: 15px 0;
+
+    &-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: flex;
+        width: 100%;
+        height: 100%;
+        border-radius: 4px;
+        border: 1px solid $color-border;
+        background-color: #fff;
+        transition: background-color 200ms ease, border-color 200ms ease;
+        overflow: hidden;
+    }
+
+    &-thumb {
+        flex: 0 0 auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 88px;
+        height: 100%;
+        background-color: #fff;
+
+        &_no-photo {
+            background-color: #dcdcdc;
+        }
+
+        &__image {
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        &__icon {
+            width: 30px;
+            height: 30px;
+            fill: #efefef;
+        }
+    }
+
+    &-body {
+        flex: 1 1 auto;
+        padding: 12px 12px 25px;
+    }
+
+    &-title {
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 22px;
+        color: $color-text;
+        transition: color 200ms ease;
+    }
+
+    &-arrow {
+        position: absolute;
+        width: 13px;
+        height: 8px;
+        bottom: 14px;
+        right: 15px;
+        fill: #fff;
+        opacity: 0;
+        transform: rotate(180deg);
+        transition: opacity 200ms ease;
+
+        &_inverse {
+            fill: $color-general;
+        }
+    }
+
+    &:hover {
+        #{$this}-container {
+            border-color: $color-general;
+            background-color: $color-general;
+
+            &_inverse {
+                border-color: $color-general;
+                background-color: #fff;
+            }
+        }
+
+        #{$this}-title {
+            color: #fff;
+
+            &_inverse {
+                color: $color-general;
+            }
+        }
+
+        #{$this}-arrow {
+            opacity: 1;
+        }
+    }
+}
+
+
+@media (max-width: 767px){
+	.category-card{
+		&-title{
+			font-size: 14px;
+			line-height: 20px;
+		}
+		&-body{
+			padding: 10px 12px;
+		}
+	}
+}

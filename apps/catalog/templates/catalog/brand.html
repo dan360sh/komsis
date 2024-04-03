@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+<div class="page">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    {% block breadcrumbs %}
+                    <div class="breadcrumbs" itemscope="itemscope" itemtype="http://schema.org/BreadcrumbList">
+                        <ul>
+                            <li itemscope="itemscope" itemprop="itemListElement" itemtype="http://schema.org/ListItem">
+                                <a href="/" itemprop="name">Главная</a>
+                                <meta itemprop="position" content="1">
+                            </li>
+                            <li itemscope="itemscope" itemprop="itemListElement" itemtype="http://schema.org/ListItem">
+                                <a href="{% url 'brands' %}" itemprop="name">Производители</a>
+                                <meta itemprop="position" content="2">
+                            </li>
+                            <li itemscope="" itemprop="itemListElement" itemtype="http://schema.org/ListItem">
+                                <span itemprop="name">{{ brand.title }}</span>
+                                <meta itemprop="position" content="3">
+                            </li>
+                        </ul>
+                    </div>
+                    {% endblock %}
+                    <h1 class="page-title">{{ brand.title }}</h1>
+                </div>
+                <div class="col-12 col-xl-9">
+                    {% if brand.text %}
+                    <div class="content-text">
+                        {{ brand.text|safe }}
+                    </div>
+                    {% endif %}
+                    {% if brand.brand_files.all %}
+                    {% include "content/files.html" with files=brand.brand_files.all %}
+                    {% endif %}
+
+                    {% regroup brand_cats by parent as parent_list %}
+                    <p class="page-title">Продукция бренда {{ brand.title }} представлена в следующих категориях:</p>
+                    {% for parent in parent_list %}
+                    	{% if not parent.grouper == None %}
+                        <div class="catalog-card">
+                            <b class="catalog-card__title">{{ parent.grouper }}</b>
+                            <div class="catalog-card__container">
+                                <div class="row">
+                                    {% for child in parent.list %}
+                                        <div class="col-12 col-sm-6 col-md-4 col-xl-3">
+                                            <a href="{{ child.get_absolute_url }}?brand_{{ brand.id }}=on" class="catalog-card__link">{{ child.title }}</a>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
+	                        {% for child in parent.list %}
+	                        <div class="catalog-card">
+	                        	<a href="{{ child.get_absolute_url }}?brand_{{ brand.id }}=on" class="catalog-card__link">
+	                            <b class="catalog-card__title">{{ child.title }}</b>
+	                            </a>
+	                        </div>
+	                        {% endfor %}
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <div class="col-12 col-xl-3 d-none d-xl-block">
+                    <div class="sidebar">
+                    {% if brand.link %}
+                        <a href="{{ brand.link }}" target="_blank"><img src="https://komsis.su/{{ brand.thumbnail.url }}"></a>
+                        {% else %}
+                        <img src="https://komsis.su/{{ brand.thumbnail.url }}">
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

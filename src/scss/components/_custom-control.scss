@@ -1,0 +1,28 @@
+.custom-control{
+	$this: &;
+	&.custom-radio{
+		#{$this}-label{
+			&::before{
+				border-radius: 100% !important;
+			}
+		}
+	}
+	&-label{
+		color: #373a3c;
+		font-size: 16px;
+		&::before{
+			border-radius: 2px !important;
+			box-shadow: none !important;
+		}
+	}
+	&-input{
+		&:checked{
+
+			& ~ #{$this}-label{
+				&::before{
+					background-color: $color-blue-light !important;
+				}
+			}
+		}
+	}
+}

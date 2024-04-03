@@ -1,0 +1,40 @@
+{% extends "admin/base.html" %}
+{% load administration_tags %}
+
+{% block title %}{{ title }} | Place-start{% endblock %}
+
+{% block extrastyle %}
+    {{ block.super }}
+
+    <link rel="stylesheet" href="/static/administration/css/vendor.css">
+    <link rel="stylesheet" href="/static/administration/css/fonts.css">
+    <link rel="stylesheet" href="/static/administration/css/main.css">
+{% endblock %}
+
+{% block extrahead %}
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    {{ block.super }}
+{% endblock %}
+
+{% block branding %}
+    <a class="header__logo" href="{% url 'admin:index' %}">
+        <img src="/static/administration/images/ps-logo.svg" alt="" srcset="">
+    </a>
+{% endblock %}
+
+{% block nav-global %}
+    {{ block.super }}
+
+    {% admin_nav %}
+{% endblock %}
+
+{% block javascript %}
+    <script src="/static/administration/js/vendor/bootstrap.min.js"></script>
+    <script src="/static/administration/js/vendor/jquery.mosaicflow.js"></script>
+    <script src="/static/administration/js/vendor/mask.min.js"></script>
+
+    <script src="/static/administration/js/main.js"></script>
+{% endblock %}
+
+{% block footer %}{% endblock %}

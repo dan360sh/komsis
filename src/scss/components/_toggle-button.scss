@@ -1,0 +1,47 @@
+.toggle-button{
+	display: flex;
+	&__input{
+		display: none;
+	}
+	&__input:checked + &__custom-button{
+		
+		background-color: $color-general;
+		border-color: $color-general;
+		&:after{
+			left: calc(100% - 17px);
+		}
+	}
+	&__custom-button{
+		display: block;
+		position: relative;
+		width: 36px;
+		height: 20px;
+		border: 1px solid #ccc;
+		border-radius: 10px;
+		transition: .3s;
+		cursor: pointer;
+		&:hover{
+			border-color: $color-general;
+		}
+		&:after{
+			content: "";
+			display: block;
+			position: absolute;
+			top: 1px;
+			left: 1px;
+			width: 16px;
+			height: 16px;
+			border-radius: 100%;
+			background-color: #fff;
+			box-shadow: 1px 1px 3px 1px rgba(0, 0, 0, 0.5);
+			transition: .3s;
+		}
+	}
+	&__text{
+		display: block;
+		padding: 5px 0 0 8px;
+		color: #373a3c;
+		font-size: 12px;
+		line-height: 13px;
+	}
+}

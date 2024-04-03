@@ -1,0 +1,1 @@
+updateCatalog("",true);

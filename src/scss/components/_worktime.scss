@@ -1,0 +1,18 @@
+.worktime {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    min-height: 100%;
+
+    &__icon {
+        width: 13px;
+        height: 13px;
+        fill: #999;
+        margin: 0 8px 2px 0;
+    }
+
+    &__text {
+		color: #656565;
+		font-size: 14px;
+    }
+}

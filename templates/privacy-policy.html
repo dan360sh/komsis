@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+    <section class="page">
+        <div class="container">
+            <div class="breadcrumbs">
+                <ul itemscope="itemscope" itemtype="http://schema.org/BreadcrumbList">
+                    <li>
+                        <span itemscope="itemscope" itemprop="itemListElement" itemtype="http://schema.org/ListItem">
+                            <a itemprop="item" title="Главная" href="/">
+                                <span itemprop="name">Главная</span>
+                                <meta itemprop="position" content="1"/>
+                            </a>
+                        </span>
+                    </li>
+                    <li>
+                        <span itemscope="itemscope" itemprop="itemListElement" itemtype="http://schema.org/ListItem">
+                            <span itemprop="name">Политика конфиденциальности</span>
+                            <meta itemprop="position" content="2"/>
+                        </span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="row">
+                <div class="col-xl-9 col-12">
+                    <div class="content-text">
+                        {{ settings.privacy_policy|safe }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

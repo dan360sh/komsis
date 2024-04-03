@@ -1,0 +1,12 @@
+<div class="notify">
+    <div class="notify-body">
+        <svg class="notify-icon" role="img">
+            <use xlink:href="/static/images/sprite.svg#cart"></use>
+        </svg>
+        <div class="notify-text">
+            <p class="notify-title">Ваша корзина пуста</p>
+            <p class="notify-desc">Для добавления товаров в корзину перейдите в каталог</p>
+        </div>
+    </div>
+    <a class="notify-button btn btn-primary" href="{% url 'catalog' %}">Перейти в каталог</a>
+</div>

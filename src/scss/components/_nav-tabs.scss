@@ -1,0 +1,26 @@
+
+
+@media (max-width : 767px) {
+	.nav-tabs{
+		flex-direction: column;
+		border: 1px solid #dbdbdb;
+		.nav-item{
+			&:not(:last-child){
+				border-bottom: 1px solid #dbdbdb;
+			}
+		}
+		.nav-link{
+			border: none !important;
+		}
+	}
+}
+
+@media(max-width: 575px){
+	.nav-tabs{
+		.nav-link{
+			padding: 5px 10px;
+			font-size: 15px;
+			font-weight: 600;
+		}
+	}
+}

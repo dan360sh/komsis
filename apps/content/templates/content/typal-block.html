@@ -1,0 +1,11 @@
+<div class="content-typal-block">
+    <div class="content-typal-block__container">
+        {% if block.image %}
+            <div class="content-typal-block__image" style="background-image: url({{ block.image.url }});"></div>
+        {% endif %}
+        <div class="content-typal-block__content">
+            <p class="content-typal-block__title">{{ block.title }}</p>
+            <p class="content-typal-block__text">{{ block.text }}</p>
+        </div>
+    </div>
+</div>

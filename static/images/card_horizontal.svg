@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="870px" height="71px" viewBox="0 0 870 71" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52 (66869) - http://www.bohemiancoding.com/sketch -->
+    <title>Карточки (картинками) Copy 3</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Catalog-Copy" transform="translate(-675.000000, -734.000000)">
+            <g id="Карточки-(картинками)-Copy-3" transform="translate(675.000000, 734.000000)">
+                <g id="Group">
+                    <polygon id="base" fill="#FFFFFF" points="0 0 870 0 870 71 0 71"></polygon>
+                    <path d="M0,5.02060074 C0,2.80797405 1.78265026,1.01428571 3.9993208,1.01428571 L866.000679,1.01428571 C868.209443,1.01428571 870,2.80604499 870,5.02060074 L870,65.9793993 C870,68.192026 868.21735,69.9857143 866.000679,69.9857143 L3.9993208,69.9857143 C1.79055691,69.9857143 0,68.193955 0,65.9793993 L0,5.02060074 Z" id="base" fill="#F0F0F0"></path>
+                    <rect id="BG-Copy-12" fill="#D1D1D1" x="661" y="20.2857143" width="69" height="30.4285714" rx="4"></rect>
+                    <rect id="BG-Copy-50" fill="#FFFFFF" x="750" y="16.2285714" width="105" height="38.5428571" rx="4"></rect>
+                    <rect id="BG-Copy-22" fill="#D1D1D1" x="77" y="19.2714286" width="276" height="12.1714286" rx="2"></rect>
+                    <path d="M77,41.5670067 C77,40.4569896 77.8944857,39.5571429 79.0083403,39.5571429 L220.99166,39.5571429 C222.100835,39.5571429 223,40.4521371 223,41.5670067 L223,49.7187075 C223,50.8287247 222.105514,51.7285714 220.99166,51.7285714 L79.0083403,51.7285714 C77.8991646,51.7285714 77,50.8335772 77,49.7187075 L77,41.5670067 Z" id="BG-Copy-23" fill="#D1D1D1"></path>
+                    <rect id="img" fill="#D1D1D1" x="10" y="11.1571429" width="48" height="48.6857143" rx="4"></rect>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

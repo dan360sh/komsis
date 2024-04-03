@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="270px" height="320px" viewBox="0 0 270 320" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52 (66869) - http://www.bohemiancoding.com/sketch -->
+    <title>Карточки (картинками)</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Catalog-Copy" transform="translate(-675.000000, -384.000000)">
+            <g id="Карточки-(картинками)" transform="translate(675.000000, 384.000000)">
+                <g id="1">
+                    <g id="Group">
+                        <polygon id="base" fill="#FFFFFF" points="0 0 270 0 270 320 0 320"></polygon>
+                        <path d="M0,4.00250278 C0,1.79198153 1.795548,0 3.99981191,0 L266.000188,0 C268.209223,0 270,1.79962814 270,4.00250278 L270,315.997497 C270,318.208018 268.204452,320 266.000188,320 L3.99981191,320 C1.79077679,320 0,318.200372 0,315.997497 L0,4.00250278 Z" id="base" fill="#F0F0F0"></path>
+                        <rect id="BG-Copy-11" fill="#D1D1D1" x="17" y="196" width="216" height="18" rx="4"></rect>
+                        <rect id="BG-Copy-12" fill="#D1D1D1" x="17" y="230" width="143" height="18" rx="4"></rect>
+                        <rect id="BG-Copy-50" fill="#FFFFFF" x="17" y="272" width="143" height="30" rx="4"></rect>
+                        <path d="M0,3.99138807 C0,1.78700531 1.795548,0 3.99981191,0 L266.000188,0 C268.209223,0 270,1.79142058 270,3.99138807 L270,181 L0,181 L0,3.99138807 Z" id="img" fill="#D1D1D1"></path>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

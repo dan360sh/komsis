@@ -1,0 +1,37 @@
+.quote {
+	position: relative;
+	border-left: 6px solid $color-yellow;
+	padding: 20px 18px;
+	margin: 20px 0 10px;
+	background-color: #f9f9f9;
+	&-text {
+		color: #333;
+		font-size: 16px;
+		font-weight: 400;
+		line-height: 24px;
+	}
+}
+
+@media(max-width: 767px) {
+	@import "../media-mixins";
+	.quote {
+		padding: 5px 10px;
+		margin: 10px 0;
+		&::before, &::after {
+			width: 26px;
+			height: 24px;
+			background-size: 14px 12px;
+		}
+		&::before {
+			top: -13px;
+			left: -11px;
+		}
+		&::after {
+			right: -11px;
+			bottom: -13px;
+		}
+		&-text {
+			@include font-p;
+		}
+	}
+}

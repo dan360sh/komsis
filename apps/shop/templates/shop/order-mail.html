@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <title>Ваш заказ №{{ order.id }}</title>
+    </head>
+
+    <body>
+
+        <table
+            border="0"
+            cellpadding="0"
+            cellspacing="0"
+            style="margin:0; padding: 60px 20px"
+            width="100%"
+            bgcolor="#e7e7e7">
+            <tr>
+                <td align="center">
+
+                    <div style="width: 560px; text-align: left; border: 1px solid #e0e0e0; background-color: #ffffff; margin: 0 auto;">
+                         <div style="padding: 10px 30px 13px; border-bottom: 1px solid #e0e0e0; background-color: {{color}};">
+                            <table style="width: 100%;">
+                                <tr>
+                                    <td>
+                                        <img src="{{ request.scheme }}://{{ request.META.HTTP_HOST }}/static/images/header-logo.svg" alt="" border="0" style="display:block;" />
+                                    </td>
+                                    <td align="right" valign="middle">
+                                        <a href="{{ request.scheme }}://{{ request.META.HTTP_HOST }}/" target="_blank" style="font-family: Arial; font-weight: 700; font-size: 16px; color: #ffffff; text-decoration: none;">{{ request.META.HTTP_HOST }}</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div style="background-color: #f5f5f5; font-family: Arial; font-size: 15px; font-weight: 400; line-height: 20px; color: #1c1c1c; padding: 30px 30px 20px;">
+                            <p style="font-size: 30px; line-height: normel; margin: 0 0 20px;">Ваш заказ №{{ order.id }}</b></p>
+                            <p style="margin: 10px 0;">ФИО: <b> {{ order.surname }} {{ order.name }} {{ order.middle_name }} </b></p>
+                            <p style="margin: 10px 0;">Email: <b>{{ order.email }}</b></p>
+                            <p style="margin: 10px 0;">Телефон: <b>{{ order.phone }}</b></p>
+                            <p style="margin: 10px 0;">Способ оплаты: <b>{{ order.str_type_payment }}</b></p>
+                            {% if order.is_shipping_default %}
+                                <p style="margin: 10px 0;">Способ получения: <b>{{ order.get_shipping_display }}</b></p>
+                                <p style="margin: 10px 0;">Адрес магазина: <b>{{ order.shop_address }}</b></p>
+                            {% else %}
+                                <p style="margin: 10px 0;">Способ доставки: <b>{{ order.get_shipping_display }}</b></p>
+                                <p style="margin: 10px 0;">Адрес доставки: <b>{{ order.get_shipping_address }}</b></p>
+                            {% endif %}
+                            {% if order.jurical and order.company_title %}
+                            <p style="margin: 10px 0;">Название компании: <b>{{ order.company_title }}</b></p>
+                            {% endif %}
+                            {% if order.jurical and order.company_inn %}
+                            <p style="margin: 10px 0;">ИНН компании: <b>{{ order.company_inn }}</b></p>
+                            {% endif %}
+                            {% if order.jurical and order.payment_file %}
+                            <p style="margin: 10px 0;">Реквизиты: <b>
+                                    <a href="{{ request.scheme }}://{{ request.META.HTTP_HOST }}/{{ order.payment_file.url }}">{{ order.get_filename }}</a>
+                                </b>
+                            </p>
+                            {% endif %}
+                        </div>
+                        {% if order.city %}
+                        <div style="background-color: #f5f5f5; font-family: Arial; font-size: 15px; font-weight: 400; line-height: 20px; color: #1c1c1c; padding: 30px 30px 20px;">
+                            <p style="font-size: 20px; line-height: normel; margin: 0 0 15px;">Адрес доставки</b></p>
+                            <p style="margin: 10px 0;">Почтовый индекс: <b>{{ order.post_code }}</b></p>
+                            <p style="margin: 10px 0;">Область: <b>{{ order.region }}</b></p>
+                            <p style="margin: 10px 0;">Район: <b>{{ order.district }}</b></p>
+                            <p style="margin: 10px 0;">Населенный пункт: <b>{{ order.city }}</b></p>
+                            <p style="margin: 10px 0;">Улица: <b>{{ order.street }}</b></p>
+                            <p style="margin: 10px 0;">Дом: <b>{{ order.house }}</b></p>
+                            <p style="margin: 10px 0;">Корпус: <b>{{ order.housing }}</b></p>
+                            <p style="margin: 10px 0;">Квартира: <b>{{ order.apartment }}</b></p>
+                        </div>
+                        {% endif %}
+
+                        {% if order.comment %}
+                            <p style="margin: 10px 0;">Ваш комментарий: <b>{{ order.comment }}</b></p>
+                        {% endif %}
+
+
+                        <div style="padding:15px 30px 0 30px;">
+                            <table
+                                border="0"
+                                cellpadding="0"
+                                cellspacing="0"
+                                style="margin:0; table-layout: auto"
+                                width="100%">
+
+                                <tr height="25px" style="font-family: Arial; font-weight: 400; font-size: 13px; color: #1c1c1c; line-height: 20px;">
+                                    <td align="left" colspan="2" style="border-bottom: 1px solid #e0e0e0;">Состав заказа</td>
+                                    <td align="left" width="65" style="border-bottom: 1px solid #e0e0e0;">Кол-во</td>
+                                    <td align="left" width="90" style="border-bottom: 1px solid #e0e0e0;">Сумма</td>
+                                </tr>
+
+                                {% for item in order.order_items.all %}
+                                    <tr style="font-family: Arial; font-weight: 400; font-size: 15px; color: #1c1c1c; vertical-align: top;">
+                                        <td width='75' style="border-bottom: 1px solid #e0e0e0; padding: 16px 0;">
+                                            <div>
+                                                {% if item.product.thumbnail %}
+                                                    <img src="{{ request.scheme}}://komsis.su/{{ item.product.thumbnail.url }}" alt="" border="0" width="60" height="60" style="display:block; margin: 0; object-fit: contain;" />
+                                                {% else %}
+                                                    <img src="{{ request.scheme}}://komsis.su/static/images/no-photo.png" alt="" border="0" width="60" height="60" style="display:block; margin: 0;" />
+                                                {% endif %}
+                                            </div>
+                                        </td>
+                                        <td width="270" style="border-bottom: 1px solid #e0e0e0; padding: 16px 0;">
+                                            <div style="padding-top: 5px;">
+                                                {% if item.option %}
+                                                    {% if item.option.product.code %}<p style="font-size: 13px; margin: 0;">Арт.{{ item.option.product.code }}</p>{% endif %}
+                                                    <p style="font-size: 13px; margin: 0;">{{ item.product.title }} {{ item.option.title }}</p>
+                                                    {% comment %}
+                                                    <p style="font-weight: 700; margin: 0;">{{ item.option.price }} руб.</p>
+                                                    {% endcomment %}
+                                                {% else %}
+                                                    {% if item.product.code %}<p style="font-size: 13px; margin: 0;">Арт.{{ item.product.code }}</p>{% endif %}
+                                                    <p style="font-size: 13px; margin: 0;">{{ item.product.title }}</p>
+                                                    {% comment %}
+                                                    <p style="font-weight: 700; margin: 0;">{{ item.product.price }} руб.</p>
+                                                    {% endcomment %}
+                                                {% endif %}
+												<p style="font-weight: 700; margin: 0;">{{ item.total }} руб.</p>
+                                            </div>
+                                        </td>
+                                        <td style="border-bottom: 1px solid #e0e0e0; padding: 16px 0;">
+                                            <div style="padding-top: 13px;">
+                                                <p style="margin: 0;">{{ item.count }} {{ item.product.unit }}.</p>
+                                            </div>
+                                        </td>
+                                        <td style="border-bottom: 1px solid #e0e0e0; padding: 16px 0;">
+                                            <div style="padding-top: 16px;">
+                                                <p style="font-weight: 700; margin: 0;">{{ item.total_price }} руб.</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+
+                            </table>
+                            <table style="width: 100%; font-family: Arial; font-weight: 400; font-size: 24px; color: #1c1c1c; padding: 20px 0 25px;">
+                                <tr>
+                                    <td align="left" style="padding: 0;"><p style="margin: 0;"><b>Итого к оплате:</b></p></td>
+                                    <td align="right" style="padding: 0;"><p style="margin: 0;"><b>{{ order.total|floatformat:2 }} руб.</b></p></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+
+                </td>
+            </tr>
+        </table>
+    </body>
+
+</html>

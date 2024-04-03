@@ -1,0 +1,15 @@
+{% if products %}
+{% if tile %}
+<div class="row custom_padding">
+	{% for product in products %}
+	<div class="col-lg-4 col-sm-6 col-6 ">
+		{% include 'catalog/product-card.html' %}
+	</div>
+	{% endfor %}
+</div>
+{% else %}
+	{% for product in products %}
+		{% include 'catalog/product-card-wide.html' %}
+	{% endfor %}
+{% endif %}
+{% endif %}

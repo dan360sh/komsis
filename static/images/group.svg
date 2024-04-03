@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="225px" height="225px" viewBox="0 0 225 225" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 49.3 (51167) - http://www.bohemiancoding.com/sketch -->
+    <title>Group</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Group" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g>
+            <rect id="Rectangle" fill="#E7E7E7" x="0" y="0" width="225" height="225" rx="5"></rect>
+            <rect id="Rectangle" fill="#CFCFCF" x="27" y="37" width="124" height="39" rx="5"></rect>
+            <rect id="Rectangle-Copy" fill="#CFCFCF" x="27" y="93" width="124" height="39" rx="5"></rect>
+            <rect id="Rectangle-Copy-2" fill="#CFCFCF" x="74" y="158" width="124" height="39" rx="5"></rect>
+        </g>
+    </g>
+</svg>

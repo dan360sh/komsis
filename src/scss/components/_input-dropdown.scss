@@ -1,0 +1,36 @@
+.dropdown-container {
+    position: relative;
+}
+
+.input-dropdown {
+    position: absolute;
+    z-index: 10;
+    top: 100%;
+    left: 0;
+    min-width: 270px;
+    width: 100%;
+    border: 0;
+    border-radius: 4px;
+    background-color: #fff;
+    box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
+    overflow: hidden;
+
+    &-item {
+        display: block;
+        padding: 4px 20px;
+        transition: background-color 200ms ease;
+        cursor: pointer;
+
+        &__text {
+            font: {
+                weight: 400;
+                size: 14px;
+            }
+            color: $color-text;
+        }
+
+        &:hover {
+            background-color: rgba(#000, 0.2)
+        }
+    }
+}

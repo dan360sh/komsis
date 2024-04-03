@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+<div class="page">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="breadcrumbs">
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><span>Каталог</span></li>
+                    </ul>
+                </div>
+                <h1 class="page-title">Каталог</h1>
+                {% for category in object_list %}
+                    <div class="catalog-card">
+							<a href="{{ category.get_absolute_url }}" class="catalog-card__title"><b>{{ category.title }}</b></a>
+							<div class="catalog-card__container">
+								<div class="row">
+									{% for children in category.get_children|dictsort:"title" %}
+										<div class="col-12 col-sm-6 col-md-4 col-xl-3">
+											<a href="{{ children.get_absolute_url }}" class="catalog-card__link">{{ children.title }}</a>
+										</div>
+									{% endfor %}
+								</div>
+							</div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+    
+
+{% endblock %}

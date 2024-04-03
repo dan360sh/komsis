@@ -1,0 +1,141 @@
+.filter-block {
+  border-bottom: 1px solid #e5e5e5;
+
+  &__header {
+    display: block;
+    position: relative;
+    background-color: #f5f5f5;
+    padding: 15px 13px;
+    color: #373a3c;
+    border-bottom: 1px solid #e5e5e5;
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 20px;
+    transition: .3s;
+    $header: &;
+
+    &:hover {
+      color: #fff;
+      background-color: $color-blue-light;
+    }
+
+    &.collapsed {
+      border-bottom-color: transparent;
+
+      &:after {
+        transform: rotate(0deg);
+      }
+    }
+
+    &:after {
+      content: "";
+      position: absolute;
+      right: 15px;
+      top: 22px;
+      display: inline-block;
+      width: 0;
+      height: 0;
+      margin-left: .255em;
+      vertical-align: .255em;
+      border-top: 4px solid;
+      border-right: 4px solid transparent;
+      border-bottom: 0;
+      border-left: 4px solid transparent;
+      transform: rotate(180deg);
+      transition: transform .3s linear;
+    }
+
+    &_bg {
+      &_yellow {
+        background-color: $color-yellow;
+      }
+    }
+  }
+
+  &__body {
+    .custom-control {
+      padding: 3px 0 3px 24px;
+
+      &-label {
+        &:before, &:after {
+          top: 3px;
+        }
+      }
+
+      input {
+        display: none;
+      }
+    }
+  }
+
+  &__wrapper {
+    padding: 13px;
+    overflow: hidden;
+
+    .place-accordion-list {
+      padding-left: 17px;
+    }
+
+    .filter-group {
+      > .place-accordion-list {
+        padding-left: 20px;
+      }
+
+      .place-accordion-item {
+        margin-bottom: 10px;
+        position: relative;
+
+        .filter-category {
+          padding: 0;
+        }
+      }
+
+      > .place-accordion-list > .place-accordion-item:before {
+        content: ' ';
+        position: absolute;
+        left: -15px;
+        width: 5px;
+        height: 5px;
+        background: #156dbc;
+        border-radius: 50%;
+        top: 6px;
+      }
+
+      > .place-accordion-list > .place-accordion-list > .place-accordion-item:before {
+        content: "";
+        position: absolute;
+        left: -15px;
+        top: 8px;
+        width: 10px;
+        height: 1px;
+        background-color: #333;
+      }
+
+      > .place-accordion-list > .place-accordion-list > .place-accordion-list > .place-accordion-item:before {
+        content: '';
+        width: 0;
+        height: 0;
+      }
+    }
+  }
+
+  &__scroll-content {
+    max-height: 200px;
+
+    &.only_categories {
+      max-height: 550px;
+    }
+
+    .os-content {
+      padding: 0 15px 0 0 !important;
+    }
+  }
+
+  &__scroll-content_full {
+    max-height: 100%;
+  }
+
+  &__search_field {
+    margin-bottom: 14px;
+  }
+}

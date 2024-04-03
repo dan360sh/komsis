@@ -1,0 +1,18 @@
+<div class="gallery">
+    <div class="row">
+        {% for item in gallery %}
+            <div class="col-sm-{{ type }} col-6">
+                <div class="gallery-item">
+                    <a class="gallery-item-thumbnail" href="{{ item.image.url }}" 
+                        {% if item.has_backing_image %}data-fancybox  style="background-image: url('{{ item.backing_image.url }}');" {% else %}data-fancybox="gallery" style="background-image: url('{{ item.image.url }}');"{% endif %}>
+                    </a>
+                    {% if item.image.description %}
+                        <div class="gallery-item-sign">
+                            <p>{{ item.image.description }}</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>

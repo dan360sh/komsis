@@ -1,0 +1,285 @@
+{% extends "base.html" %}
+{% load navs %}
+
+
+{% block content %}
+			<div class="page">
+				<div class="container">
+					<div class="row">
+						<div class="col-12">
+							<div class="breadcrumbs" itemscope="" itemtype="http://schema.org/BreadcrumbList">
+								<ul>
+									<li itemscope="" itemprop="itemListElement" itemtype="http://schema.org/ListItem">
+										<a href="/" itemprop="name">Главная</a>
+										<meta itemprop="position" content="1">
+									</li>
+									<li itemscope="" itemprop="itemListElement" itemtype="http://schema.org/ListItem">
+										<span itemprop="name">О нас</span>
+										<meta itemprop="position" content="2">
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div class="col-12 col-xl-9">
+							<div class="content">
+								<div class="content-text">
+									<h1>H1. Пример заголовка типовой текстовой страницы</h1>
+									<p>В конце ноября, в оттепель, часов в девять утра, поезд Петербургско-Варшавской железной дороги на всех парах подходил к Петербургу. Было так сыро и туманно; в десяти шагах, вправо и влево от дороги, трудно было разглядеть хоть что-нибудь из окон вагона.
+										<a href="http://yanaafafasfasfadex.ru">Ссылка в тексте,</a>
+										<a href="http://yandsfqffasfafafsafex.ru">ховер для ссылки,</a>
+										<a href="http://yandex.ru">посещённая ссылка.</a>
+									</p>
+									<p>Из пассажиров были и возвращавшиеся из-за границы; но более были наполнены отделения для третьего класса, и всё людом мелким и деловым, не из очень далека. Все, как водится, устали, у всех отяжелели за ночь глаза, все назяблись, все лица были бледно-желтые, под цвет тумана.
+									</p>
+									<h2>H2. Пример подзаголовка второго уровня типовой текстовой страницы в две строки и более</h2>
+									<p>В одном из вагонов третьего класса, с рассвета, очутились друг против друга, у самого окна, два пассажира — оба люди молодые,
+									оба почти налегке, оба не щегольски одетые, оба с довольно замечательными физиономиями и оба пожелавшие, наконец, войти друг
+									с другом в разговор.</p>
+									<h3>H3. Пример подзаголовка третьего уровня</h3>
+									<p>Если б они оба знали один про другого, чем они особенно в эту минуту замечательны, то, конечно, подивились бы, что случай
+									так странно посадил их друг против друга в третьеклассном вагоне петербургско-варшавского поезда.</p>
+									<img src="/static/images/les1.jpg" alt="">
+								</div>
+								<div class="content-text">
+									<h3>Пример нумерованного списка</h3>
+									<ol>
+										<li>Один из них был небольшого роста, лет двадцати семи, курчавый и почти черноволосый, с серыми маленькими, но огненными глазами.</li>
+										<li>Нос его был широк и сплюснут, лицо скулистое;</li>
+										<li>тонкие губы беспрерывно складывались в какую-то наглую, насмешливую и даже злую улыбку.</li>
+									</ol>
+									<h3>Пример маркированного списка</h3>
+									<ul>
+										<li>Один из них был небольшого роста, лет двадцати семи, курчавый и почти черноволосый, с серыми маленькими, но огненными глазами.</li>
+										<li>Нос его был широк и сплюснут, лицо скулистое;</li>
+										<li>тонкие губы беспрерывно складывались в какую-то наглую, насмешливую и даже злую улыбку.</li>
+									</ul>
+								</div>
+								<div class="quote">
+									<p class="quote-text">В конце ноября, в оттепель, часов в девять утра, поезд Петербургско-Варшавской железной дороги на всех парах подходил к Петербургу.</p>
+								</div>
+								<div class="files">
+									<div class="row">
+										<div class="col-md-6 col-12">
+											<a class="file" href="#" target="_blank">
+												<div class="file-thumbnail">
+													<svg role="img">
+														<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/static/images/sprite.svg#file_icon"></use>
+													</svg>
+												</div>
+												<div class="file-info">
+													<span class="name">
+														<em>
+															Пример прикрепленного документа с длинным названием
+														</em>
+													</span>
+													<span class="size">
+														pdf 2,3 Мб
+													</span>
+												</div>
+											</a>
+										</div>
+										<div class="col-md-6 col-12">
+											<a class="file" href="#" target="_blank">
+												<div class="file-thumbnail">
+													<svg role="img">
+														<use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/static/images/sprite.svg#file_icon"></use>
+													</svg>
+												</div>
+												<div class="file-info">
+													<span class="name">
+														<em>
+															Пример прикрепленного документа с длинным названием
+														</em>
+													</span>
+													<span class="size">
+														DOC 218 Kб
+													</span>
+												</div>
+											</a>
+										</div>
+									</div>
+								</div>
+								<div class="content-text">
+									<h3>Пример заголовка таблицы</h3>
+									<table>
+										<tbody>
+											<tr>
+												<td>Наименование столбца 1</td>
+												<td>Наименование столбца 2</td>
+											</tr>
+											<tr>
+												<td>Поэтажный план эвакуации</td>
+												<td>На заказ</td>
+											</tr>
+											<tr>
+												<td>Поэтажный план эвакуации (с фотолюминесцентным покрытием и текстовой частью) без рамки</td>
+												<td>На заказ</td>
+											</tr>
+											<tr>
+												<td>Дополнительный экземпляр плана</td>
+												<td>1000 руб.</td>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+								<div class="text-underline">
+									<p>Подзаголовок с линией</p>
+								</div>
+								<div class="certificates">
+									<div class="row">
+										<div class="col-sm-4 col-6">
+											<div class="certificate">
+												<a class="certificate-thumbnail" href="/static/images/les1.jpg" data-lightbox="certificates-set" style="background-image: url('/static/images/les1.jpg');"></a>
+												<div class="certificate-sign">
+													<p>
+														Пример подписи для вертикального документа формата A4
+													</p>
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-4 col-6">
+											<div class="certificate">
+												<a class="certificate-thumbnail" href="/static/images/les1.jpg" data-lightbox="certificates-set" style="background-image: url('/static/images/les1.jpg');"></a>
+												
+											</div>
+										</div>
+										<div class="col-sm-4 col-6">
+											<div class="certificate">
+												<a class="certificate-thumbnail" href="/static/images/les1.jpg" data-lightbox="certificates-set" style="background-image: url('/static/images/les1.jpg');"></a>
+												
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="gallery">
+									<div class="row">
+										<div class="col-sm-6 col-6">
+											<div class="gallery-item">
+												<a class="gallery-item-thumbnail" href="/static/images/les1.jpg" data-lightbox="gallery-set" style="background-image: url('/static/images/les1.jpg');"></a>
+												<div class="gallery-item-sign">
+													<p>
+														Пример подписи для изображения в тексте
+													</p>
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-6 col-6">
+											<div class="gallery-item">
+												<a class="gallery-item-thumbnail" href="/static/images/les1.jpg" data-lightbox="gallery-set" style="background-image: url('/static/images/les1.jpg');"></a>
+												<div class="gallery-item-sign">
+													<p>
+														Пример подписи для изображения в тексте
+													</p>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="gallery">
+									<div class="row">
+										<div class="col-sm-4 col-6">
+											<div class="gallery-item">
+												<a class="gallery-item-thumbnail" href="/static/images/les1.jpg" data-lightbox="gallery-set" style="background-image: url('/static/images/les1.jpg');"></a>
+												<div class="gallery-item-sign">
+													<p>
+														Пример подписи для изображения в тексте
+													</p>
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-4 col-6">
+											<div class="gallery-item">
+												<a class="gallery-item-thumbnail" href="/static/images/les1.jpg" data-lightbox="gallery-set" style="background-image: url('/static/images/les1.jpg');"></a>
+												<div class="gallery-item-sign">
+													<p>
+														Пример подписи для изображения в тексте
+													</p>
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-4 col-6">
+											<div class="gallery-item">
+												<a class="gallery-item-thumbnail" href="/static/images/les1.jpg" data-lightbox="gallery-set" style="background-image: url('/static/images/les1.jpg');"></a>
+												<div class="gallery-item-sign">
+													<p>
+														Пример подписи для изображения в тексте
+													</p>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="gallery">
+									<div class="row">
+										<div class="col-sm-3 col-6">
+											<div class="gallery-item">
+												<a class="gallery-item-thumbnail" href="/static/images/les1.jpg" data-lightbox="gallery-set" style="background-image: url('/static/images/les1.jpg');"></a>
+												<div class="gallery-item-sign">
+													<p>
+														Пример подписи для изображения в тексте
+													</p>
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-3 col-6">
+											<div class="gallery-item">
+												<a class="gallery-item-thumbnail" href="/static/images/les1.jpg" data-lightbox="gallery-set" style="background-image: url('/static/images/les1.jpg');"></a>
+												<div class="gallery-item-sign">
+													<p>
+														Пример подписи для изображения в тексте
+													</p>
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-3 col-6">
+											<div class="gallery-item">
+												<a class="gallery-item-thumbnail" href="/static/images/les1.jpg" data-lightbox="gallery-set" style="background-image: url('/static/images/les1.jpg');"></a>
+												<div class="gallery-item-sign">
+													<p>
+														Пример подписи для изображения в тексте
+													</p>
+												</div>
+											</div>
+										</div>
+										<div class="col-sm-3 col-6">
+											<div class="gallery-item">
+												<a class="gallery-item-thumbnail" href="/static/images/les1.jpg" data-lightbox="gallery-set" style="background-image: url('/static/images/les1.jpg');"></a>
+												<div class="gallery-item-sign">
+													<p>
+														Пример подписи для изображения в тексте
+													</p>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-12 col-xl-3 d-none d-xl-block">
+							<div class="sidebar">
+								<ul>
+									<li class="sidebar-item current-menu-item">
+										<a href="#" class="sidebar-link">Активный раздел</a>
+									</li>
+									<li class="sidebar-item">
+										<a href="#" class="sidebar-link">Ховер раздела</a>
+									</li>
+									<li class="sidebar-item">
+										<a href="#" class="sidebar-link">Смартфоны</a>
+									</li>
+									<li class="sidebar-item">
+										<a href="#" class="sidebar-link">Телевизоры</a>
+									</li>
+								</ul>
+							</div>
+							<a class="sidebar-help" href="#" style="background-image: url('/static/images/sidebar-helper-img.jpg');">
+								<div class="sidebar-help__wrapper">
+									<b class="sidebar-help__title">Поможем выбрать нужный товар</b>
+									<span class="sidebar-help__button">Нужна помощь</span>
+								</div>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+{% endblock %}

@@ -1,0 +1,24 @@
+a.header-link{
+	.header-link__text{
+		text-decoration: underline;
+	}
+}
+.header-link {
+    display: flex;
+    align-items: center;
+	justify-content: flex-end;
+	padding-left: 50px;
+    min-height: 100%;
+
+    &__icon {
+        width: 16px;
+        height: 16px;
+        fill: #999;
+        margin: 0 8px 2px 0;
+    }
+
+    &__text {
+		color: #656565;
+		font-size: 14px;
+    }
+}

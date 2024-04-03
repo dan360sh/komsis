@@ -1,0 +1,72 @@
+<div class="checkout-form__form-part-body">
+    <div class="order-error" style='display:none;color:red;'></div>
+    <div class="form-group ">
+        <span for="name" class='title'>ФИО</span>
+        <span>{{ account.surname }} {{ account.name }} {{ account.middle_name }}</span>
+        <input name="name" class="form-control" type="hidden" id="name" value="{{ account.name }}" required="required"/>
+        <input name="surname" class="form-control" type="hidden" id="surname" value="{{ account.surname }}" required="required"/>
+        <input name="middle_name" class="form-control" type="hidden" id="middle_name" value="{{ account.middle_name }}"/>
+        <div class="valid-feedback">Готово!</div>
+    </div>
+    <div class="form-group ">
+        <span for="email" class='title'>Email</span>
+        <span>{{ account.email }}</span>
+        <input name="email" class="form-control" type="hidden" id="email" value="{{ account.email }}" required="required"/>
+        <div class="invalid-feedback">Обязательное поле для заполнение</div>
+    </div>
+    <div class="form-group ">
+        <span for="user_phone" class='title'>Телефон</span>
+        <span>{{ account.phone }}</span>
+        <input name="phone" class="form-control" type="hidden" id="user_phone" value="{{ account.phone }}" required="required"/>
+        <div class="invalid-feedback">Обязательное поле для заполнение</div>
+    </div>
+    {% if account.jurical %}
+        <div class="form-group custom_checkbox">
+            <div class="custom-control custom-checkbox">
+                {% if not saved_order %}
+                    <input class="custom-control-input" type="checkbox" id="face" name="face" {% if account.jurical %}checked{% endif %}>
+                {% elif saved_order.jurical %}
+                    <input class="custom-control-input" type="checkbox" id="face" name="face" checked>
+                {% elif not saved_order.jurical %}
+                    <input class="custom-control-input" type="checkbox" id="face" name="face">
+                {% endif %}
+                <label class="custom-control-label title" for="face">Заказ от юридического лица</label>
+                <div class="invalid-feedback"></div>
+            </div>
+            <div class="face_step"  style="display: {% if account.jurical %}block{% else %}none{% endif %};">
+                <div class="form-group ">
+                    <span for="company" class='title'>Название компании</span>
+                    <span>{{ account.company_title }}</span>
+                    <input name="company_title" class="form-control" type="hidden" id="company" value="{{ account.company_title }}"/>
+                    <div class="invalid-feedback">Обязательное поле для заполнение</div>
+                </div>
+                <div class="row__container">
+                    <div class="form-group ">
+                        <span for="inn" class='title'>ИНН</span>
+                        <span>{{ account.company_inn }}</span>
+                        <input name="company_inn" class="form-control" type="hidden" id="inn" value="{{ account.company_inn }}"/>
+                        <div class="invalid-feedback">Обязательное поле для заполнение</div>
+                    </div>
+                    <div class="example-1">
+                    <div class="form-group">
+                        <label class="label">
+                            <svg id="Capa_1" enable-background="new 0 0 512 512" height="512" viewBox="0 0 512 512" width="512" xmlns="http://www.w3.org/2000/svg">
+                                <path d="m226 512c-49.626 0-90-40.374-90-90v-302c0-66.168 53.832-120 120-120s120 53.832 120 120v302h-30v-302c0-49.626-40.374-90-90-90s-90 40.374-90 90v302c0 33.084 26.916 60 60 60s60-26.916 60-60v-242c0-16.542-13.458-30-30-30s-30 13.458-30 30v242h-30v-242c0-33.084 26.916-60 60-60s60 26.916 60 60v242c0 49.626-40.374 90-90 90z"/>
+                            </svg>
+                            <input type="file" name="file-payment">
+                            <span class="title">Добавить файл</span>
+                        </lable>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <input class="custom-control-input" type="hidden" id="hidden_jurical_checkbox" value="false">
+    {% endif %}
+    <div class="form-group">
+        <span class="">Ваш комментарий к заказу </span>
+        <textarea name="comment" id="comment" cols="30" rows="10"></textarea>
+        <div class="invalid-feedback">Ваш комментарий слишком большой!</div>
+    </div>
+</div>

@@ -1,0 +1,26 @@
+.footer-social-links-wrapper{
+	display: flex;
+	flex-wrap: wrap;
+	padding: 10px 0 0;
+}
+.footer-social-link{
+	$this: &;
+	display: flex !important;
+	align-items: center;
+	text-decoration: underline;
+	&:hover{
+		#{$this}__icon{
+			background-color: $color-blue-light;
+			border-color: $color-blue-light;
+			> svg{
+				fill: #fff;
+			}
+		}
+	}
+	&__icon{
+		margin: 0 20px 0 0;
+	}
+	&_wide{
+		padding: 10px 0 0;
+	}
+}

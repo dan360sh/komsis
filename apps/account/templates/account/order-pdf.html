@@ -1,0 +1,264 @@
+{% load utils %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Заказ {{ order.id }}</title>
+    <link rel="stylesheet" href="https://komsis.su/static/css/vendors.css"/>
+	<link rel="stylesheet" href="https://komsis.su/static/css/custom.css"/>
+	<link rel="stylesheet" href="https://komsis.su/static/css/no_gulp_style.css"/>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .order-table {
+            border: 1px solid #DDDDDD;
+            border-radius: 4px;
+        }
+        .order-table-head{
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            height: 30px;
+            background-color: #eceeef;
+            border-bottom: 1px solid #e5e5e5;
+            padding-left: 15px;
+        }
+        .order-table-row {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+        .order-item {
+            border-bottom: 1px solid #e5e5e5;
+        }
+        .order-item:last-child{
+            border-bottom: none;
+        }
+        .order-table-col {
+            -webkit-box-flex: 1;
+            -ms-flex: 1 1 auto;
+            flex: 1 1 auto;
+            display: -webkit-box;
+            display: -ms-flexbox;
+            display: flex;
+            -webkit-box-orient: vertical;
+            -webkit-box-direction: normal;
+            -ms-flex-direction: row;
+            flex-direction: row;
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+            -webkit-box-align: center;
+            -ms-flex-align: center;
+            align-items: center;
+            height: 100%;
+            padding: 15px 5px;
+        }
+        .order-table-col.product{
+            width: 300px;
+            align-self: center;
+        }
+        .order-table-col.price{
+            width: 120px;
+            font-weight: 400;
+            align-self: center;
+        }
+        .order-table-col.count{
+            width: 70px;
+            align-self: center;
+        }
+        .order-table-col.total{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100px;
+            align-self: center;
+        }
+        .order-item-title{
+            color: #212529;
+        }
+        .cart-item-price{
+            font-weight: 400;
+        }
+    </style>
+</head>
+<body>
+    <div class="form" method="POST" style="border: none;">
+        <div class="title-wrapper">
+            <h2 class="form-title">Заказ № {{ order.id }} от {{ order.date|date:"Y.m.d" }} {{ order.date|date:"f:s" }}</h2>
+        </div>
+        <div class="order-form">
+            <div class="order-group" style="width: 40%;">
+                <div class="order-title">Ваши контактные данные</div>
+                <div class="order-data">
+                    <div class="order-row">
+                        <span class="title">ФИО: </span>
+                        <span class="value">
+                            {% if not retail_price %}
+                                {{ order.surname }} {{ order.name }} {{ order.middle_name }}
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="order-row">
+                        <span class="title">Email: </span>
+                        <span class="value">
+                            {% if not retail_price %}
+                                {{ order.email }}
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="order-row">
+                        <span class="title">Телефон: </span>
+                        <span class="value">
+                            {% if not retail_price %}
+                                {{ order.phone }}
+                            {% endif %}
+                        </span>
+                    </div>
+                    {% if order.jurical %}
+                        <div class="order-row row-overflow">
+                            <span class="title">Компания: </span>
+                            <span class="value_overflow">{{ order.company_title }}</span>
+                        </div>
+                        <div class="order-row">
+                            <span class="title">ИНН: </span>
+                            <span class="value">{{ order.company_inn }}</span>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="order-group" style="width: 40%;">
+                <div class="order-title">Заказ</div>
+                <div class="order-data">
+                    <div class="order-row">
+                        <span class="title">Статус: </span>
+                        <span class="value status status_{{ order.status }}">{{ order.get_status_display }}</span>
+                    </div>
+                    <div class="order-row">
+                        <span class="title">Сумма заказа: </span>
+                        <span class="value" style="font-weight: 500;">
+                            {% if not retail_price %}
+                                {{ order.total|format_number }}
+                            {% else %}
+                                {{ order.get_default_total|format_number }}
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="order-row">
+                        <span class="title">Способ оплаты: </span>
+                        <span class="value">{{ order.get_type_payment_display }}</span>
+                    </div>
+                    <div class="order-row">
+                        <span class="title">Статус оплаты: </span>
+                        <span class="value">
+                            {% if order.payment %}
+                                <span class="value status status_completed">Оплачен</span>
+                            {% else %}
+                                <span class="value status status_processing">Не оплачен</span>
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="order-row">
+                        <span class="title">Способ получения: </span>
+                        <span class="value">{{ order.get_shipping_display }}</span>
+                    </div>
+                    {% if order.shipping != 'self' %}
+                        <div class="order-row">
+                            <span class="title">Адрес доставки: </span>
+                            <span class="value">
+                                {% if not retail_price %}
+                                    {{ order.region }}, п. {{ order.entrance }}
+                                {% endif %}
+                            </span>
+                        </div>
+                    {% else %}
+                        <div class="order-row">
+                            <span class="title">Адрес магазина: </span>
+                            <span class="value">
+                                {% if not retail_price %}
+                                    {{ order.shop_address }}
+                                {% endif %}
+                            </span>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+    
+            <div class="order-group wide">
+                <div class="order-title">Товары, заказанные вами</div>
+                <div class="order-data">
+                    <div class="order-table">
+                        <div class="order-table-head">
+                            <div class="order-table-row">
+                                <div class="order-table-col product">Ваш заказ</div>
+                                <div class="order-table-col price">Цена</div>
+                                <div class="order-table-col count">Количество</div>
+                                <div class="order-table-col total">Сумма</div>
+                            </div>
+                        </div>
+                        <div class="order-table-body">
+                            {% for item in order.order_items.all %}
+                                <div class="order-item">
+                                    <div class="order-table-row product=row">
+                                        <div class="order-table-col product">
+                                            <p class="order-item-title" style="padding-right: 20px;">{{ item.product.title }}{% if item.option %} {{ item.option.title }}{% endif %}</p>
+                                        </div>
+                                        <div class="order-table-col price" >
+                                            <p class="cart-item-price">
+                                                {% if retail_price %}
+                                                    {% if item.option %}
+                                                        {{ item.option.price|format_number }}
+                                                    {% else %}
+                                                        {{ item.product.price|format_number }}
+                                                    {% endif %}
+                                                {% else %}
+                                                    {{ item.total|format_number }}
+                                                {% endif %} руб.
+                                            </p>
+                                        </div>
+                                        <div class="order-table-col count " >{{ item.count }}</div>
+                                        <div class="order-table-col total" style="padding-left: 15px; font-weight: 500;">
+                                            {% if retail_price %}
+                                                {{ item.get_default_total_price|format_number }} руб.
+                                            {% else %}
+                                                {{ item.total_price|format_number }} руб.
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% if order.comment %}
+                <div class="order-group wide">
+                    <div class="order-title" >Комментарий, оставленный вами</div>
+                    <div class="comment">{{ order.comment }}</div>
+                </div>
+            {% endif %}
+            <div class="order-group wide">
+                <div class="order-title order-total">
+                    <div class="title" style='color: black;'>
+                        Сумма заказа 
+                        <span class="cart-total" style='color: #156DBC;'>
+                            {% if not retail_price %}
+                                {{ order.total|format_number }}
+                            {% else %}
+                                {{ order.get_default_total|format_number }}
+                            {% endif %}
+                        </span>
+                        <span class="cart-currency" style='color: #156DBC;'>руб.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

@@ -1,0 +1,74 @@
+.shop-button {
+    flex: 0 0 auto;
+    display: flex;
+	align-items: center;
+	justify-content: center;
+	height: 40px;
+	width: 165px;
+	padding: 10px 13px;
+	margin: 0 0 0 10px;
+	border-radius: 6px 6px 0 0;
+	border: 1px solid $color-blue-light;
+	border-bottom: none;
+    color: #333;
+    font-size: 16px;
+	font-weight: 700;
+    transition: .3s;
+	$this: &;
+	&:hover{
+		background-color: $color-blue-light;
+		color: #fff;
+		#{$this}__icon{
+			fill: $color-yellow;
+		}
+		#{$this}__count{
+			color: $color-yellow;
+		}
+	}
+	&.cart-button{
+		background-color: $color-yellow;
+		border-color: $color-yellow;
+		$cart: &;
+		&:hover{
+			color: #fff;
+			background-color: $color-blue-light;
+			border-color: $color-blue-light;
+			#{$cart}__icon{
+				fill: $color-yellow;
+			}
+			#{$cart}__count{
+				color: $color-yellow;
+			}
+		}
+		#{$cart}__icon{
+			fill: $color-blue-light;
+		}
+		#{$cart}__count{
+			color: $color-blue-light;
+		}
+	}
+
+    &__icon {
+        fill: $color-blue-light;
+		margin-right: 10px;
+		transition: .3s;
+    }
+
+    &__count {
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        color: $color-blue-light;
+		font-size: 16px;
+		font-weight: 700;
+        margin-left: -16px;
+        transform: scale(0);
+        transition: .3s;
+
+        &.filled {
+            margin-left: 8px;
+            transform: scale(1);
+            transition: .3s;
+        }
+    }
+}

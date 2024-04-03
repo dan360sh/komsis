@@ -1,0 +1,44 @@
+.range-slider-field{
+	position: relative;
+	&__inputs{
+		display: flex;
+		justify-content: space-between;
+		margin: 3px 0 0px;
+	}
+	&__min-price, &__max-price{
+		width: calc(100% / 2 - 5px) !important;
+		&::-webkit-outer-spin-button, &::-webkit-inner-spin-button{
+			-webkit-appearance: none;
+			margin: 0; 
+		}
+	}
+	
+}
+.irs{
+	height: 40px;
+	&-min, &-max, &-from, &-to, &-single{
+		display: none;
+	}
+	&-line{
+		top: 22px;
+		border-radius: 2px;
+		background: #e5e5e5;
+		height: 5px;
+		border: none;
+	}
+	&-bar{
+		top: 22px;
+		height: 5px;
+		border-radius: 2px;
+		background: $color-general;
+		border: none;
+	}
+	&-slider{
+		top: 15px;
+		width: 17px;
+		height: 17px;
+		border: none;
+		background: #fff;
+		border: 4px solid $color-general;
+	}
+}

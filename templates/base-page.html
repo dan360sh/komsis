@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load navs %}
+
+
+{% block content %}
+
+<div class="page">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    {% block breadcrumbs %}
+                    <div class="breadcrumbs" itemscope="itemscope" itemtype="http://schema.org/BreadcrumbList">
+                        <ul>
+                            <li itemscope="itemscope" itemprop="itemListElement" itemtype="http://schema.org/ListItem">
+                                <a href="/" itemprop="name">Главная</a>
+                                <meta itemprop="position" content="1">
+                            </li>
+                            {% if object.get_ancestors %}
+                                    {% for item in object.get_ancestors.all %}
+                                        <li itemscope="" itemprop="itemListElement" itemtype="http://schema.org/ListItem">
+                                            <a href="{{ item.get_absolute_url }}" itemprop="name">{{ item.title }}</a>
+                                            <meta itemprop="position" content="1">
+                                        </li>
+                                    {% endfor %}
+                            {% endif %}
+                            <li itemscope="" itemprop="itemListElement" itemtype="http://schema.org/ListItem">
+                                <span itemprop="name">{{ object.title }}</span>
+                                <meta itemprop="position" content="2">
+                            </li>
+                        </ul>
+                    </div>
+                    {% endblock %}
+                </div>
+                <div class="col-12 col-xl-9">
+                    {% block page_content %}{% endblock %}
+                </div>
+                <div class="col-12 col-xl-3 d-none d-xl-block">
+                   
+                    {% block page_sidebar %}
+                        {% get_nav 'sidebar-menu' as sidebar %}
+                            <div class="sidebar">
+                                <ul>
+                                    {% for item in sidebar %}
+                                        <li class="sidebar-item {% if request.META.PATH_INFO == item.get_url %}current-menu-item{% endif %}">
+                                            <a href="{{ item.get_url }}" class="sidebar-link">{{ item.title }}</a>
+                                        </li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                    {% endblock page_sidebar %}
+                    {% if settings.banner_text %}
+                        <a class="sidebar-helper" href="#recall_modal" style="background-image: url({{settings.banner_img.url}});">
+                            <span class="sidebar-helper__wrapper">
+                                <b class="sidebar-helper__title">{{settings.banner_text}}</b>
+                                <span class="sidebar-helper__button">Нужна помощь</span>
+                            </span>
+                        </a>
+                    {% else %}
+                        <a class="sidebar-helper" href="#recall_modal" style="background-image: url(/static/images/les1.jpg);">
+                            <span class="sidebar-helper__wrapper">
+                                <b class="sidebar-helper__title">Поможем подобрать оборудование</b>
+                                <span class="sidebar-helper__button">Нужна помощь</span>
+                            </span>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

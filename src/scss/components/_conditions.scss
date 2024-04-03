@@ -1,0 +1,40 @@
+.conditions{
+	border: 1px dashed #ccc;
+	padding: 15px 20px;
+	&__block{
+		&:not(:last-child){
+			border-bottom: 1px solid #e7e7e7;
+			padding-bottom: 20px;
+    		margin-bottom: 19px;
+		}
+		&-title{
+			display: flex;
+			align-items: center;
+			padding-bottom: 6px;
+			> svg{
+				fill: $color-yellow;
+				margin: 0 12px 0 0;
+				&.color_blue{
+					fill: $color-blue-light;
+				}
+			}
+			b{	
+				display: block;
+				color: #373a3c;
+				font-size: 18px;
+			}
+		}
+		&-text{
+			color: #999;
+			font-size: 15px;
+			font-weight: 400;
+			line-height: 20px;
+		}
+	}
+}
+
+@media (max-width : 767px) {
+	.conditions{
+		margin: 10px 0;
+	}
+}

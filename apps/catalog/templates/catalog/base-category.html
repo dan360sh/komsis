@@ -1,0 +1,252 @@
+{% extends "base.html" %}
+{% load pages cache static%}
+
+{% block body-class %}loading-blocks{% endblock %}
+
+{% block content %}
+
+<style>
+    .disabled_class{
+        color: grey;
+    }
+</style>
+
+<input id="salemode_flag" type="hidden" name="salemode" value="{% if salemode %}true{% else %}false{% endif %}"/>
+<input id="stockmode_flag" type="hidden" name="stockmode" value="{% if stockmode %}true{% else %}false{% endif %}">
+
+<div class="page">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="breadcrumbs">
+                        <ul>
+                            {% if not object and search %}
+                                <li>
+                                    <a href="/">Главная</a>
+                                </li>
+                                <li>
+                                    <span>Поиск</span>
+                                </li>
+                            {% else %}
+                                {% for item in object.get_breadcrumbs %}
+                                    <li>
+                                        {% if forloop.last %}
+                                            <span>{{ item.title }}</span>
+                                        {% else %}
+                                            <a href="{{ item.get_absolute_url }}">{{ item.title }}</a>
+                                        {% endif %}
+                                    </li>
+                                {% endfor %}
+                            {% endif %}
+                        </ul>
+                    </div>
+					<h1 class="page-title">{% if search %}Товары по запросу: "{{ search }}"{% else %}{{ object.title }} {% endif %}
+                        {% comment %} <span class="count_products" style="font-size: 21px;font-weight: 400;line-height: 38px;">{% if salemode %}{{ object.get_products_count_sale }}{% else %}{{object.get_products_count}}{% endif %} {{word}} </span> {% endcomment %}
+                        <span class="count_products" style="font-size: 21px;font-weight: 400;line-height: 38px;">{% if salemode %}{{ object.get_products_count_sale }}{% else %}{{count_products}}{% endif %} {{word}} </span>
+                    </h1>
+				</div>
+                {% include "./includes/filters.html" %}
+                <div class="col-12 col-xl-9">
+                    {% if object.level >= 1 and object.childs.exists and object.display_related_categories %}
+                        <div class="catalog-categories opened">
+                            {% for child in object.childs.all %}
+                                <a class="catalog-categories__link" href="{{ child.get_absolute_url }}">
+                                    {{ child.title }}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    <div class="catalog-categories opened" id="header-filters">
+
+                    </div>
+                    <form class="sort-parameters" action="">
+                        <div class="sort-parameters__order-by">
+                        <div class="sort-options">
+                            Сортировать по:
+                                <select name="sort">
+                                    <option value="sort">умолчанию</option>
+                                    <option value="-price">цене ↑</option>
+                                    <option value="price">цене ↓</option>
+                                    <option value="-title">названию ↑</option>
+                                    <option value="title">названию ↓</option>
+    <!--                                 <option value="pop-up">популярности ↑</option>
+                                    <option value="pop-down">популярности ↓</option> -->
+                                </select>
+                        </div>
+
+                            <div class="filter-buttons">
+                                <label for="sort-actions" class="sort-actions" id="sort-sale" style="display: none;">
+                                <input type="checkbox" id="sort-actions" name="sale">
+                                <span>
+                                    <span class="sort-actions-marker">
+                                        <svg width="13" height="9" viewBox="0 0 13 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M13 0.984123L11.9591 0L4.50966 7.04328L1.04088 3.76364L0 4.74545L4.49991 9L4.50966 8.99078L4.51941 9L13 0.984123Z" fill="#FFE000"/>
+                                        </svg>
+                                    </span>
+                                    АКЦИЯ
+                                    <span class="sort-actions-icon">
+                                        <svg width="9" height="9" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M2.11765 0C0.948531 0 0 0.946212 0 2.11247C0 3.27873 0.948531 4.22495 2.11765 4.22495C3.28677 4.22495 4.2353 3.27873 4.2353 2.11247C4.2353 0.946212 3.28677 0 2.11765 0ZM2.11765 2.88265C1.69191 2.88265 1.34559 2.53717 1.34559 2.11247C1.34559 1.68778 1.69191 1.3423 2.11765 1.3423C2.54339 1.3423 2.88971 1.68778 2.88971 2.11247C2.88971 2.53717 2.54339 2.88265 2.11765 2.88265Z" fill="#FFE000"/>
+                                            <path d="M6.8823 4.7749C5.71318 4.7749 4.76465 5.72111 4.76465 6.88738C4.76465 8.05364 5.71318 8.99985 6.8823 8.99985C8.05142 8.99985 8.99996 8.05364 8.99996 6.88738C8.99996 5.72111 8.05142 4.7749 6.8823 4.7749ZM6.8823 7.65755C6.45657 7.65755 6.11024 7.31207 6.11024 6.88738C6.11024 6.46268 6.45657 6.1172 6.8823 6.1172C7.30804 6.1172 7.65436 6.46268 7.65436 6.88738C7.65436 7.31207 7.30804 7.65755 6.8823 7.65755Z" fill="#FFE000"/>
+                                            <path d="M8.80774 1.13576L7.86719 0.19751L0.194616 7.85132L1.13517 8.78956L8.80774 1.13576Z" fill="#FFE000"/>
+                                        </svg>
+                                    </span>
+                                </span>
+                                </label>
+                                <label for="sort-stock" class="sort-actions" style="display: none;">
+                                    <input type="checkbox" id="sort-stock" name="stock">
+                                    <span>
+                                        <span class="sort-actions-marker">
+                                            <svg width="13" height="9" viewBox="0 0 13 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M13 0.984123L11.9591 0L4.50966 7.04328L1.04088 3.76364L0 4.74545L4.49991 9L4.50966 8.99078L4.51941 9L13 0.984123Z" fill="#FFE000"/>
+                                            </svg>
+                                        </span>
+                                        В НАЛИЧИИ
+                                    </span>
+                                </label>
+                                {% comment %} <label for="sort-shock" class="sort-actions" style="display: none;">
+                                    <input type="checkbox" id="sort-shock" name="shock">
+                                    <span>
+                                        <span class="sort-actions-marker">
+                                            <svg width="13" height="9" viewBox="0 0 13 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M13 0.984123L11.9591 0L4.50966 7.04328L1.04088 3.76364L0 4.74545L4.49991 9L4.50966 8.99078L4.51941 9L13 0.984123Z" fill="#FFE000"/>
+                                            </svg>
+                                        </span>
+                                        ШОК ЦЕНА
+                                    </span>
+                                </label> {% endcomment %}
+                            </div>
+                            {% comment %} <label for="sort-actions" class="sort-actions" id="sort-sale" style="display: none;">
+                                <input type="checkbox" id="sort-actions" name="sale">
+                                <span>
+                                    <span class="sort-actions-marker">
+                                        <svg width="13" height="9" viewBox="0 0 13 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M13 0.984123L11.9591 0L4.50966 7.04328L1.04088 3.76364L0 4.74545L4.49991 9L4.50966 8.99078L4.51941 9L13 0.984123Z" fill="#FFE000"/>
+                                        </svg>
+                                    </span>
+                                    АКЦИЯ
+                                    <span class="sort-actions-icon">
+                                        <svg width="9" height="9" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M2.11765 0C0.948531 0 0 0.946212 0 2.11247C0 3.27873 0.948531 4.22495 2.11765 4.22495C3.28677 4.22495 4.2353 3.27873 4.2353 2.11247C4.2353 0.946212 3.28677 0 2.11765 0ZM2.11765 2.88265C1.69191 2.88265 1.34559 2.53717 1.34559 2.11247C1.34559 1.68778 1.69191 1.3423 2.11765 1.3423C2.54339 1.3423 2.88971 1.68778 2.88971 2.11247C2.88971 2.53717 2.54339 2.88265 2.11765 2.88265Z" fill="#FFE000"/>
+                                            <path d="M6.8823 4.7749C5.71318 4.7749 4.76465 5.72111 4.76465 6.88738C4.76465 8.05364 5.71318 8.99985 6.8823 8.99985C8.05142 8.99985 8.99996 8.05364 8.99996 6.88738C8.99996 5.72111 8.05142 4.7749 6.8823 4.7749ZM6.8823 7.65755C6.45657 7.65755 6.11024 7.31207 6.11024 6.88738C6.11024 6.46268 6.45657 6.1172 6.8823 6.1172C7.30804 6.1172 7.65436 6.46268 7.65436 6.88738C7.65436 7.31207 7.30804 7.65755 6.8823 7.65755Z" fill="#FFE000"/>
+                                            <path d="M8.80774 1.13576L7.86719 0.19751L0.194616 7.85132L1.13517 8.78956L8.80774 1.13576Z" fill="#FFE000"/>
+                                        </svg>
+                                    </span>
+                                </span>
+                            </label>
+                            <label for="sort-stock" class="sort-actions" style="display: none;">
+                                <input type="checkbox" id="sort-stock" name="stock">
+                                <span>
+                                    <span class="sort-actions-marker">
+                                        <svg width="13" height="9" viewBox="0 0 13 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                            <path d="M13 0.984123L11.9591 0L4.50966 7.04328L1.04088 3.76364L0 4.74545L4.49991 9L4.50966 8.99078L4.51941 9L13 0.984123Z" fill="#FFE000"/>
+                                        </svg>
+                                    </span>
+                                    В НАЛИЧИИ
+                                </span>
+                            </label> {% endcomment %}
+                        </div>
+                        <div class="sort-parameters__layout-types">
+                            <button {% if tile %}class="active"{% endif %} data-url="{% url 'card-type' %}" type="button" data-type="tile">
+                                <svg role="img" width="14" height="14">
+                                    <use xlink:href="/static/images/sprite.svg#grid-three-up"></use>
+                                </svg>
+                            </button>
+                            <button {% if not tile %}class="active"{% endif %} data-url="{% url 'card-type' %}" type="button" data-type="wide">
+                                <svg role="img" width="16" height="14">
+                                    <use xlink:href="/static/images/sprite.svg#list"></use>
+                                </svg>
+                            </button>
+                        </div>
+                    </form>
+
+                    {% block category_content %}{% endblock %}
+                </div>
+            </div>
+        </div>
+	</div>
+    {% if object.seo_text %}
+	<section class="seo-scroller">
+		<div class="container">
+			<div class="row">
+				<div class="col-12 col-lg-6">
+					<div class="seo-scroller__seo-images">
+						<img src="https://komsis.su/{{ object.seo_img1.url }}" alt="{{ object.get_alt1 }}"/>
+						<img src="https://komsis.su/{{ object.seo_img2.url }}" alt="{{ object.get_alt2 }}"/>
+						<img src="https://komsis.su/{{ object.seo_img3.url }}" alt="{{ object.get_alt3 }}"/>
+					</div>
+				</div>
+				<div class="col-12 col-lg-6">
+					<div class="seo-scroller__seo-text">
+						<div class="content-text">
+							{{ object.seo_text|safe }}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+    {% endif %}
+
+<script type="text/javascript" defer>
+
+// function ajax(url, callback) {
+//     var xhr = new XMLHttpRequest();
+//     xhr.open('GET', url);
+//     xhr.onreadystatechange = function(){
+//         if (this.readyState == 4) {
+//             if (this.status == 200)
+//                 callback(JSON.parse(this.responseText));
+//             // иначе сетевая ошибка
+//         }
+//     };
+//     xhr.send(null);
+// }
+
+
+// function htmlToElement(html) {
+//     var template = document.createElement('template');
+//     html = html.trim(); // Never return a text node of whitespace as the result
+//     template.innerHTML = html;
+//     return template.content.firstChild;
+// }
+
+
+
+// query_string = window.location.href
+// if (query_string.indexOf("?")!= -1){
+//     query_string  += "&ajax=Y&only_filter=True";
+// } else {
+//     query_string  += "?ajax=Y&only_filter=True";
+// }
+// ajax(query_string,function(response){
+//     if (response.products.length != 0) {
+//         console.log(response);
+//         document.getElementsByClassName("filterBlock")[0].parentNode.replaceChild(htmlToElement(response.template_filters), document.getElementsByClassName("filterBlock")[0])
+//         document.getElementsByClassName("change_products")[0].innerHTML = response.products;
+//         document.getElementsByClassName("paginationBlock")[0].innerHTML = response.pagination;
+//     } else {
+//         document.getElementsByClassName("paginationBlock")[0].innerHTML = "";
+//         document.getElementsByClassName("sn-products-container")[0].innerHTML =
+//             '<div class="products-container">\
+//             <div class="row sn-products-container">\
+//                 <div class="col-12">\
+//                 <p class="empty-category__title">По данному запросу товаров не найдено.</p>\
+//                 </div>\
+//                 </div>\
+//             </div>';
+//         }
+// })
+
+
+</script>
+{% endblock %}
+
+
+
+
+{% block scripts %}
+<script src="{% static "js/catalog_first.js" %}" defer></script>
+
+
+{% endblock  %}

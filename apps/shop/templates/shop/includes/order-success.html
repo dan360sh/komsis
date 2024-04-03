@@ -1,0 +1,17 @@
+<div class="col-12">
+<div class="notification_block">
+    <div class="wrapper_left">
+        <div class="icon_wrapper">
+            <svg role="img" width="57" height="57"><use xlink:href="/static/images/sprite.svg#done_icon"></use></svg>
+        </div>
+        <div class="text">
+            <b>Заказ №{{ order.id }} успешно {% if not order.is_in_stash %}оформлен{% else %}сохранен{% endif %}</b>
+            {% if not order.is_in_stash %}
+                <span>Ожидайте звонка менеджера для подтверждения заказа</span>
+            {% else %}
+                <span>Вы всегда можете перейти в личный кабинет и продолжить оформление заказа</span>
+            {% endif %}
+        </div>
+    </div>
+</div>
+</div>

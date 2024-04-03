@@ -1,0 +1,31 @@
+{% extends "account/base-account.html" %}
+
+
+{% block account_sidebar %}{% endblock %}
+{% block account_class %}col-12{% endblock %}
+{% block page_name %}Сравнение товаров{% endblock %}
+{% block breadcrumb %}Сравнение товаров{% endblock %}
+
+{% block content_account %}
+
+    {% comment %}
+        <div class="product_categories">
+            <a class="active" href="#">Все товары</a>
+            <a href="#">В наличии</a>
+            <a href="#">Нет в наличии</a>
+        </div>
+    {% endcomment %}
+
+    <div class="products">
+        <div class="row">
+            {% for item in compare.items %}
+                {% with product=item.product %}
+                    <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+                        {% include "catalog/product-card.html" %}
+                    </div>
+                {% endwith %}
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}

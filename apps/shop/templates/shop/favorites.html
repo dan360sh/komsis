@@ -1,0 +1,38 @@
+{% extends "account/base-account.html" %}
+
+
+{% block account_sidebar %}{% endblock %}
+{% block account_class %}col-12{% endblock %}
+{% block page_name %}Избранные товары{% endblock %}
+{% block breadcrumb %}Избранные товары{% endblock %}
+
+{% block content_account %}
+
+    <div class="products">
+        {% if favorites.count %}
+            <div class="row">
+                {% for item in favorites.items %}
+                    {% with product=item.product %}
+                        <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+                            {% include "catalog/favorite-card.html" %}
+                        </div>
+                    {% endwith %}
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="notify">
+                <div class="notify-body">
+                    <svg class="notify-icon" role="img">
+                        <use xlink:href="/static/images/sprite.svg#heart"></use>
+                    </svg>
+                    <div class="notify-text">
+                        <p class="notify-title">Нет избранных товаров</p>
+                        <p class="notify-desc">Для добавления товаров в избранные перейдите в каталог</p>
+                    </div>
+                </div>
+                <a class="notify-button btn btn-primary" href="{% url 'catalog' %}">Перейти в каталог</a>
+            </div>
+        {% endif %}
+    </div>
+
+{% endblock %}

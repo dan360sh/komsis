@@ -1,0 +1,48 @@
+.theme-button{
+	text-decoration: none;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 40px;
+	padding: 0 15px;
+	margin-right: 5px;
+	border-radius: 4px;
+	border: 1px solid transparent;
+	color: #0275d8;
+	font-size: 16px;
+	font-weight: 400;
+	line-height: 21px;
+	transition: .3s;
+	&:hover{
+		border-color: #eceeef;
+	}
+	&.theme-button{
+		text-decoration: none;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		height: 40px;
+		padding: 0 15px;
+		margin-right: 5px;
+		border-radius: 4px;
+		border: 1px solid transparent;
+		color: #0275d8;
+		font-size: 16px;
+		font-weight: 400;
+		line-height: 21px;
+		transition: .3s;
+		&:hover{
+			border-color: #eceeef;
+		}
+	}
+	.theme-button_active{
+		background-color: $color-general;
+		border-color: $color-general;
+		color: #fff;
+	}
+	&_active{
+		background-color: $color-general;
+		border-color: $color-general;
+		color: #fff;
+	}
+}

@@ -1,0 +1,516 @@
+{% extends "base.html" %}
+{% load thumbnail utils %}
+
+{% block head %}
+<style>
+	.variations-table-col_price{
+		justify-content: center;
+		text-align: center;
+	}
+</style>
+<script>
+	function sort_options(reverse) {
+		let filter_group = document.querySelectorAll('.variation-table');
+		console.log(filter_group);
+		Array.prototype.slice.call( filter_group ).forEach(function(item, i, arr) {
+
+			nodeList = item.querySelectorAll('.variations-table-row');
+			// console.log(nodeList)
+			if (nodeList.length > 0) {
+				var itemsArray = [];
+				var parent = nodeList[0].parentNode;
+
+				for (var i = 0; i < nodeList.length; i++) {
+					itemsArray.push(parent.removeChild(nodeList[i]));
+				}
+
+				// console.log(itemsArray)
+				itemsArray.sort(function(nodeA, nodeB) {
+					var textA = nodeA.querySelector('.variations-table-col_size').textContent;
+					var textB = nodeB.querySelector('.variations-table-col_size').textContent;
+					var numberA = parseInt(textA);
+					var numberB = parseInt(textB);
+					if (numberA > numberB) {
+						return reverse ? 1 : -1;
+					}
+					if (numberA < numberB) {
+						return reverse ? -1 : 1;
+					}
+					return 0;
+				})
+
+				.forEach(function(node) {
+					parent.appendChild(node)
+				});
+			}
+		});
+	}
+	document.addEventListener("DOMContentLoaded", sort_options);
+</script>
+{% endblock %}
+
+{% block content %}
+
+    <div class="page" itemscope itemtype="http://schema.org/Product">
+
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="breadcrumbs">
+                        <ul itemscope itemtype="http://schema.org/BreadcrumbList">
+                            {% for item in object.get_breadcrumbs %}
+                            <li itemprop="itemListElement" itemscope itemtype="http://schema.org/ListItem">
+                                {% if forloop.last %}
+                                <span itemprop="name">{{ item.title }}</span>
+                                {% else %}
+                                <a itemprop="item" href="{{ item.get_absolute_url }}"><span itemprop="name">{{ item.title }}</span></a>
+                                {% endif %}
+                                <meta itemprop="position" content="{{forloop.counter}}" />
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <a class="back-to-catalog" href="{{ object.category.get_absolute_url }}">
+                        <svg role="img" width="8" height="5">
+                            <use xlink:href="/static/images/sprite.svg#arrow_left"></use>
+                        </svg>Назад к списку товаров
+                    </a>
+                </div>
+                <div class="col-12">
+					<div class="product">
+						<div class="product__top-info">
+							<div class="row">
+								<div class="col-12 col-lg-5">
+									{% if object.thumbnail or object.product_gallery.all %}
+										<div class="product-slider">
+											<div class="product-slider__container">
+												<a class="product-slider__container-slide item-thumbnail" href="https://komsis.su/{{ object.thumbnail.url }}" data-fancybox="gallery">
+													<img itemprop="image" src="https://komsis.su/{{object.thumbnail.url}}" alt="{{object.title}}"/>
+												</a>
+												{% for p in object.product_gallery.all %}
+													<a class="product-slider__container-slide item-thumbnail" href="https://komsis.su/{{p.photo.url}}" data-fancybox="gallery">
+														<img itemprop="image" src="https://komsis.su/{{p.photo.url}}" alt="{{object.title}}"/>
+													</a>
+												{% endfor %}
+											</div>
+                                            {% if  object.product_gallery.all %}
+											<div class="product-slider__carousel">
+												<div class="product-slider__carousel-item">
+													<img src="https://komsis.su/{{object.thumbnail.url}}" alt="{{object.title}}"/>
+												</div>
+												{% for p in object.product_gallery.all %}
+													<div class="product-slider__carousel-item">
+														<img src="https://komsis.su/{{p.photo.url}}" alt="{{object.title}}"/>
+													</div>
+												{% endfor %}
+											</div>
+                                            {% endif %}
+										</div>
+									{% else %}
+										<div class="product-photo product-photo_none">
+											<svg role="img" width="80" height="80">
+												<use xlink:href="/static/images/sprite.svg#no_photo"></use>
+											</svg>
+										</div>
+									{% endif %}
+								</div>
+								<div class="col-12 col-lg-7">
+									<h1 class="page-title product-form__title" itemprop="name">{{ object.title }}</h1>
+									<div class="product-form__labels no-border">
+										<span class="product-form__vendor-code"> {% if object.code %}Артикул: {{ object.code }}{% endif %}</span>
+										<div class="badges">
+											{% if object.new %}
+												<span class="badge badge-success">Новинка</span>
+											{% endif %}
+											{% if object.hit %}
+												<span class="badge badge-warning">Хит!</span>
+											{% endif %}
+											{% if object.sale or object.is_shock_sale %}
+												<span class="badge badge-danger">Спеццена</span>
+											{% endif %}
+										</div>
+									</div>
+
+									<div class="product-form__variations-table variation-table">
+										{% comment %}
+										Если у товара при выгрузке "ВыгружатьЦену" = 0, то цена 0
+										Если у товара цена 0, но есть опции, то цену скрываем все равно
+										{% endcomment %}
+										{% if options and object.price > 0 %}
+											<div class="variations-table-header">
+												<div class="variations-table-col variations-table-col_size">Размер</div>
+												<div class="variations-table-col variations-table-col_price">Остаток, {{object.unit}}</div>
+												<div class="variations-table-col variations-table-col_price price-c">Цена, руб.</div>
+												<div class="variations-table-col variations-table-col_amount">Количество</div>
+											</div>
+											<div class="variations-table-body">
+												{% for option in options %}
+												<div class="variations-table-row">
+													<form class="product-form" action="{% url 'cart-add' %}" method="POST">
+														<input type="hidden" name="product-id" value="{{ object.id }}"/>
+														<input type="hidden" name="product-option" value="{{ option.id }}">
+														<div class="variations-table-col variations-table-col_size">{{ option.title }}</div>
+														<div class="variations-table-col variations-table-col_price">
+															{% if option.count > 0 %}
+																{{ option.count|format_number }}
+																<span class='icon-information' data-toggle="tooltip" data-placement="top" data-html="true"
+																title="В Вологде: {{option.get_count_vologda}}											В Череповце: {{option.get_count_cherepovets}}">
+																<i class="fa fa-info-circle" aria-hidden="true"></i></span>
+															{% else %}
+																<p style="font-size: 14px;">Нет<br>в наличии</p>
+															{% endif %}
+														</div>
+														<div class="variations-table-col variations-table-col_price price-c" data-price="{{ option.price|format_number }}">
+															{% if option.price %}
+																{% get_option_price as price %}
+																<b>{{ price|format_number }} / {{ option.product.unit }}</b>
+															{% else %}
+																<span style="font-size: 14px;">Цена по запросу</span>
+															{% endif %}
+														</div>
+														<div class="variations-table-col variations-table-col_amount">
+															{% if option.count >= option.step and option.price %}
+															<div class="product-counter">
+																<div class="product-counter__button product-counter__button_minus">
+																	<svg role="img" width="4" height="6">
+																		<use xlink:href="/static/images/sprite.svg#product-amount-arrow"></use>
+																	</svg>
+																</div>
+																<div class="product-counter__field-wrapper">
+																	<input class="product-counter__original-input"
+																	type="number" name="product-count" min="0"
+																	max="{{ product.get_available_count|floatformat }}"
+																	data-step="{{ option.step }}" data-unit="{{ object.unit }}" value="0" />
+																	<span class="product-counter__fake-input">0</span>
+																</div>
+																<div class="product-counter__button product-counter__button_plus">
+																	<svg role="img" width="4" height="6">
+																		<use xlink:href="/static/images/sprite.svg#product-amount-arrow"></use>
+																	</svg>
+																</div>
+																<span class="product-counter__notification product-counter__notification_step">Кратность {{ option.step }}</span>
+																<span class="product-counter__notification product-counter__notification_min">Выбрано минимальное значение</span>
+																<span class="product-counter__notification product-counter__notification_max">Выбрано максимальное значение</span>
+															</div>
+															{% else %}
+																<div class="product-counter-none">
+																	<span class="product-counter__fake-input">Цена по запросу</span>
+																</div>
+															{% endif %}
+														</div>
+														<div class="product-form__add-to-cart">
+															{% if option.count > 0 and option.price %}
+															<button class="simple-button simple-button_inverse sn-add-to-cart add-to-cart options" type="submit" onclick="ym(56972323, 'reachGoal', 'plus'); return true;">В корзину</button>
+															<div class="go-to-cart">
+																<span>Товар добавлен в корзину</span>
+																<a class="simple-button" onclick="event.stopPropagation()" href="{% url 'cart' %}">Перейти в корзину</a>
+															</div>
+															{% else %}
+																<button class="product-card-button modal_product_trigger modal_trigger" data-target="#product-nutify">Запросить</button>
+															{% endif %}
+														</div>
+													</form>
+												</div>
+												{% endfor %}
+											</div>
+											<div class="variations-table-footer">
+												<b class="variations-table-result">
+													Итого:
+													<span class="variations-table-result_price">
+														<span class="variations-table_price-value">0</span> руб.
+													</span>
+												</b>
+												{% comment %}
+												<div class="product-form__add-to-cart">
+													<button class="simple-button simple-button_inverse add-products" type="submit" onclick="ym(56972323, 'reachGoal', 'plus'); return true;">В корзину</button>
+													<div class="go-to-cart">
+														<span>Товар добавлен в корзину</span>
+														<a class="simple-button" onclick="event.stopPropagation()" href="{% url 'cart' %}">Перейти в корзину</a>
+													</div>
+												</div>
+												{% endcomment %}
+											</div>
+										{% else %}
+											<div class="product-form__price-row">
+												<div class="product-price" itemprop="offers" itemscope="itemscope" itemtype="http://schema.org/Offer">
+													<!--meta itemprop="price" content="{{ object.old_price|format_number }}"/-->
+													<meta itemprop="priceCurrency" content="RUB"/>
+													<link itemprop="availability" href="http://schema.org/InStock"/>
+
+													<span
+														class="product-price__status
+														product-card-wide-status_color_{% if object.has_count %}green{% elif object.display_price %}orange{% else %}gray{% endif %}">
+														{{ object.get_status }}
+													</span>
+													{% if object.display_price %}
+														{% get_product_price as price %}
+														<b class="product-price__price product-price__price_sell-price">{{ price|format_number }} руб.  / {{ object.unit }}
+															{% if object.old_price %}
+															{% get_old_price as old_price %}
+															<s class="product-price__old_price">{{ old_price|format_number }} руб.</s>
+															{% endif %}
+														</b>
+														<meta itemprop="price" content="{{ price|format_number }}"/>
+													{% else %}
+														<b class="product-price__price product-price__price_sell-price">
+															Цена по запросу
+														</b>
+														<meta itemprop="price" content="Цена по запросу"/>
+													{% endif %}
+												</div>
+												<form action="{% url 'cart-add' %}" method="POST">
+													<input type="hidden" name="product-id" value="{{ object.id }}"/>
+														{% if object.count >= object.step and object.price %}
+															<div class="wrapper">
+																<div class="product-counter">
+																	<div class="product-counter__button product-counter__button_minus">
+																		<svg role="img" width="4" height="6">
+																			<use xlink:href="/static/images/sprite.svg#product-amount-arrow"></use>
+																		</svg>
+																	</div>
+																	<div class="product-counter__field-wrapper">
+																		<input class="product-counter__original-input" type="number" name="product-count" min="0"
+																				max="{{ product.get_available_count|floatformat }}"
+																			   	data-step="{{ object.step }}" data-unit="{{ object.unit }}" value="0"/>
+																		<span class="product-counter__fake-input">0</span>
+																	</div>
+																	<div class="product-counter__button product-counter__button_plus">
+																		<svg role="img" width="4" height="6">
+																			<use xlink:href="/static/images/sprite.svg#product-amount-arrow"></use>
+																		</svg>
+																	</div>
+																	<span class="product-counter__notification product-counter__notification_min">Выбрано минимальное значение</span>
+																	<span class="product-counter__notification product-counter__notification_max">Выбрано максимальное значение</span>
+																</div>
+																<div class="product-form__add-to-cart">
+																	<button class="add-to-cart sn-add-to-cart simple-button simple-button_inverse add-to-cart" type="submit" onclick="ym(56972323, 'reachGoal', 'plus'); return true;">В корзину</button>
+																	<div class="go-to-cart">
+																		<span>Товар добавлен в корзину</span>
+																		<a class="simple-button" onclick="event.stopPropagation()" href="{% url 'cart' %}">Перейти в корзину</a>
+																	</div>
+																</div>
+															</div>
+														{% else %}
+															<div class="wrapper">
+																<div class="product-form__notify-button">
+																	<button class="modal_product_trigger modal_trigger btn btn-outline-primary" data-target="#recall_modal" type="submit">Запросить</button>
+																</div>
+															</div>
+														{% endif %}
+												</form>
+											</div>
+										{% endif %}
+
+										<div class="product-form__buttons-wrapper">
+											<button class="product-form__button add_to_favorites sn-add-to-favorites {% if object.id in favorites_list %}active{% endif %}" type="button" data-product="{{ object.id }}" data-url="{% url 'favorites-add' %}">
+												<svg role="img" width="16" height="14">
+													<use xlink:href="/static/images/sprite.svg#heart"></use>
+												</svg>Добавить в избранное
+											</button>
+											{% if object.rent %}<a class="rent-link" href="/uslugi/arenda/" target="_blank">АРЕНДА</a>{% endif %}
+										</div>
+									</div>
+									{% if options and object.price > 0 %}
+										<div class="row mobile-storage-count">
+											<div class="product-card-button product-amount-button modal_product_trigger modal_trigger" data-target="#storage-amount">
+												Узнать остатки товара
+											</div>
+										</div>
+									{% endif %}
+									{% if object.storages.exists %}
+									<div class="row" >
+										<p class="col-12">Склад Вологда: {{ object.get_count_vologda|default:0 }}</p>
+										<p class="col-12">Склад Череповец: {{ object.get_count_cherepovets|default:0 }}</p>
+									</div>
+									{% endif %}
+								</div>
+							</div>
+						</div>
+					</div>
+                </div>
+            <!-- <div class="row"> -->
+                <div class="col-12 col-lg-9">
+                	{% if object.description or object.product_attrbutes.exists or object.brand %}
+	                    <div class="product-tabs">
+	                        <ul class="nav-tabs nav" id="myTab" role="tablist">
+
+	                            <li class="nav-item">
+	                            <a class="nav-link{% if object.description %} active{% else %} disabled{% endif %}" id="tab-1" data-toggle="tab" href="#tab_container-1" role="tab" aria-controls="tab_container-1" aria-selected="true">Описание</a>
+	                            </li>
+	                            <li class="nav-item">
+	                            <a class="nav-link{% if not object.description and object.product_attrbutes.all %} active{% endif %}{% if not object.product_attrbutes.all %} disabled{% endif %}" id="tab-2" data-toggle="tab" href="#tab_container-2" role="tab" aria-controls="tab_container-2" aria-selected="false">Характеристики</a>
+	                            </li>
+
+	                        </ul>
+	                        <div class="tab-content" id="tab-content-1">
+		                        <div class="tab-pane fade {% if object.description %} show active{% endif %}" id="tab_container-1" role="tabpanel" aria-labelledby="tab-1">
+		                            <div class="tab-pane__text">
+		                                <div class="content-text" itemprop="description" style="white-space: pre-line;">
+		                                        {{ object.description|safe }}
+		                                </div>
+		                            </div>
+		                        </div>
+	    						<div class="tab-pane fade {% if not object.description and object.product_attrbutes %} active show{% endif %}" id="tab_container-2" role="tabpanel" aria-labelledby="tab-2">
+		                            <div class="tab-pane__characteristics">
+		                            	{% if object.brand %}
+		                            	 <div class="tab-pane__characteristic-row">
+		                                    <b class="tab-pane__characteristic-row-title">Производитель</b>
+		                                    <span itemprop="brand" class="tab-pane__characteristic-row-value">{{ object.brand.title }}</span>
+		                                </div>
+		                            	{% endif %}
+		                                {% for item in object.get_visible_attrs.iterator %}
+		                                    <div class="tab-pane__characteristic-row">
+												<b class="tab-pane__characteristic-row-title">{{ item.group.title }}</b>
+												<span class="tab-pane__characteristic-row-value">{{ item.value.title }}</span>
+											</div>
+		                                {% endfor %}
+		                            </div>
+	                      		</div>
+
+	                        </div>
+	                    </div>
+	                {% endif %}
+                </div>
+                <div class="col-12 col-lg-3">
+                    <div class="conditions">
+                        <div class="conditions__block">
+                            <div class="conditions__block-title">
+                                <svg role="img" width="26" height="19">
+                                    <use xlink:href="/static/images/sprite.svg#wallet"></use>
+                                </svg>
+                                <b>Оплата</b>
+                            </div>
+                            <p class="conditions__block-text">
+							{{ settings.payment_text|safe }}
+							</p>
+                        </div>
+                        <div class="conditions__block">
+                            <div class="conditions__block-title">
+                                <svg class="color_blue" role="img" width="26" height="19">
+                                    <use xlink:href="/static/images/sprite.svg#delivery"></use>
+                                </svg>
+                                <b>Доставка</b>
+                            </div>
+                            <p class="conditions__block-text">
+								{{ settings.shipping_text|safe }}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+				{% if similar_products %}
+                    <div class="col-12">
+                        <div class="extra-products-slider">
+
+                            <div class="extra-products-slider__slider-header">
+                                <b class="extra-products-slider__slider-header-title">
+									<svg role="img" width="32" height="34">
+										<use xlink:href="/static/images/static-sprite.svg#brands-title-icon"></use>
+									</svg>
+									Похожие товары
+								</b>
+                                {% if similar_count > 4 %}
+                                <div class="nav-buttons">
+                                    <a class="prev" href="#">
+                                        <svg role="img" width="6" height="9">
+                                            <use xlink:href="/static/images/sprite.svg#small_arrow"></use>
+                                        </svg>
+                                    </a>
+                                    <a class="next" href="#">
+                                        <svg role="img" width="6" height="9">
+                                            <use xlink:href="/static/images/sprite.svg#small_arrow"></use>
+                                        </svg>
+                                    </a>
+                                </div>
+                                {% endif %}
+                            </div>
+
+                            {% if settings.in_product_view == 'wide' %}
+                                <div class="extra-products-slider__no-slider">
+                                    {% for product in similar_products %}
+                                    	{% include "catalog/product-card-wide.html" %}
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <div class="extra-products-slider__slider-body">
+                                    {% for product in similar_products %}
+                                    	{% include "catalog/product-card.html" %}
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        dataLayer.push({
+            "ecommerce": {
+                "detail": {
+                    "products": [
+                        {
+                            "id": "{{object.id}}",
+                            "name" : "{{object.title}}",
+                            "price": "{{object.price}}",
+                            // "brand": "Яндекс / Яndex",
+                            // "variant" : "Красный цвет",
+                            "category": "{{object.category.title}}"
+
+                        }
+                    ]
+                }
+            }
+        });
+
+		document.querySelectorAll("button.sn-add-to-cart").forEach(element => {element.disabled = true;});
+		document.querySelectorAll("button.sn-add-to-cart").forEach(element => {element.classList.add("disabled-button");});
+    </script>
+{% endblock %}
+
+{% block scripts %}
+	<script>
+		document.querySelectorAll("input[name='product-count']").forEach(element => {element.onchange = function(e) {
+			setTimeout(function () {
+				prodForm = e.target.closest("form");
+				toCartBtn = prodForm.querySelector("button.sn-add-to-cart");
+				if (toCartBtn) {
+					inputValue = parseFloat(e.target.getAttribute('value'));
+					stepValue = parseFloat(e.target.getAttribute('data-step'));
+					if (e.target.value <= 0 || inputValue % stepValue !== 0) {
+						toCartBtn.disabled = true;
+						toCartBtn.classList.add("disabled-button");
+						if ((inputValue % stepValue !== 0) && e.target.value != 0) {
+							$(prodForm).find('.product-counter__notification_step').show();
+							setTimeout(() => {
+								$(prodForm).find('.product-counter__notification_step').hide();
+							}, 1000)
+						}
+					} else {
+						$('body').find('.product-counter__notification_step').hide();
+						toCartBtn.disabled = false;
+						toCartBtn.classList.remove("disabled-button");
+					}
+				}
+			}, 100);
+		}});
+	</script>
+{% endblock %}
+
+{% block modals %}
+	<div class="custom_modal" id="storage-amount">
+        <a class="modal_close" href="#"></a>
+        <b class="modal_title">Остатки товара</b>
+		{% for option in options %}
+			<div class="option-amount">
+				<span class="option-title">{{ option.title }}</span>
+				<div class="storages-amount">
+					<span>Вологда: <b>{{ option.get_count_vologda }}</b></span>
+					<span>Череповец: <b>{{ option.get_count_cherepovets }}</b></span>
+				</div>
+			</div>
+		{% endfor %}
+    </div>
+{% endblock %}

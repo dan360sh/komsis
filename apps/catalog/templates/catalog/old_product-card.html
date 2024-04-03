@@ -1,0 +1,111 @@
+{% load utils thumbnail %}
+
+<div class="product-card" data-product="{{ product.id }}" itemscope itemtype="http://schema.org/Product">
+    <meta itemprop="description" content="{{ product.title }}"/>
+    <a href="{{ product.get_absolute_url }}" class="product-card-overlay"></a>
+    <div class="product-card-container">
+        <div class="product-card-thumb {% if not product.thumbnail %}product-card-thumb_no-photo{% endif %}">
+            {% if product.thumbnail %}
+                <img class="product-card-thumb__image" src="{% thumbnail product.thumbnail 238x156 %}" alt="{{ product.get_alt }}"/>
+            {% else %}
+                <svg class="product-card-thumb__icon" role="img" width="64" height="64">
+                    <use xlink:href="/static/images/sprite.svg#no_photo"></use>
+                </svg>
+            {% endif %}
+            <div class="product-card-badges">
+                {% if product.sale %}<span class="product-card-badge badge badge-danger">Спеццена</span>{% endif %}
+                {% if product.hit %}<span class="product-card-badge badge badge-warning">Хит!</span>{% endif %}
+                {% if product.new %}<span class="product-card-badge badge badge-success">Новинка</span>{% endif %}
+            </div>
+        </div>
+        <div class="product-card-body">
+            <p itemprop="name" class="product-card-title">{{ product.title }}</p>
+        </div>
+        <div class="product-card-footer"  itemprop="offers" itemscope itemType="http://schema.org/Offer">
+            <meta itemprop="priceCurrency" content="RUB"/>
+            <!--span class="product-card-status product-card-status_color_{% if product.status == 1 %}green{% else %}gray{% endif %}">{{ product.get_status_display }}</span-->
+            {% if not product.exist_options %}
+                <span
+                    class="product-card-status product-card-status_color_{% if product.has_count %}green{% else %}gray{% endif %}">{{ product.get_status }}</span>
+                {% if product.price > 0 %}
+                    <div class="price">
+                    {% if product.old_price %}
+                        <p class="product-card-price product-card-price_sale">{{ product.price|format_number }} руб.</p>
+                        <meta itemprop="price" content="{{ product.price }}"/>
+                        <p class="product-card-old-price">{{ product.old_price|format_number }} руб.</p>
+                    {% else %}
+                        <p class="product-card-price">{{ product.price|format_number }} руб.</p>
+                        <meta itemprop="price" content="{{ product.price }}"/>
+                    {% endif %}
+                    </div>
+                {% else %}
+                    <p class="product-card-no-price">Цена по запросу</p>
+                    <meta itemprop="price" content="По запросу"/>
+                {% endif %}
+            {% else %}
+                {% if product.exist_options_stock %}
+                    <span class="product-card-status product-card-status_color_green">
+                        В наличии
+                    </span>
+                    {% if product.min_price %}
+                        <p class="product-card-price">от {{ product.min_price|format_number }} руб.</p>
+                        <meta itemprop="loWprice" content="{{ product.min_price }}"/>
+                    {% else %}
+                        <p class="product-card-no-price">Цена по запросу</p>
+                        <meta itemprop="price" content="По запросу"/>
+                    {% endif %}
+                {% else %}
+                    <span class="product-card-status product-card-status_color_grey">
+                        Нет в наличии
+                    </span>
+                {% endif %}
+            {% endif %}
+            <!--link itemprop="itemType" href="http://schema.org/Product"/-->
+            {% comment %}
+                        {% if product.price %}
+                            <span class="product-card-price">{{ product.price|format_number }} руб.</span>
+                        {% else %}
+                            {% if product.exist_options and product.min_price != None %}
+                                <span class="product-card-price">от {{ product.min_price|format_number }} руб.</span>
+                            {% else %}
+                                <span class="product-card-no-price">Цена по запросу</span>
+                            {% endif %}
+                        {% endif %}
+                        {% if product.old_price %}
+                        <span class="product-card-old-price">{{ product.old_price|format_number }} руб.</span>
+                        {% endif %}
+            {% endcomment %}
+            <form class="product-card-form sn-card-add" action="{% url 'cart-add' %}" method="POST">
+                <input type="hidden" name="product-id" value="{{ product.id }}"/>
+                <input type="hidden" name="product-count" value="1"/>
+                {% comment %}
+                {% if product.status == 1 and product.count %}
+                    {% if not product.exist_options %}
+                        <button class="product-card-button product-card-button_inverse add-to-cart sn-add-to-cart" type="submit" onclick="ym(56972323, 'reachGoal', 'plus'); return true;">В корзину</button>
+                    {% else %}
+                        <a href="{{ product.get_absolute_url }}" class="product-card-button product-card-button_inverse">Смотреть все</a>
+                    {% endif %}
+                {% else %}
+                    {% if not product.exist_options %}
+                        <div class="product-card-button modal_product_trigger modal_trigger" data-target="#product-nutify">Запросить</div>
+                    {% else %}
+                        <a href="{{ product.get_absolute_url }}" class="product-card-button product-card-button_inverse">Смотреть все</a>
+                    {% endif %}
+                {% endif %}
+                {% endcomment %}
+                {% if product.exist_options %}
+                    <a href="{{ product.get_absolute_url }}" class="product-card-button product-card-button_inverse">Смотреть все</a>
+                {% elif product.count and product.price %}
+                    <button class="product-card-button product-card-button_inverse add-to-cart sn-add-to-cart" type="submit" onclick="ym(56972323, 'reachGoal', 'plus'); return true;">В корзину</button>
+                {% else %}
+                    <div class="product-card-button modal_product_trigger modal_trigger" data-target="#product-nutify">Запросить</div>
+                {% endif %}
+                <button class="product-card-action mini-button sn-add-to-favorites {% if product.id in additional.favorites_list or product.id in favorites_list %}active{% endif %}" data-url="{% url 'favorites-add' %}">
+                    <svg class="mini-button__icon" role="img">
+                        <use xlink:href="/static/images/sprite.svg#heart"></use>
+                    </svg>
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

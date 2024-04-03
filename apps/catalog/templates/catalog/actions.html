@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+
+{% block content %}
+
+<div class="page">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="breadcrumbs">
+                    <ul>
+                        <li><a href="/">Главная</a></li>
+                        <li><span>Товары со скидкой</span></li>
+                    </ul>
+                </div>
+                <p class="page-title">Товары со скидкой</p>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            {% for category in categories|dictsort:"title" %}
+            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                <a href="{{ category.get_absolute_url }}?sale=on" class="category-block_directions">                       
+                        <b>{{ category.title }}</b>
+                        {% if category.parent %}<span>{{ category.parent.title }}</span>{% endif %}    
+                        <i>
+                            <svg role="img" width="26" height="9">
+                                <use xlink:href="/static/images/sprite.svg#direction-arrow"></use>
+                            </svg>
+                        </i>
+                </a> 
+            </div>
+             {% endfor %}
+        </div>
+    </div>
+</div>
+    
+{% endblock %}

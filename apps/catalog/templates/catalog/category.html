@@ -1,0 +1,28 @@
+{% extends "./base-category.html" %}
+
+
+{% block category_content %}
+
+        <div class="products-container">
+            <div class="change_products sn-products-container">
+                {% if tile %}
+                    <div class="row">
+                        {% for product in "xxxxxxxxxxxx" %}
+                            <div class="col-12 col-md-6 col-lg-4">
+                                {% include "catalog/product-card.html" %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {% for product in "xxxxxxxxxxxx" %}
+                        {% include "catalog/product-card-wide.html" %}
+                    {% endfor %}
+                {% endif %}
+            </div>
+            
+        </div>
+        <div class="paginationBlock">
+            {{ pagination }}
+        </div>
+
+{% endblock %}

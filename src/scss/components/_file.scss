@@ -1,0 +1,70 @@
+.file {
+	display: flex;
+	flex-direction: row;
+	align-items: flex-start;
+	padding: 10px 0 15px;
+	&-thumbnail {
+		display: inline-block;
+		min-width: 33px;
+		width: 33px;
+		height: 40px;
+		margin-top: 3px;
+		> svg {
+			width: 100%;
+			height: 100%;
+			fill: $color-yellow;
+		}
+	}
+	&-info {
+		display: inline-block;
+		padding: 1px 0 0 13px;
+		.name {
+			display: block;
+			@include font-p;
+			line-height: 22px;
+			em {
+				font-style: normal;
+				border: 1px solid rgba(0,0,0,0);
+				transition: .3s;
+			}
+		}
+		.size {
+			display: block;
+			color: #898989;
+			
+			font-size: 14px;
+			font-weight: 400;
+			text-transform: uppercase;
+			padding-top: 4px;
+			@include font-sign;
+		}
+	}
+	&:hover .file-info {
+		.name {
+			color: $color-general;
+			text-decoration: underline;
+		}
+	}
+}
+
+@media(max-width: 767px) {
+	@import "../media-mixins";
+	
+	.file {
+		padding: 6px 0;
+		&-thumbnail {
+			min-width: 26px;
+			width: 26px;
+			height: 32px;
+		}
+		&-info {
+			padding: 0 0 0 10px;
+			.name {
+				@include font-p;
+			}
+			.size {
+				@include font-sign;
+			}
+		}
+	}
+}

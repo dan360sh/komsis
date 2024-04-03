@@ -1,0 +1,192 @@
+@font-face {
+    font-family: 'MADE Evolve Sans';
+    src: local('MADE Evolve Sans'), local('MADEEvolveSans'), url('../fonts/Madeevolvesans/Madeevolvesans.woff2') format('woff2'), url('../fonts/Madeevolvesans/Madeevolvesans.woff') format('woff'), url('../fonts/Madeevolvesans/Madeevolvesans.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'MADE Evolve Sans';
+    src: local('MADE Evolve Sans Medium'), local('MADEEvolveSans-Medium'), url('../fonts/Madeevolvesans/Madeevolvesansmedium.woff2') format('woff2'), url('../fonts/Madeevolvesans/Madeevolvesansmedium.woff') format('woff'), url('../fonts/Madeevolvesans/Madeevolvesansmedium.ttf') format('truetype');
+    font-weight: 500;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'MADE Evolve Sans';
+    src: local('MADE Evolve Sans Bold'), local('MADEEvolveSans-Bold'), url('../fonts/Madeevolvesans/Madeevolvesansbold.woff2') format('woff2'), url('../fonts/Madeevolvesans/Madeevolvesansbold.woff') format('woff'), url('../fonts/Madeevolvesans/Madeevolvesansbold.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    min-height: 100%;
+    height: 100%;
+}
+
+body {
+    min-width: 320px;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+	// font-family: sans-serif;
+	font-family: "MADE Evolve Sans";
+	&.opened {
+		// position: fixed;
+		// left: 0;
+		// right: 0;
+		// top: 0;
+		overflow: hidden;
+	}
+}
+
+::-webkit-input-placeholder { color: $color-placeholder; }
+::-moz-placeholder          { color: $color-placeholder; }
+:-moz-placeholder           { color: $color-placeholder; }
+:-ms-input-placeholder      { color: $color-placeholder; }
+
+ol, ul {
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    list-style-type: none;
+}
+
+.h1, .h2, .h3, .h4, h1, h2, h3, h4, p {
+    line-height: normal;
+    margin: 0;
+    padding: 0;
+}
+
+a {
+    color: $color-text;
+    text-decoration: none;
+    &:hover {
+        color: $color-general;
+        text-decoration: none;
+    }
+}
+
+a:focus, button:focus, input:focus, textarea:focus {
+    outline: 0;
+    text-decoration: none;
+}
+
+// Базовая обертка сайта
+.base {
+    &-wrapper, &-container {
+        width: 100%;
+    }
+    
+    &-wrapper {
+        display: flex;
+        flex-direction: column;
+        min-height: 100%;
+    }
+
+    &-container {
+        flex: 1  auto;
+        overflow: initial;
+        padding: {
+            top: 170px;
+            // bottom: 25px;
+        }
+    }
+
+    &-page {
+        padding-bottom: 90px;
+    }
+}
+
+.btn:focus {
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+}
+
+.navbar {
+    padding: 0;
+}
+
+.params-item~.params-delimeter {
+    display: none;
+}
+
+.params-delimeter::before {
+    content: '-';
+}
+
+
+//  
+.mobile-search-trigger{
+	svg{
+		pointer-events: none;
+	}
+}
+.nav-close{
+	*{
+		pointer-events: none;
+	}
+}
+
+
+
+///  Bootstrap reset
+.btn-primary{
+	background-color: $color-general;
+    border-color: $color-general;
+}
+.btn-primary:hover,
+.btn-outline-primary:hover,
+.page-item.active .page-link{
+	//background-color: $color-bootstrap-dark;
+}
+.btn-outline-primary,
+.btn-primary:hover,
+.btn-outline-primary:hover,
+.page-item.active .page-link{
+	border-color: $color-bootstrap-dark;
+}
+.btn-outline-primary,
+.page-link,
+.page-link:hover{
+	color: $color-bootstrap-dark;
+}
+.btn.disabled, .btn:disabled{
+	opacity: 1;
+}
+
+
+
+
+
+
+@media (min-width: 1200px) {
+    .container {
+        max-width: 1200px;
+    }
+}
+
+@media (max-width: 1199px) {
+    .container {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .base {
+        &-container {
+            padding: {
+                top: 60px;
+                // bottom: 25px;
+            }
+        }
+    }
+}
+

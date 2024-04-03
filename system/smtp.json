@@ -1,0 +1,10 @@
+{
+    "from": "",
+    "host": "",
+    "secure_tls": false,
+    "ssl": true,
+    "user": "",
+    "password": "",
+    "port": 465
+}
+

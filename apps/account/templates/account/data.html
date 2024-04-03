@@ -1,0 +1,53 @@
+{% extends "./base-account.html" %}
+
+
+{% block data_class %} current-sidebar-item{% endblock %}
+
+{% block content_account %}
+    <form class="form sn-account-data-form" action="{% url 'accounts:account-change-data' %}", method="POST">
+        {% csrf_token %}
+        <h2 class="form-title">Личные данные</h2>
+
+        <div class="form-group required">
+            <label class="form-group__title" for="data-surnname">Фамилия</label>
+            <input class="form-control" type="text" name="surname" id="data-surname" value="{{ account.surname }}"/>
+        </div>
+        <div class="form-group required">
+            <label class="form-group__title" for="data-name">Имя</label>
+            <input class="form-control" type="text" name="name" id="data-name" value="{{ account.name }}"/>
+        </div>
+        <div class="form-group">
+            <label class="form-group__title" for="data-middle_name">Отчество</label>
+            <input class="form-control" type="text" name="middle_name" id="data-middle_name" value="{{ account.middle_name }}"/>
+        </div>
+
+        <div class="form-group required">
+            <label class="form-group__title" for="data-phone">Телефон</label>
+            <input class="form-control" type="tel" name="phone" id="data-phone" value="{{ account.phone }}"/>
+        </div>
+        <div class="form-group required">
+            <label class="form-group__title" for="data-email">Email</label>
+            <input class="form-control" type="email" name="email" id="data-email" value="{{ account.email }}"/>
+        </div>
+        <label class="acceptance_checkbox">
+			<input type="checkbox" name="jurical" id="jurical" {% if account.jurical %}checked{% endif %}/>
+			<s class="new_checkbox">
+				<svg role="img" width="8" height="6">
+					<use xlink:href="/static/images/sprite.svg#checkbox_arrow"></use>
+				</svg>
+			</s>
+			<span class="normal-text"> Я являюсь юридическим лицом</span>
+		</label>
+        <div class="form-group__block" id="jurical-block" style="overflow: hidden; {% if account.jurical %}max-height:300px{% else %}max-height:0px;{% endif %}">
+            <div class="form-group required">
+                <label class="form-group__title" for="data-company-title">Название компании</label>
+                <input class="form-control" type="text" name="company_title" id="data-company-title" value="{{ account.company_title }}"/>
+            </div>
+            <div class="form-group required">
+                <label class="form-group__title" for="data-company-inn">ИНН</label>
+                <input class="form-control" type="number" name="company_inn" id="data-company-inn" value="{{ account.company_inn }}"/>
+            </div>
+        </div>
+        <input class="simple-button simple-button_reverse simple-button_default-size" type="submit" value="Сохранить"/>
+    </form>
+{% endblock %}

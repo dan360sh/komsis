@@ -1,0 +1,47 @@
+.section-brands{
+	padding: 20px 0;
+	&__title{
+		display: flex;
+		padding: 0 0 35px;
+		color: #3e3e3e;
+		font-size: 36px;
+		font-weight: 700;
+		> svg{
+			margin: 10px 15px 0 0;
+		}
+	}
+	&__button{
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 170px;
+		height: 40px;
+		margin: 0 auto;
+		border-radius: 6px;
+		border: 1px solid $color-blue-light;
+		background-color: #fff;
+		color: $color-blue-light;
+		font-size: 13px;
+		font-weight: 700;
+		text-transform: uppercase;
+		transition: .3s;
+		&:hover{
+			background-color: $color-blue-light;
+			color: #fff;
+		}
+	}
+}
+
+@media(max-width: 575px){
+	.section-brands{
+		padding: 10px 0;
+
+		&__title{
+			font-size: 28px;
+			padding: 0 0 10px;
+			> svg{
+				margin: 5px 15px 0 0;
+			}
+		}
+	}
+}

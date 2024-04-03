@@ -1,0 +1,67 @@
+<div class="checkout-form__form-part-body">
+
+    <div class="form-group required">
+        <label for="surname">Фамилия</label>
+        <input name="surname" class="form-control" type="text" id="surname" value="{{ request.user.account.surname }}" required="required"/>
+        <div class="valid-feedback">Готово!</div>
+    </div>
+    <div class="form-group required">
+        <label for="name">Имя</label>
+        <input name="name" class="form-control" type="text" id="name" value="{{ request.user.account.name }}" required="required"/>
+        <div class="valid-feedback">Готово!</div>
+    </div>
+    <div class="form-group ">
+        <label for="middle_name">Отчество</label>
+        <input name="middle_name" class="form-control" type="text" id="middle_name" value="{{ request.user.account.middle_name }}"/>
+        <div class="valid-feedback">Готово!</div>
+    </div>
+
+    <div class="form-group required">
+        <label for="email">Email</label>
+        <input name="email" class="form-control" type="email" id="email" value="{{ request.user.account.email }}" required="required"/>
+        <div class="invalid-feedback">Обязательное поле для заполнение</div>
+    </div>
+    <div class="form-group required">
+        <label for="user_phone">Телефон</label>
+        <input name="phone" class="form-control" type="tel" id="user_phone" value="{{ request.user.account.phone }}" required="required"/>
+        <div class="invalid-feedback">Обязательное поле для заполнение</div>
+    </div>
+    <div class="form-group custom_checkbox">
+         <div class="custom-control custom-checkbox">
+            <input class="custom-control-input" type="checkbox" id="face" name="face" >
+            <label class="custom-control-label" for="face">Я являюсь юридическим лицом</label>
+            <div class="invalid-feedback"></div>
+        </div>
+        <div class="face_step" style="display: none;">
+            <div class="form-group required">
+                <label for="company">Название компании</label>
+                <input name="company_title" class="form-control" type="text" id="company" value="{{ request.user.account.company_title }}"/>
+                <div class="invalid-feedback">Обязательное поле для заполнение</div>
+            </div>
+            <div class="row__container">
+                <div class="form-group required">
+                    <label for="inn">ИНН</label>
+                    <input name="company_inn" class="form-control" type="number" id="inn" value="{{ request.user.account.company_inn }}"/>
+                    <div class="invalid-feedback">Обязательное поле для заполнение</div>
+                </div>
+                <div class="example-1">
+                  <div class="form-group">
+                    <label class="label">
+                        <svg id="Capa_1" enable-background="new 0 0 512 512" height="512" viewBox="0 0 512 512" width="512" xmlns="http://www.w3.org/2000/svg">
+                            <path d="m226 512c-49.626 0-90-40.374-90-90v-302c0-66.168 53.832-120 120-120s120 53.832 120 120v302h-30v-302c0-49.626-40.374-90-90-90s-90 40.374-90 90v302c0 33.084 26.916 60 60 60s60-26.916 60-60v-242c0-16.542-13.458-30-30-30s-30 13.458-30 30v242h-30v-242c0-33.084 26.916-60 60-60s60 26.916 60 60v242c0 49.626-40.374 90-90 90z"/>
+                        </svg>
+                      <input type="file" name="file-payment">
+                      <span class="title">Добавить файл</span>
+                    </label>
+                  </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <span class="">Ваш комментарий к заказу </span>
+            <textarea name="comment" id="comment" cols="30" rows="10"></textarea>
+            <div class="invalid-feedback">Ваш комментарий слишком большой</div>
+        </div>
+    </div>
+</div>

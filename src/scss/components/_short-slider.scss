@@ -1,0 +1,97 @@
+.short-slider-section{
+	padding: 7px 0 20px;
+	overflow: hidden;
+}
+
+.short-slider{
+	position: relative;
+	&:not(.slick-initialized){
+		height: 210px;
+		overflow: hidden;
+	}
+	&__slide{
+		display: block;
+		height: 210px;
+		background-size: cover;
+		background-position: center;
+	}
+	&__arrow{
+		display: flex !important;
+		align-items: center;
+		justify-content: center;
+		position: absolute;
+		z-index: 10;
+		top: 0;
+		bottom: 0;
+		margin: auto;
+		width: 40px;
+		height: 40px;
+		transform: rotate(-45deg);
+		border-radius: 6px;
+		background-color: $color-blue-light;
+		transition: .3s;
+		cursor: pointer;
+
+		&:hover{
+			background-color: $color-yellow;
+			> svg{
+				fill: $color-blue-light;
+			}
+		}
+		&_prev{
+			left: -20px;
+			> svg{
+				transform: rotate(45deg);
+			}
+		}
+		&_next{
+			right: -20px;
+			> svg{
+				transform: rotate(-135deg);
+			}
+		}
+		> svg{
+			fill: #fff;
+			transition: .3s;
+		}
+	}
+	.slick-dots{
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: absolute;
+		bottom: -12px;
+		left: 0;
+		width: 100%;
+		li{
+			width: 8px;
+			height: 8px;
+			margin: 0 4px;
+			border: 1px solid $color-blue-dark;
+			background-color: #fff;
+			border-radius: 100%;
+			transition: .3s;
+			cursor: pointer;
+			&.slick-active{
+				width: 10px;
+				height: 10px;
+				border-color: $color-yellow;
+				border-width: 2px;
+			}
+			button{
+				display: none;
+			}
+		}
+	}
+}
+
+@media (max-width: 1199px){
+	.short-slider{
+		&:not(.slick-initialized), &__slide{
+			height: 16vw;
+		}
+		&__arrow{
+			display: none !important;
+		}
+	}
+}

@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block head %}
+<script src="//api-maps.yandex.ru/2.1/?lang=ru_RU"></script>
+{% endblock %}
+
+{% block content %}
+
+    <div class="page order_page">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="breadcrumbs">
+                        <ul>
+                            <li><a href="/">Главная</a></li>
+                            <li> <span>Контакты</span></li>
+                        </ul>
+                    </div>
+					<h1 class="page-title">Контакты</h1>
+					{% with cities=settings.city_items.all %}
+					<div class="contacts-block" itemscope="" itemtype="http://schema.org/LocalBusiness">
+						<div class="contacts-block__info">
+							<b class="contacts-block__title" itemprop="name">Инженерный Центр<br>"Коммунальные системы"</b>
+							<div class="select-tabs">
+								<div class="select-tabs__header">
+									<button class="select-tabs__list-trigger">Вологда</button>
+									<ul class="nav select-tabs__list" id="tabs" role="tablist" style="display: none;">
+										{% for city in cities %}
+										<li>
+											<a{% if forloop.first %} class="active"{% endif %} id="tab-{{ forloop.counter }}" data-toggle="tab" href="#tab_content-{{ forloop.counter }}" data-map="#map-{{ forloop.counter }}" role="tab" {% if forloop.first %}aria-selected="true"{% endif %}>{{ city.title }}</a>
+										</li>
+										{% endfor %}
+									</ul>
+								</div>
+								<div class="tab-content select-tabs__tabs" id="content_container">
+									{% for city in cities  %}
+									<div class="tab-pane fade show{% if forloop.first %} active{% endif %}" id="tab_content-{{ forloop.counter }}" role="tabpanel">
+										<div class="requisite-block"><b class="requisite-block__title">Адрес</b><span class="requisite-block__value" itemprop="address">{{ city.address }}</span></div>
+										<div class="requisite-block">
+											<b class="requisite-block__title">Телефоны</b>
+											{% for item in city.get_phones %}
+												<a class="requisite-block__value" href="tel:{{ phone }}" itemprop="telephone" onclick="ym(56972323, 'reachGoal', 'tel'); return true;">{{ item.phone }} - {{ item.title }}</a>
+											{% endfor %}
+										</div>
+										<div class="requisite-block">
+											<b class="requisite-block__title">Эл. почта</b>
+											{% for item in city.get_emails %}
+												<a class="requisite-block__value underline" href="mailto:{{ item.email }}" itemprop="email" onclick="ym(56972323, 'reachGoal', 'email'); return true;">{{ item.email }} - {{ item.title }}</a>
+											{% endfor %}
+										</div>
+										{% if city.time_work %}
+										<div class="requisite-block"><b class="requisite-block__title">Режим работы</b><span class="requisite-block__value" itemprop="openingHours">{{ city.time_work|safe }}</span></div>
+										{% endif %}
+									</div>
+									{% endfor %}
+								</div>
+							</div>
+						</div>
+						<div class="contacts-block__maps">
+						{% for city in cities  %}
+							<div class="contacts-block__map-container {% if forloop.first %} active{% endif %}" id="map-{{ forloop.counter }}">
+								<div data-lat="{{ city.coord_x }}" data-lng="{{ city.coord_y }}" data-message="{{ city.address }}" data-popup="{{ city.title }}"></div>
+							</div>
+						{% endfor %}
+						</div>
+					</div>
+					{% endwith %}
+
+					<div class="callback-block">
+						<div class="row">
+							<div class="col-12 col-lg-9 offset-lg-3">
+								<div class="callback-block__wrapper">
+									<div class="callback-block__info">
+										<b class="callback-block__title">Свяжитесь с нами</b>
+										<span class="callback-block__desc">Оставьте данные, мы перезвоним вам и ответим на все интересующие вопросы</span>
+									</div>
+									<div class="callback-block__form">
+										<!-- На тег <form> кидай класс load и success -->
+										<form id="contacts-form" action="{% url 'feedback-contacts' %}" method="POST" class="simple-form" data-ym="form">
+											<input type="text" name="name" class="simple-form__input" placeholder="Имя" autocomplete="off" required>
+											<div class="simple-form__row">
+												<input type="tel" name="phone" class="simple-form__input" placeholder="Телефон" autocomplete="off" required>
+												<input type="email" name="email" class="simple-form__input" placeholder="Эл. почта" autocomplete="off" required>
+											</div>
+											<textarea name="message" class="simple-form__textarea" id="" cols="30" rows="10" placeholder="Сообщение менеджеру" autocomplete="off" required></textarea>
+											<!-- <span class="simple-form__error">Заполните все поля!</span> -->
+											<button class="simple-button simple-button_inverse simple-form__button-submit" type="submit">Отправить</button>
+											<span class="simple-form__acceptance">Нажимая кнопку, вы соглашаетесь с <a href="{% url 'personal-data' %}">обработкой персональных данных</a></span>
+
+											<div class="simple-form__loader">
+												<img src="/static/images/preloader.png" alt="">
+												<!-- <svg class="simple-form__loader-icon" role="img" width="50" height="50">
+													<use xlink:href="/static/images/sprite.svg#loader"></use>
+												</svg> -->
+											</div>
+											<div class="simple-form__success">
+												<svg class="simple-form__success-icon" role="img" width="50" height="50">
+													<use xlink:href="/static/images/sprite.svg#done_icon"></use>
+												</svg>
+												<b class="simple-form__success-title">Ваша заявка успешно отправлена</b>
+												<span class="simple-form__success-desc">Менеджер свяжется с вами в ближайшее время</span>
+											</div>
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+
+{% endblock %}

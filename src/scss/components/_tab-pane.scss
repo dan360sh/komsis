@@ -1,0 +1,45 @@
+.tab-pane{
+	padding: 20px;
+	&__characteristic-row{
+		display: flex;
+		align-items: flex-start;
+		padding: 8px 0;
+		&:not(:last-child){
+			border-bottom: 1px solid #e5e5e5;
+		}
+		&-title{
+			display: block;
+			width: 46%;
+			min-width: 46%;
+			color: #999;
+			font-size: 13px;
+		}
+		&-value{
+			display: block;
+			color: #3a372e;
+			font-size: 16px;
+		}
+	}
+}
+
+
+@media (max-width : 767px) {
+	.tab-pane{
+		padding: 10px 2px;
+	}
+}
+
+@media (max-width : 575px) {
+	.tab-pane{
+		&__characteristic-row{
+			flex-direction: column;
+			padding: 8px 0 0;
+			&-title{
+				width: 100%;
+			}
+			&-value{
+				font-size: 14px;
+			}
+		}
+	}
+}

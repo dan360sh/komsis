@@ -1,0 +1,63 @@
+.sidebar {
+    $this: &;
+    // border: 1px solid #ddd;
+    background-color: #fff;
+    margin: 0 0 30px;
+
+    &-item {
+        display: block;
+
+        &:hover {
+            #{$this}-link {
+				background-color: $color-yellow;
+				border-color: $color-yellow;
+				color: #373a3c;
+            }
+        }
+
+        &.current-sidebar-item, &.current-menu-item {
+            #{$this}-link {
+				background-color: $color-blue-light;
+				border-color: $color-blue-light;
+                color: #fff;
+            }
+		}
+		
+		&:not(:first-child){
+			#{$this}-link{
+				border-top: none;
+			}
+		}
+
+		&:first-child{
+			#{$this}-link{
+				border-radius: 4px 4px 0 0;
+			}
+		}
+
+		&:last-child{
+			#{$this}-link{
+				border-radius: 0 0 4px 4px;
+			}
+		}
+    }
+
+    &-link {
+        display: block;
+        display: flex;
+        align-items: center;
+        position: relative;
+        color: #373a3c;
+        font-size: 16px;
+		font-weight: 400;
+		line-height: 24px;
+        padding: 12px 20px;
+        transition: color 200ms ease, background-color 200ms ease;
+		border: 1px solid #ddd;
+    }
+
+    img{
+        max-width: 100%;
+        max-height: 100%;
+    }
+}

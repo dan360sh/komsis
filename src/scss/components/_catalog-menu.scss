@@ -1,0 +1,110 @@
+.catalog-menu, .catalog-submenu {
+    position: absolute;
+    background-color: #fff;
+    border-top: none;
+}
+
+.catalog-menu {
+    z-index: 100;
+    top: 100%;
+    left: 0;
+    width: 300px;
+
+    &-item {
+        $this: &;
+        display: block;
+		transition: background-color 100ms ease;
+		$item: &;
+		&:last-child{
+			.catalog-menu-link{
+				border-bottom: none;
+			}
+		}
+		&.all-cats{
+			.catalog-menu-link{
+				background-color: $color-blue-dark;
+				border-left-color: $color-blue-dark;
+				border-right-color: $color-blue-dark;
+			}
+            #{$item}__text{
+                color: #fff;
+            }
+		}
+        &__text {
+            color: #333;
+			font-size: 16px;
+			line-height: 20px;
+            transition: color 100ms ease;
+        }
+
+        &__arrow {
+			min-width: 6px;
+            width: 6px;
+			height: 9px;
+			margin: 0 0 0 5px;
+            fill: #999;
+            transform: rotate(180deg);
+            transition: fill 100ms ease;
+        }
+
+        &:hover {
+			.catalog-menu-link{
+				background-color: $color-yellow;
+				border-left-color: $color-yellow;
+				border-right-color: $color-yellow;
+			}
+            #{$this}__text {
+                color: #333;
+            }
+
+            #{$this}__arrow {
+                fill: #333;
+            }
+
+            .catalog-submenu {
+                display: block;
+            }
+        }
+    }
+
+    &-link {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 20px;
+		border: 1px solid #dee2e6;
+		border-width: 0 1px 1px 1px;
+		transition: .3s;
+		// &:hover{
+		// 	background-color: $color-yellow;
+		// 	border-left-color: $color-yellow;
+		// 	border-right-color: $color-yellow;
+		// }
+    }
+}
+
+.catalog-submenu {
+    display: none;
+    z-index: 105;
+    top: 0;
+    left: 100%;
+    width: 870px;
+    min-height: 100%;
+    padding: 4px 0;
+	border: 1px solid #dee2e6;
+	border-width: 0 1px 1px 1px;
+	
+    &-link {
+        display: block;
+        max-width: 290px;
+        color: #333;
+		font-size: 15px;
+		line-height: 19px;
+        transition: color 100ms ease;
+        padding: 8px 25px;
+
+        &:hover {
+            color: $color-blue-light;
+        }
+    }
+}

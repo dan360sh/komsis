@@ -1,0 +1,16 @@
+<div class="certificates">
+    <div class="row">
+        {% for item in certificates %}
+            <div class="col-sm-4 col-6">
+                <div class="certificate">
+                    <a class="certificate-thumbnail" href="{{ item.image.url }}" data-fancybox="certificates" style="background-image: url('{{ item.image.url }}');"></a>
+                    {% comment %}
+                        <div class="certificate-sign">
+                            <p>Пример подписи для вертикального документа формата A4</p>
+                        </div>
+                    {% endcomment %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>

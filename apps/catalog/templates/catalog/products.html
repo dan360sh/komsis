@@ -1,0 +1,73 @@
+{% extends "./base-category.html" %}
+{% load thumbnail %}
+
+
+{% block category_content %}
+ 
+        <div class="products-container">
+            {% if products %}
+            <div class="change_products sn-products-container">
+                {% if tile %}
+                <div class="row">
+                    {% for product in "xxxxxxxxxxxx" %}
+                        <div class="col-12 col-md-6 col-lg-4">
+                            {% include "catalog/product-card.html" %}
+                        </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                    {% for product in "xxxxxxxxxxxx" %}
+                        {% include "catalog/product-card-wide.html" %}
+                    {% endfor %}
+                {% endif %} 
+            </div>
+            {% else %}
+            <!--div class="paginationBlock">
+            {{ pagination }}
+            </div-->
+           
+            <div class="container">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="notify" style="margin-top: 35px;">
+                            <div class="notify-body">
+                                <svg class="notify-icon" role="img">
+                                    <use xlink:href="/static/images/sprite.svg#cart"></use>
+                                </svg>
+                                <div class="notify-text">
+                                    <p class="notify-title">Товары по данному запросу не найдены</p>
+                                    <p class="notify-desc">Попробуйте изменить формулировку или воспользуйтесь нашим каталогом.</p>
+                                </div>
+                            </div>
+                            <a class="notify-button btn btn-primary" href="{% url 'catalog' %}">Перейти в каталог</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        <div class="paginationBlock">
+            {{ pagination }}
+        </div>
+{% endblock %}
+
+{% block breadcrumbs %}
+    <div class="breadcrumbs">
+        <ul itemscope="itemscope" itemtype="http://schema.org/BreadcrumbList">
+            <li>
+                <span itemscope="itemscope" itemprop="itemListElement" itemtype="http://schema.org/ListItem">
+                    <a itemprop="item" title="Главная" href="/">
+                        <span itemprop="name">Главная</span>
+                        <meta itemprop="position" content="1"/>
+                    </a>
+                </span>
+            </li>
+            <li>
+                <span itemscope="itemscope" itemprop="itemListElement" itemtype="http://schema.org/ListItem">
+                    <span itemprop="name">Поиск</span>
+                    <meta itemprop="position" content="2"/>
+                </span>
+            </li>
+        </ul>
+    </div>
+{% endblock %}

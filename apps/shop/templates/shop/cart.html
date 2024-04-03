@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load utils %}
+
+{% block content %}
+<div class="base-page">
+    <div class="container">
+        <div class="breadcrumbs">
+            <ul>
+                <li><a href="/">Главная</a></li>
+                <li><span>Корзина</span></li>
+            </ul>
+        </div>
+
+        <h1 class="page-title">Корзина</h1>
+
+        {% if cart.count %}
+            <div class="cart">
+                <div class="cart-container">
+                    <div class="cart-table">
+                        <div class="cart-table-head">
+                            <div class="cart-table-row">
+                                <div class="cart-table-col cart-table-col_product">
+                                    <span class="cart-table-head__title">Ваш заказ</span>
+                                </div>
+                                <div class="cart-table-col cart-table-col_price">
+                                    <span class="cart-table-head__title">Цена</span>
+                                </div>
+                                <div class="cart-table-col cart-table-col_count">
+                                    <span class="cart-table-head__title">Количество</span>
+                                </div>
+                                <div class="cart-table-col cart-table-col_total">
+                                    <span class="cart-table-head__title">Сумма</span>
+                                </div>
+                                <div class="cart-table-col cart-table-col_delete"></div>
+                            </div>
+                        </div>
+                        <div class="cart-table-body">
+                            {% include "shop/includes/cart-items.html" %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xl-6 col-12">
+                            <p class="cart-desc">После оформления заявки на сайте мы свяжемся с вами. Уточним цены на интересующие товары, рассчитаем сроки и стоимость доставки.</p>
+                        </div>
+                        <div class="col-xl-6 col-12">
+                            <div class="cart-order">
+                                {% count_cart as cart_total %}
+                                <p class="cart-text">Итого: <span class="cart-total">{{ cart_total|format_number }}</span><span class="cart-currency">руб.</span></p>
+                                <a class="cart-order-btn simple-button simple-button_inverse" href="{% url 'order' %}" onclick="ym(56972323, 'reachGoal', 'oform'); return true;">Оформить заказ</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            {% include "./includes/cart-empty.html" %}
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,111 @@
+.product-counter {
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+	justify-content: center;
+	position: relative;
+    width: 100px;
+    height: 30px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    border-radius: 4px;
+
+    &__button {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 45px;
+        height: 100%;
+        color: #9b9b9b;
+        font-size: 7px;
+        font-weight: 700;
+        -webkit-transition: .2s;
+        transition: .2s;
+        border-radius: 30px;
+        cursor: pointer;
+        user-select: none;
+
+        &:hover {
+			color: $color-general;
+			> svg{
+				fill: $color-general;
+			}
+		}
+		
+		> svg{
+			fill: #9b9b9b;
+		}
+
+		&_minus{
+			> svg{
+				transform: rotate(180deg);
+			}
+			
+		}
+    }
+
+    &__field-wrapper {
+		display: flex;
+		flex: 1 0 52px;
+        border-left: 1px solid #ccc;
+		border-right: 1px solid #ccc;
+		overflow: hidden;
+	}
+
+	&__original-input{
+		// display: none;
+	    width: 100%;
+	    border: none;
+	    text-align: center;
+	    // padding-left: 14px;
+		color: #373a3c;
+		font-size: 15px;
+		line-height: 21px;
+	}
+
+	&__fake-input{
+		display: none;
+		// display: flex;
+		// align-items: center;
+		// justify-content: center;
+		// flex: 1 0 auto;
+		// text-align: center;
+		// color: #373a3c;
+		// font-size: 15px;
+		// line-height: 21px;
+	}
+
+	&__notification{
+		position: absolute;
+		z-index: 99;
+		width: 160px;
+		padding: 10px 15px;
+		background-color: $color-blue-light;
+		color: #fff;
+		font-size: 16px;
+		line-height: 20px;
+		text-align: center;
+		border-radius: 6px;
+		z-index: 999;
+		&_max, &_min{
+			display: none;
+		}
+		&_max{
+		    top: -70px;
+		    right: calc(-100% - 10px);
+		}
+		&_min{
+			top: -70px;
+		    left: calc(-100% - 10px);
+		}
+	}
+}
+
+input[type='number'] {
+    -moz-appearance:textfield;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}

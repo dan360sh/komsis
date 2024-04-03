@@ -1,0 +1,215 @@
+.header {
+    flex: 0 1 auto;
+    position: fixed;
+    z-index: 100;
+    top: 0;
+    left: 0;
+    width: 100%;
+    max-height: 120px;
+    transition: transform 500ms ease;
+
+    &-desctop {
+
+    }
+
+    &-top {
+		background-color: $color-bg;
+		
+		&__wrapper{
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+		}
+		&__reqs-wrapper{
+			display: flex;
+			align-items: center;
+			justify-content: flex-end;
+		}
+    }
+
+    &-middle {
+        background-color: #fff;
+    }
+
+    &-bottom {
+		background-color: #fff;
+		border-bottom: 2px solid $color-blue-light;
+    }
+
+    &-shop {
+        display: flex;
+        align-items: flex-end;
+    }
+
+    &-mobile {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: 1px solid #ddd;
+        background-color: #fff;
+    }
+}
+
+@media(min-width: 1200px) {
+    .header {
+        &.is-hidden {
+            transform: translateY(-100%);
+        }
+
+        &.is-hidden &-bottom {
+            box-shadow: 0 2px 2px 0 rgba(0,0,0,0.14), 0 3px 1px -2px rgba(0,0,0,0.12), 0 1px 5px 0 rgba(0,0,0,0.2);
+        }
+    }
+}
+
+  
+  header .mobile-header .left-part {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    height: 100%;
+  }
+  
+  header .mobile-header .left-part .ps-burger {
+    width: 55px;
+    min-width: 55px;
+  }
+  
+  header .mobile-header .left-part .ps-burger.opened span, header .mobile-header .left-part .ps-burger.opened span:before, header .mobile-header .left-part .ps-burger.opened span:after {
+    height: 2px;
+  }
+  
+  header .mobile-header .left-part .ps-burger.opened span:before {
+    top: 0;
+  }
+  
+  header .mobile-header .left-part .ps-burger span, header .mobile-header .left-part .ps-burger span:after, header .mobile-header .left-part .ps-burger span:before {
+    background-color: #373a3c;
+    height: 3px;
+  }
+  
+  header .mobile-header .left-part .ps-burger span {
+    width: 20px;
+  }
+  
+  header .mobile-header .left-part .ps-burger span:before {
+    top: -7px;
+  }
+  
+  header .mobile-header .left-part .ps-burger span:after {
+    bottom: -7px;
+  }
+  
+  header .mobile-header .left-part .logo {
+    display: block;
+    width: 145px;
+  }
+  
+  header .mobile-header .left-part .logo img {
+    max-height: 100%;
+    max-width: 100%;
+  }
+  
+  header .mobile-header .right-part {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    height: 100%;
+  }
+  
+  header .mobile-header .right-part .mobile-search-trigger {
+    position: relative;
+    height: 100%;
+    width: 40px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+  }
+  
+  header .mobile-header .right-part .mobile-search-trigger.opened:before, header .mobile-header .right-part .mobile-search-trigger.opened:after {
+    content: "";
+    position: absolute;
+    top: 28px;
+    left: 10px;
+    width: 22px;
+    height: 2px;
+    background: #999;
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+  }
+  
+  header .mobile-header .right-part .mobile-search-trigger.opened:after {
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+  }
+  
+  header .mobile-header .right-part .mobile-search-trigger.opened > svg {
+    display: none;
+  }
+  
+  header .mobile-header .right-part .mobile-search-trigger > svg {
+    fill: #999;
+  }
+  
+  header .mobile-header .right-part .mobile-cart-link {
+    height: 100%;
+    width: 50px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+  }
+  
+  header .mobile-header .right-part .mobile-cart-link .icon {
+    position: relative;
+    height: 25px;
+  }
+  
+  header .mobile-header .right-part .mobile-cart-link .icon > svg {
+    fill: #373a3c;
+  }
+  
+  header .mobile-header .right-part .mobile-cart-link .icon .number {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    position: absolute;
+    top: -7px;
+    right: -10px;
+    width: 20px;
+    height: 13px;
+    border-radius: 3px;
+    background-color: $color-blue-light;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+  }
+
+
+@media (max-width: 1199px) {
+	header .mobile-header {
+		display: -webkit-box;
+		display: -ms-flexbox;
+		display: flex;
+		height: 60px;
+	}
+}

@@ -1,0 +1,1 @@
+from .analyzers import fuzzy_analyzer, en_rus_analyzer

@@ -1,0 +1,14 @@
+.product{
+	&__top-info {
+		padding: 0 0 35px;
+	}
+}
+
+
+@media (max-width: 575px) {
+	.product{
+		&__top-info {
+			padding: 0 0 15px;
+		}
+	}
+}

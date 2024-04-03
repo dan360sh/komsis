@@ -1,0 +1,17 @@
+<div class="files">
+    <div class="row">
+        {% for item in files %}
+            <div class="col-md-6 col-12">
+                <a class="file" href="{{ item.obj.url }}" target="_blank">
+                    <div class="file-thumbnail">
+                        <svg role="img"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="/static/images/sprite.svg#file_icon"></use></svg>
+                    </div>
+                    <div class="file-info">
+                        <span class="name"><em>{{ item.title }}</em></span>
+                        <span class="size">{{ item.get_type }} {{ item.get_size }}</span>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+</div>

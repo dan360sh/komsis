@@ -1,0 +1,11 @@
+{% extends 'catalog/product-card.html' %}
+
+{% block top %}
+    <button class="product-card-remove favorite-remove" type="button" data-url="{% url 'favorites-delete' %}"></button>
+    <button class="product-card-restore favorite-restore" type="button" data-url="{% url 'favorites-restore' %}" >
+        <svg role="img" width="20" height="19">
+            <use xlink:href="/static/images/sprite.svg#arrow_reload"></use>
+        </svg>
+    </button>
+{% endblock %}
+{% block favorite_button %}{% endblock  %}

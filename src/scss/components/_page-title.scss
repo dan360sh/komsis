@@ -1,0 +1,27 @@
+.page-title {
+	display: block;
+	color: #333;
+	font-size: 36px;
+	font-weight: 700;
+	line-height: 44px;
+    padding: 0 0 15px;
+    
+    &_small {
+        font-size: 20px;
+        line-height: 22px;
+        padding: 0 0 16px;
+    }
+}
+
+@media (max-width: 565px) {
+	.page-title {
+		line-height: 32px;
+		padding: 5px 0 15px;
+        font-size: 26px;
+        
+        &_small {
+            font-size: 18px;
+            line-height: 20px;
+        }
+	}
+}

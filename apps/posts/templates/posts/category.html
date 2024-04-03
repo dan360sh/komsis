@@ -1,0 +1,50 @@
+
+
+{% extends "base.html" %}
+{% block content %}
+<div class="page order_page">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="breadcrumbs">
+                        <ul>
+                            <li><a href="/">Главная</a></li>
+                            <li> <span>{{ object.title }}</span></li>
+                        </ul>
+                    </div>
+                    <h1 class="page-title">{{ object.title }}</h1>
+				</div>
+			</div>
+			<div class="articles-container">
+				<div class="row">
+					{% for post in posts %}
+					<div class="col-12 col-md-6 col-lg-4 col-xl-3">
+						<a class="article-card" href="{{ post.get_absolute_url }}">
+							{% if post.thumbnail %}
+								<span class="article-card-thumbnail" style="background-image: url({{ post.thumbnail.url }});"></span>
+							{% else %}
+								<span class="article-card-thumbnail article-card-thumbnail_no-photo">
+									<svg class="article-card-thumbnail__svg" role="img" width="54" height="54">
+										<use xlink:href="/static/images/sprite.svg#no_photo"></use>
+									</svg>
+								</span>
+							{% endif %}
+							<span class="article-card-info">
+								<b class="article-card-info__title">{{ post.title }}</b>
+								{% if post.description %}
+									<p class="article-card-info__text">{{post.description}}</p>
+								{% endif %}
+							</span>
+							<span class="article-card__date">
+								<svg class="article-card__date-svg" role="img" width="11" height="12">
+									<use xlink:href="/static/images/sprite.svg#calendar"></use>
+								</svg>{{ post.published_date }}
+							</span>
+						</a>
+					</div>
+					{% endfor %}
+				</div>
+			</div>
+        </div>
+    </div>
+{% endblock %}

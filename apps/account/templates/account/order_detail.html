@@ -1,0 +1,177 @@
+{% extends './base-account.html' %}
+
+{% load utils static %}
+
+{% block breadcrumb %}Заказ № {{ order.id }}{% endblock %}
+
+{% block orders_class %} current-sidebar-item{% endblock %}
+
+{% block content_account %}
+    <div class="form" , method="POST">
+        {% csrf_token %}
+        <div class="title-wrapper">
+            <h2 class="form-title">Заказ № {{ order.id }} от {{ order.date|date:"Y.m.d" }} {{ order.date|date:"f:s" }}</h2>
+        </div>
+        <div class="order-form">
+            <div class="order-group normal">
+                <div class="order-title">Ваши контактные данные</div>
+                <div class="order-data">
+                    <div class="order-row">
+                        <span class="title">ФИО: </span>
+                        <span class="value">{{ order.surname }} {{ order.name }} {{ order.middle_name }}</span>
+                    </div>
+                    <div class="order-row">
+                        <span class="title">Email: </span>
+                        <span class="value">{{ order.email }}</span>
+                    </div>
+                    <div class="order-row">
+                        <span class="title">Телефон: </span>
+                        <span class="value">{{ order.phone }}</span>
+                    </div>
+                    {% if order.jurical %}
+                        <div class="order-row row-overflow">
+                            <span class="title">Компания: </span>
+                            <span class="value_overflow">{{ order.company_title }}</span>
+                        </div>
+                        <div class="order-row">
+                            <span class="title">ИНН: </span>
+                            <span class="value">{{ order.company_inn }}</span>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="order-group">
+                <div class="order-title">Заказ</div>
+                <div class="order-data">
+                    <div class="order-row clickable" data-target="#clickable1">
+                        <span class="title">Статус: </span>
+                        <span class="value status tool-tip"
+                            style="color: {{ order.current_state.color }};">
+                            {{ order.current_state.title }}
+                            <span class="tooltiptext bottom wide">
+                                {% for state in order.completed_states.all %}
+                                    <span class="completed-state-container">
+                                        <span class="completed-state-title">
+                                            {{ state }}
+                                        </span>
+                                        <img src="{% static 'images/check.svg' %}" alt="" class="completed-state-img">
+                                    </span>
+                                {% endfor %}
+                            </span>
+                        </span>
+                    </div>
+                    <div class="clickable-target" id="clickable1">
+                        {% for state in order.completed_states.all %}
+                            <span class="completed-state-container">
+                                <span class="completed-state-title">
+                                    {{ state }}
+                                </span>
+                                <img src="{% static 'images/check.svg' %}" alt="" class="completed-state-img">
+                            </span>
+                        {% endfor %}
+                    </div>
+                    {% if not order.is_in_stash %}
+                        <div class="order-row">
+                            <span class="title">Сумма заказа: </span>
+                            <span class="value" style="font-weight: 500;">{{ order.total | format_number }} руб.</span>
+                        </div>
+                    {% endif %}
+                    <div class="order-row">
+                        <span class="title">Способ оплаты: </span>
+                        <span class="value">{{ order.get_type_payment_display }}</span>
+                    </div>
+                    <div class="order-row">
+                        <span class="title">Статус оплаты: </span>
+                        <span class="value">
+                            {% if order.payment %}
+                                <span class="value status status_completed">Оплачен</span>
+                            {% else %}
+                                <span class="value status status_processing">Не оплачен</span>
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="order-row">
+                        <span class="title">Способ получения: </span>
+                        <span class="value">{{ order.get_shipping_display }}</span>
+                    </div>
+                    {% if order.shipping != 'self' %}
+                        <div class="order-row">
+                            <span class="title">Адрес доставки: </span>
+                            <span class="value">{{ order.region }}, п. {{ order.entrance }}</span>
+                        </div>
+                    {% else %}
+                        <div class="order-row">
+                            <span class="title">Адрес магазина: </span>
+                            <span class="value">{{ order.shop_address }}</span>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="order-group wide">
+                <div class="order-title">Товары, заказанные вами</div>
+                <div class="order-data">
+                    <div class="cart-table">
+                        <div class="cart-table-head">
+                            <div class="cart-table-row">
+                                <div class="cart-table-col cart-table-col_product">
+                                    <span class="cart-table-head__title">Ваш заказ</span>
+                                </div>
+                                <div class="cart-table-col cart-table-col_price" style="width:120px">
+                                    <span class="cart-table-head__title">Цена</span>
+                                </div>
+                                <div class="cart-table-col cart-table-col_count " style="width:140px">
+                                    <span class="cart-table-head__title">Количество</span>
+                                </div>
+                                <div class="cart-table-col cart-table-col_total ">
+                                    <span class="cart-table-head__title">Сумма</span>
+                                </div>
+                                {% if order.is_in_stash %}
+                                    <div class="cart-table-col cart-table-col_delete"></div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="cart-table-body">
+                            {% for item in order.order_items.all %}
+                                {% include 'account/includes/order_detail_item.html' %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% if order.comment %}
+                <div class="order-group wide">
+                    <div class="order-title" >Комментарий, оставленный вами</div>
+                    <div class="comment">{{ order.comment | linebreaks }}</div>
+                </div>
+            {% endif %}
+            <div class="order-group wide">
+                <div class="order-title order-total">
+                    <div class="title" style='color: black;'>
+                        Сумма заказа
+                        <span class="cart-total" style='color: #156DBC;'>{{ order.total|format_number }}</span>
+                        <span class="cart-currency" style='color: #156DBC;'>руб.</span>
+                    </div>
+                </div>
+            </div>
+            <div class="order-group wide">
+                <div class="order-controls" >
+                    {% if order.is_in_stash %}
+                        <a href="{% url 'accounts:account-order' order.id %}" class="simple-button order-button"
+                            data-order="{{ order.id }}" style='height: 40px'>
+                            Продолжить оформление заказа
+                        </a>
+
+                        <a href="{% url 'accounts:order-delete' order.id %}" class="simple-button order-button" style='height: 40px'>
+                            Удалить сохраненный заказ
+                        </a>
+                    {% else %}
+                        <a href="{% url 'accounts:account-order' order.id %}" class="simple-button order-button" style='height: 40px'>
+                            Повторить заказ
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

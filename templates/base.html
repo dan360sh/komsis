@@ -1,0 +1,911 @@
+{% load navs seo static recaptcha utils %}
+
+{% get_nav 'general-menu' as general_menu %}
+
+{% comment %}
+{% get_nav 'footer-menu' as footer_menu %}
+{% endcomment %}
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+        <!-- Meta -->
+        <meta charset="UTF-8" />
+        <meta http-equiv="expires" content="0" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+        <meta name="theme-color" content="{{settings.color_scheme}}">
+		<meta name="yandex-verification" content="8b98a20263075d02" />
+        <link rel="shortcut icon" href="{% static 'images/favicon.png' %}" type="image/x-icon">
+	<meta name="yandex-verification" content="cf4824b80ce19de3" />
+	<meta name="google-site-verification" content="_bSGQ14Y1xjoiQXmwyGYR48tqqseP78s7pCeKZ4bhMg" />
+
+        <!-- PWA -->
+        <link rel="manifest" href="/static/manifest.json" />
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="application-name" content="shop">
+        <meta name="apple-mobile-web-app-title" content="shop">
+        <meta name="msapplication-starturl" content="/">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+        <!-- Seo -->
+        <link rel="canonical" href="{{ request.scheme }}://{{ SERVER_META.HTTP_HOST }}{{ SERVER_META.PATH_INFO }}"/>
+        <title>{% meta_title %}</title>
+        <meta name="description" content="{% meta_description %}">
+        <meta name="keywords" content="{{ settings.meta_keywords }}">
+
+        <!-- Style -->
+        <style>
+        	@font-face {
+			    font-family: 'MADE Evolve Sans';
+			    src:
+			        url("/static/fonts/Madeevolvesans/Madeevolvesans.woff2") format("woff2"),
+			        url("/static/fonts/Madeevolvesans/Madeevolvesans.woff") format("woff"),
+			        url("/static/fonts/Madeevolvesans/Madeevolvesans.ttf") format("truetype");
+			    font-weight: 400;
+			    font-style: normal;
+			}
+
+			@font-face {
+			    font-family: 'MADE Evolve Sans';
+			    src:
+			        url("/static/fonts/Madeevolvesans/Madeevolvesansmedium.woff2") format("woff2"),
+			        url("/static/fonts/Madeevolvesans/Madeevolvesansmedium.woff") format("woff"),
+			        url("/static/fonts/Madeevolvesans/Madeevolvesansmedium.ttf") format("truetype");
+			    font-weight: 500;
+			    font-style: normal;
+			}
+
+			@font-face {
+			    font-family: 'MADE Evolve Sans';
+			    src:
+			        url("/static/fonts/Madeevolvesans/Madeevolvesansbold.woff2") format("woff2"),
+			        url("/static/fonts/Madeevolvesans/Madeevolvesansbold.woff") format("woff"),
+			        url("/static/fonts/Madeevolvesans/Madeevolvesansbold.ttf") format("truetype");
+			    font-weight: 700;
+			    font-style: normal;
+			}
+        </style>
+		<link rel="stylesheet" href="{% static 'css/vendors.css' %}?v=1234"/>
+		<link rel="stylesheet" href="{% static 'css/custom.css' %}?v=1234"/>
+		<link rel="stylesheet" href="{% static 'css/no_gulp_style.css' %}?v=1234"/>
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+		<style>
+		.g-recaptcha {
+			transform:scale(0.86);
+			transform-origin:0 0;
+		}
+		</style>
+        <script type="text/javascript">window.dataLayer = window.dataLayer || [];</script>
+		<script src='https://www.google.com/recaptcha/api.js'></script>
+        {% block head %}{% endblock %}
+
+        {{ settings.head_scripts|safe }}
+	</head>
+	<body class="{% block body-class %}{% endblock %}">
+		<i class="modal_bg"></i>
+		<a class="nav-close"><span></span></a>
+		<div class="mobile-menu">
+			<div class="catalog-link has-children">
+				<a href="#">
+					<svg role="img" width="16" height="14">
+						<use xlink:href="/static/images/sprite.svg#menu-burger"></use>
+					</svg>
+					Каталог
+					<span class="open-child"></span>
+				</a>
+				<ul class="sub-menu">
+					<li>
+						<a class="step_back" href="">
+							<svg role="img" width="12" height="7">
+								<use xlink:href="/static/images/sprite.svg#arrow_left"></use>
+							</svg>Назад
+						</a>
+                    </li>
+                    {% for cat in categories %}
+						<li {% if cat.childs.all %}class="has-children"{% endif %}>
+							<a href="{{ cat.get_absolute_url }}">{{ cat.title }}
+	                            {% if cat.childs.all %}
+	                            <span class="open-child"></span>
+	                            {% endif %}
+	                        </a>
+	                        {% if cat.childs.all %}
+							<ul class="sub-menu">
+								<li>
+									<a class="step_back" href="">
+										<svg role="img" width="12" height="7">
+											<use xlink:href="/static/images/sprite.svg#arrow_left"></use>
+										</svg>Назад
+									</a>
+	                            </li>
+	                            {% for subcat in cat.childs.all %}
+								<li>
+									<a href="{{ subcat.get_absolute_url }}">{{ subcat.title }}</a>
+	                            </li>
+	                            {% endfor %}
+	                        </ul>
+	                        {% endif %}
+	                    </li>
+                    {% endfor %}
+				</ul>
+			</div>
+			<div class="profile-nav">
+				<a {% if user.is_authenticated %}class="profile" href="{% url 'accounts:account-orders'  %}"{% else %}class="profile modal_trigger" href="#" data-target="#custom_modal-1"{% endif %}>
+					<svg role="img" width="17" height="17">
+						<use xlink:href="/static/images/sprite.svg#new-user"></use>
+					</svg>Личный кабинет
+				</a>
+				<div class="icons">
+					<a href="{% url 'favorites' %}">
+						<span class="icon">
+							<svg role="img" width="18" height="16">
+								<use xlink:href="/static/images/sprite.svg#new-heart"></use>
+							</svg>
+							<span class="number shop-button__count-mob">{% if favorites %}{{ favorites.count }}{% else %}0{% endif %}</span>
+						</span>
+					</a>
+				</div>
+			</div>
+			<ul class="main-menu">
+                {% for punct in general_menu %}
+                    {% if punct.child.all %}
+                    <li class="has-children">
+                        <a href="{{ punct.get_url }}">{{ punct.title }}
+                            <span class="open-child"></span>
+                        </a>
+						<ul class="sub-menu">
+							<li>
+								<a class="step_back" href="">
+									<!--svg role="img" width="16" height="11">
+										<use xlink:href="/static/images/sprite.svg#pointer"></use>
+									</svg-->Назад
+								</a>
+							</li>
+							{% for subitem in punct.child.all %}
+							<li>
+								<a href="{{ subitem.get_url }}">{{ subitem.title }}</a>
+							</li>
+							{% endfor %}
+						</ul>
+                    </li>
+                    {% else %}
+                    <li>
+                        <a href="{{ punct.get_url }}">{{ punct.title }}</a>
+                    </li>
+                    {% endif %}
+                {% endfor %}
+			</ul>
+			<div class="mobile-menu__footer">
+                <a class="callback simple-button modal_trigger" href="#" data-target="#recall_modal">Заказать звонок</a>
+                {% for phone in settings.get_phones %}
+				<a class="contact-row" href="tel:{{ phone }}" onclick="ym(56972323, 'reachGoal', 'tel'); return true;">
+					<div class="icon">
+						<svg role="img" width="14" height="14">
+							<use xlink:href="/static/images/sprite.svg#new-phone"></use>
+						</svg>
+					</div>{{ phone }}
+				</a>
+				{% endfor %}
+				{% for address in settings.get_addresses %}
+				<span class="contact-row">
+					<div class="icon">
+						<svg role="img" width="12" height="15">
+							<use xlink:href="/static/images/sprite.svg#new-pin"></use>
+						</svg>
+					</div>{{ address }}
+				</span>
+				{% endfor %}
+				<a class="contact-row" href="mailto:{{ settings.email }}" onclick="ym(56972323, 'reachGoal', 'email'); return true;">
+					<div class="icon">
+						<svg role="img" width="14" height="14">
+							<use xlink:href="/static/images/sprite.svg#new-email"></use>
+						</svg>
+					</div>{{ settings.email }}
+				</a>
+			</div>
+		</div>
+		<div class="mobile-search-wrapper">
+			<form class="search-form" action="/products/" url-api="{% url 'search' %}" data-attr="mob">
+				<input type="text" name="search" placeholder="Поиск по каталогу" value="{{ search }}" />
+				<button aria-label="Close">Искать</button>
+			</form>
+			<div class="ajax_search">
+				<ul>
+
+				</ul>
+			</div>
+        </div>
+
+		<div class="base-wrapper">
+            <div class="base-container">
+
+                <header class="header cd-auto-hide-header">
+			{#				<div style="display:flex;justify-content:center;"><img src="/static/images/test_top_banner.jpg" style="z-index: 1;opacity: .7;"> </div> #}
+                    <div class="header-desktop d-none d-xl-block">
+                        <div>
+                            <div class="header-top">
+                                <div class="container">
+                                    <div class="row">
+										<div class="col-12">
+											<div class="header-top__wrapper">
+												<nav class="main-menu-wrapper navbar navbar-light navbar-expand-md">
+													<ul class="main-menu navbar-nav">
+														{% for item in general_menu %}
+															<li class="main-menu-item nav-item{% if item.child.all %} dropdown{% endif %}">
+																{% if item.child.all %}
+																	<a class="main-menu-link nav-link dropdown-toggle" href="{{ item.get_url }}" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ item.title }}</a>
+																	<div class="main-menu-dropdown dropdown-menu">
+																		{% for child in item.child.all %}
+																			<a class="dropdown-item" href="{{ child.get_url }}">{{ child.title }}</a>
+																		{% endfor %}
+																	</div>
+																{% else %}
+																	<a class="main-menu-link nav-link" href="{{ item.get_url }}">{{ item.title }}<span class="sr-only">(current)</span></a>
+																{% endif %}
+															</li>
+														{% endfor %}
+													</ul>
+												</nav>
+												<div class="header-top__reqs-wrapper">
+													<a href="mailto:op@komsis.su" class="header-link" onclick="ym(56972323, 'reachGoal', 'email'); return true;">
+														<svg role="img" class="header-link__icon"><use xlink:href="/static/images/sprite.svg#new-email"></use></svg>
+														<span class="header-link__text">{{ settings.email }}</span>
+													</a>
+													<div>
+														<a href="#" class="header-contacts__callback simple-button modal_trigger" data-target="#recall_modal">Перезвоните мне</a>
+													</div>
+												</div>
+											</div>
+										</div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="header-middle">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="col-3">
+                                            <a class="header-logo" href="/">
+                                                <img class="header-logo__image" src="/static/images/header-logo.svg" alt=""/>
+                                            </a>
+                                        </div>
+                                        <div class="col-9">
+                                            <div class="header-contacts">
+												<div class="header-contacts__block addresses">
+													{% for address in settings.get_addresses %}
+													<div class="contacts-wrapper">
+														<span class="header-contacts-item header-contacts-item_address">
+															<svg class="header-contacts-item__icon" width="13" height="17" role="img">
+																<use xlink:href="/static/images/sprite.svg#new-pin"></use>
+															</svg>
+															<span class="header-contacts-item__text">{{ address }}</span>
+														</span>
+															{% if forloop.first %}
+																<div class="header-contacts-item work-time-value">
+																	<svg role="img" class="header-link__icon"><use xlink:href="/static/images/sprite.svg#new-clock"></use></svg>
+																	<div class="header-link__text">{{ settings.time_work }}</div>
+																</div>
+															{% else %}
+																<div class="header-contacts-item work-time-value">
+																	<svg role="img" class="header-link__icon"><use xlink:href="/static/images/sprite.svg#new-clock"></use></svg>
+																	<div class="header-link__text">{{ settings.time_work_cherep }}</div>
+																</div>
+															{% endif %}
+													</div>
+													{% endfor %}
+												</div>
+                                                <div class="header-contacts__block">
+                                                	{% for phone in settings.get_phones %}
+													<a class="header-contacts-item header-contacts-item_phone" href="tel:phone" onclick="ym(56972323, 'reachGoal', 'tel'); return true;">
+														<svg class="header-contacts-item__icon" width="16" height="17" role="img">
+															<use xlink:href="/static/images/sprite.svg#new-phone"></use>
+														</svg>
+														<span class="header-contacts-item__text header-contacts-item__text_phone">{{ phone }}</span>
+													</a>
+													{% endfor %}
+												</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+						</div>
+						<div class="header-bottom cd-secondary-nav">
+							<div class="container">
+								<div class="header-shop">
+									<div class="catalog-button">
+										<a class="catalog-button-link" href="{% url 'catalog' %}">
+											<span class="catalog-button-lines"></span>
+											<span class="catalog-button-title">Каталог товаров</span>
+											<span class="catalog-button-arrow"></span>
+										</a>
+										<ul class="catalog-menu">
+											{% for item in categories%}
+												{% if forloop.counter < 7 %}
+												<li class="catalog-menu-item">
+													<a class="catalog-menu-link" href="{{ item.get_absolute_url }}">
+														<span class="catalog-menu-item__text">{{ item.title }}</span>
+														{% if item.childs.all %}
+															<svg class="catalog-menu-item__arrow" role="img">
+																<use xlink:href="/static/images/sprite.svg#small_arrow"></use>
+															</svg>
+														{% endif %}
+													</a>
+													{% if item.childs.all %}
+														<div class="catalog-submenu">
+															{% for child in item.childs.all %}
+																<a class="catalog-submenu-link" href="{{ child.get_absolute_url }}">{{ child.title }}</a>
+															{% endfor %}
+														</div>
+													{% endif %}
+												</li>
+												{% endif %}
+											{% endfor %}
+											<li class="catalog-menu-item all-cats">
+												<a class="catalog-menu-link" href="{% url 'catalog' %}">
+													<span class="catalog-menu-item__text">Все категории</span>
+												</a>
+											</li>
+										</ul>
+									</div>
+									<form class="search-form" action="/products/" url-api="{% url 'search' %}" data-attr="desc">
+										<label for="search" class="search-form__label">
+											<input type="text" name="search" id="search" autocomplete="off" value="{{ search }}" placeholder="Введите артикул или наименования" />
+										</label>
+                                        <button aria-label="search">
+                                            <svg role="img" width="16" height="16">
+                                                <use xlink:href="/static/images/sprite.svg#search"></use>
+                                            </svg>
+                                        </button>
+                                        <div class="search-form__ajax-search"><ul></ul></div>
+                                    </form>
+                                    {% if user.is_authenticated %}
+                                        <a class="shop-button" href="{% url 'accounts:account-orders'  %}">
+                                    {% else %}
+                                        <a class="shop-button modal_trigger" href="#" data-target="#custom_modal-1">
+                                    {% endif %}
+                                        <svg class="shop-button__icon" width="13" height="13" role="img">
+                                            <use xlink:href="/static/images/sprite.svg#new-user"></use>
+                                        </svg>
+                                        <span class="shop-button__title">Личный кабинет</span>
+                                    </a>
+                                    <a class="shop-button favorites-button" data-shop-button="favorites" href="{% url 'favorites' %}">
+                                        <svg class="shop-button__icon" width="14" height="13" role="img">
+                                            <use xlink:href="/static/images/sprite.svg#new-heart"></use>
+                                        </svg>
+                                        <span class="shop-button__title">Избранное</span>
+                                        <span class="shop-button__count favorites-button__count{% if favorites.count %} filled{% endif %}">{{ favorites.count }}</span>
+                                    </a>
+                                    <a class="shop-button cart-button" data-shop-button="cart" href="{% url 'cart' %}">
+                                        <svg class="shop-button__icon" width="17" height="15" role="img">
+                                            <use xlink:href="/static/images/sprite.svg#new-cart"></use>
+                                        </svg>
+                                        <span class="shop-button__title">Корзина</span>
+                                        <span class="shop-button__count cart-button__count{% if cart.count %} filled{% endif %}">{{ cart.count }}</span>
+                                    </a>
+								</div>
+							</div>
+						</div>
+                    </div>
+                    <div class="header-mobile mobile-header d-xl-none">
+                        <div class="left-part">
+                            <button class="mobile-menu-button">
+                                <div class="burger">
+                                    <div class="burger-lines">
+                                        <div class="burger-lines__top"></div>
+                                        <div class="burger-lines__center"></div>
+                                        <div class="burger-lines__bottom"></div>
+                                    </div>
+                                </div>
+                            </button>
+                            <a class="logo" href="/">
+                                <img src="/static/images/header-logo.svg" alt="mobile-logo"/>
+                            </a>
+                        </div>
+                        <div class="right-part">
+                            <div class="mobile-search-icon">
+                                <svg role="img" width="17" height="17" class="search-icon active">
+                                    <use xlink:href="/static/images/sprite.svg#search"></use>
+                                </svg>
+								<svg role="img" width="17" height="17" class="close-icon">
+                                    <use xlink:href="/static/images/sprite.svg#close-button"></use>
+                                </svg>
+                            </div>
+                            <a class="mobile-cart-link" href="{% url 'cart' %}">
+                                <span class="icon">
+                                    <svg role="img" width="23" height="16">
+                                        <use xlink:href="/static/images/sprite.svg#new-cart"></use>
+                                    </svg>
+                                    <span class="number cart_count">{% if cart %}{{ cart.count }}{% else %}0{% endif %}</span>
+                                </span>
+                            </a>
+                        </div>
+                    </div>
+                </header>
+                {% block content %}{% endblock %}
+            </div>
+            <footer class="footer">
+				<div class="container">
+					<div class="row">
+						{% if general_menu %}
+						<div class="col-12 d-none d-lg-block col-lg-3">
+							<div class="footer-block">
+								<b class="footer-block__title">Компания</b>
+								<ul class="footer-block__menu">
+									{% for punct in general_menu %}
+										<li>
+											<a href="{{ punct.get_url }}"><span>{{ punct.title }}</span></a>
+										</li>
+									{% endfor %}
+								</ul>
+							</div>
+						</div>
+						{% endif %}
+						{% if footer_menu %}
+						<div class="col-12 d-none d-lg-block col-lg-3">
+							<div class="footer-block">
+								<b class="footer-block__title">Покупателям</b>
+								<ul class="footer-block__menu">
+									{% for punct in footer_menu %}
+									<li>
+										<a href="{{ punct.get_url }}"><span>{{ punct.title }}</span></a>
+									</li>
+									{% endfor %}
+								</ul>
+							</div>
+						</div>
+						{% endif %}
+						<div class="col-12 col-sm-6 col-lg-3 col-xl-3">
+							<div class="footer-block" itemscope="" itemtype="http://schema.org/LocalBusiness">
+								<b class="footer-block__title">Связаться с нами</b>
+								<meta content="{{ settings.name }}" itemprop="name"/>
+								{% for address in settings.get_addresses %}
+								<span class="address footer-block__req" itemprop="address">{{ address }}</span>
+								{% endfor %}
+								<span class="footer-block__req">
+									{% for phone in settings.get_phones %}
+									<meta content="{{ phone }}" itemprop="telephone"/>
+									<a class="phone" href="tel:{{ phone }}" onclick="ym(56972323, 'reachGoal', 'tel'); return true;">{{ phone }}</a>
+									{% endfor %}
+								</span>
+								{% get_emails as emails %}
+								{% for item in emails %}
+									<a class="footer-block__req footer-block__req_mail" href="mailto:{{ item.email }}" itemprop="email" onclick="ym(56972323, 'reachGoal', 'email'); return true;">
+										{{ item.email }} - {{ item.title }}{% if item.show_city %}, {{ item.city }}{% endif %}
+									</a>
+								{% endfor %}
+								<a class="simple-button modal_trigger footer-callback" href="#" data-target="#recall_modal">Заказать звонок</a>
+							</div>
+						</div>
+						<div class="col-12 d-none d-sm-block col-sm-6 col-lg-3">
+							<div class="footer-block">
+                                <b class="footer-block__title">Социальные сети</b>
+
+                                {% if settings.social_view == 'classic' %}
+                                    {% if settings.vkontakte%}
+                                    <a class="footer-social-link" href="{{ settings.vkontakte }}" target="_blank">
+                                        <span class="footer-social-icon footer-social-link__icon">
+                                            <svg role="img" width="18" height="10">
+                                                <use xlink:href="/static/images/sprite.svg#vk"></use>
+                                            </svg>
+                                        </span>
+                                    </a>
+                                    {% endif %}
+                                    {% if settings.facebook%}
+                                    <a class="footer-social-link" href="{{ settings.facebook }}" target="_blank">
+                                        <span class="footer-social-icon footer-social-link__icon">
+                                            <svg role="img" width="10" height="19">
+                                                <use xlink:href="/static/images/sprite.svg#facebook"></use>
+                                            </svg>
+                                        </span>
+                                    </a>
+                                    {% endif %}
+                                    {% if settings.twitter%}
+                                    <a class="footer-social-link" href="{{ settings.twitter }}" target="_blank">
+                                        <span class="footer-social-icon footer-social-link__icon">
+                                            <svg role="img" width="17" height="14">
+                                                <use xlink:href="/static/images/sprite.svg#twitter"></use>
+                                            </svg>
+                                        </span>
+                                    </a>
+                                    {% endif %}
+                                    {% if settings.odnoklassniky%}
+                                    <a class="footer-social-link" href="{{ settings.odnoklassniky }}" target="_blank">
+                                        <span class="footer-social-icon footer-social-link__icon">
+                                            <svg role="img" width="11" height="17">
+                                                <use xlink:href="/static/images/sprite.svg#ok"></use>
+                                            </svg>
+                                        </span>
+                                    </a>
+                                    {% endif %}
+                                    {% if settings.instagram%}
+                                    <a class="footer-social-link" href="{{ settings.instagram }}" target="_blank">
+                                        <span class="footer-social-icon footer-social-link__icon">
+                                            <svg role="img" width="20" height="20">
+                                                <use xlink:href="/static/images/sprite.svg#insta"></use>
+                                            </svg>
+                                        </span>
+                                    </a>
+                                    {% endif %}
+                                    {% if settings.youtube%}
+                                    <a class="footer-social-link" href="{{ settings.youtube }}" target="_blank">
+                                        <span class="footer-social-icon footer-social-link__icon">
+                                            <svg role="img" width="17" height="12">
+                                                <use xlink:href="/static/images/sprite.svg#youtube"></use>
+                                            </svg>
+                                        </span>
+                                    </a>
+                                    {% endif %}
+                                {% else %}
+                                    {% if settings.vkontakte%}
+                                    <a class="footer-social-link footer-social-link_wide" href="{{ settings.vkontakte }}" target="_blank">
+                                        <span class="footer-social-icon footer-social-link__icon">
+                                            <svg role="img" width="18" height="10">
+                                                <use xlink:href="/static/images/sprite.svg#vk"></use>
+                                            </svg>
+                                        </span>ВКонтакте
+                                    </a>
+                                    {% endif %}
+                                    {% if settings.facebook%}
+                                    <a class="footer-social-link footer-social-link_wide" href="{{ settings.facebook }}" target="_blank">
+                                        <span class="footer-social-icon footer-social-link__icon">
+                                            <svg role="img" width="10" height="19">
+                                                <use xlink:href="/static/images/sprite.svg#facebook"></use>
+                                            </svg>
+                                        </span>facebook
+                                    </a>
+                                    {% endif %}
+                                    {% if settings.twitter%}
+                                    <a class="footer-social-link footer-social-link_wide" href="{{ settings.twitter }}" target="_blank">
+                                        <span class="footer-social-icon footer-social-link__icon">
+                                            <svg role="img" width="17" height="14">
+                                                <use xlink:href="/static/images/sprite.svg#twitter"></use>
+                                            </svg>
+                                        </span>twitter
+                                    </a>
+                                    {% endif %}
+                                    {% if settings.odnoklassniky%}
+                                    <a class="footer-social-link footer-social-link_wide" href="{{ settings.odnoklassniky }}" target="_blank">
+                                        <span class="footer-social-icon footer-social-link__icon">
+                                            <svg role="img" width="11" height="17">
+                                                <use xlink:href="/static/images/sprite.svg#ok"></use>
+                                            </svg>
+                                        </span>Одноклассники
+                                    </a>
+                                    {% endif %}
+                                    {% if settings.instagram%}
+                                    <a class="footer-social-link footer-social-link_wide" href="{{ settings.instagram }}" target="_blank">
+                                        <span class="footer-social-icon footer-social-link__icon">
+                                            <svg role="img" width="20" height="20">
+                                                <use xlink:href="/static/images/sprite.svg#insta"></use>
+                                            </svg>
+                                        </span>Instagram
+                                    </a>
+                                    {% endif %}
+                                    {% if settings.youtube%}
+                                    <a class="footer-social-link footer-social-link_wide" href="{{ settings.youtube }}" target="_blank">
+                                        <span class="footer-social-icon footer-social-link__icon">
+                                            <svg role="img" width="17" height="12">
+                                                <use xlink:href="/static/images/sprite.svg#youtube"></use>
+                                            </svg>
+                                        </span> YouTube
+                                    </a>
+                                    {% endif %}
+                                {% endif %}
+
+							</div>
+						</div>
+						<div class="col-12">
+							<div class="footer__lower-part">
+								<div class="footer__lower-part-wrapper">
+									<div class="footer__lower-part-left">
+										<p>© 2007-<span id="current-year"></span> ООО ИЦ Коммунальные системы</p>
+										<a href="{% url 'privacy-policy' %}" target="_blank">Политика конфиденциальности</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</footer>
+		</div>
+		<div class="cookie-window disable">
+			<div class="cookie-text">
+				Этот сайт использует файлы cookies и сервисы сбора технических данных посетителей
+				для обеспечения работоспособности и улучшения качества обслуживания.
+				Продолжая использовать наш сайт, вы автоматически соглашаетесь с использованием данных технологий.
+			</div>
+			<button class="cookie-button simple-button">Согласен</button>
+		</div>
+		<div class="to-top hide" data-anchore="body">
+			<span class="arrow_top">
+				<svg role="img" width="26" height="9">
+					<use xlink:href="/static/images/sprite.svg#slider-arr"></use>
+				</svg>
+			</span>
+		</div>
+        <div class="custom_modal" id="recall_modal">
+            <a class="modal_close" href="#"></a>
+            <b class="modal_title">Заказать звонок</b>
+            <form class="custom_modal__feedback-form" action="{% url 'feedback-question' %}" method="POST" data-ym="call">
+                <input type="hidden" name="subject" value="Заявка на звонок">
+                <input type="hidden" name="product_id" value="{{ object.id }}">
+                <div class="form-group required">
+                    <label>Телефон</label>
+                    <input class="form-control" name="phone" type="tel" required="required"/>
+                    <div class="valid-feedback">Готово!</div>
+                </div>
+				<label class="acceptance_checkbox">
+					<input type="checkbox" name="agree" checked="checked" />
+					<s class="new_checkbox">
+						<svg role="img" width="8" height="6">
+							<use xlink:href="/static/images/sprite.svg#checkbox_arrow"></use>
+						</svg>
+					</s>
+					<span class="text">Согласен на <a href="{% url 'personal-data' %}" target="_blank">обработку данных</a></span>
+				</label>
+                <button class="btn btn-primary btn-lg" type="submit" aria-labelledby="call">Отправить заявку</button>
+                <div class="load">
+                    <img src="/static/images/loader.gif" alt=""/>
+                </div>
+                <div class="success">
+                    <svg role="img" width="57" height="57">
+                        <use xlink:href="/static/images/sprite.svg#done_icon"></use>
+                    </svg>
+                    <b>Заявка успешно отправлена</b>
+					<span
+						class="will-callback {% if settings.is_working %}hidden{% endif %}"
+						>
+						Оператор свяжется с вами в рабочее время!
+					</span>
+                </div>
+            </form>
+        </div>
+        <div class="custom_modal" id="recall_modal_1">
+            <a class="modal_close" href="#"></a>
+            <b class="modal_title">Заказать звонок</b>
+			<script src="https://yastatic.net/q/forms-frontend-ext/_/embed.js"></script>
+			<iframe src="https://forms.yandex.ru/u/5f0c4059c12fb20265f28280/?iframe=1"; frameborder="0" name="ya-form-5f0c4059c12fb20265f28280" width="650"></iframe>
+		</div>
+		<div class="custom_modal" id="product-nutify">
+            <a class="modal_close" href="#"></a>
+            <b class="modal_title">Уведомить о наличии</b>
+            <form class="custom_modal__feedback-form" id="nutify-form" action="{% url 'feedback-question' %}" method="POST">
+                <input type="hidden" name="subject" value="Уведомить о наличии">
+                <input type="hidden" name="product_id" value="Уведомить о наличии">
+                <div class="form-group required">
+                    <label>Телефон</label>
+                    <input class="form-control" name="phone" type="tel" required="required"/>
+                    <div class="valid-feedback">Готово!</div>
+                </div>
+                <label class="acceptance_checkbox">
+                    <input type="checkbox" name="agree" checked="checked"/>
+                    <s class="new_checkbox">
+                        <svg role="img" width="8" height="6">
+                            <use xlink:href="/static/images/sprite.svg#checkbox_arrow"></use>
+                        </svg>
+                    </s>
+                    <span class="text">Согласен на <a href="{% url 'personal-data' %}" target="_blank">обработку данных</a></span>
+                </label>
+                <button class="btn btn-primary btn-lg" type="submit" aria-labelledby="call">Отправить заявку</button>
+                <div class="load">
+                    <img src="/static/images/loader.gif" alt=""/>
+                </div>
+                <div class="success">
+                    <svg role="img" width="57" height="57">
+                        <use xlink:href="/static/images/sprite.svg#done_icon"></use>
+                    </svg>
+                    <b>Заявка успешно отправлена</b>
+                </div>
+            </form>
+        </div>
+        <div class="custom_modal" id="custom_modal-1">
+			<a class="modal_close" href="#"></a>
+			<b class="modal_title">Войти в личный кабинет</b>
+			<!-- На форму кидать классы: error, load, success-->
+			<form action="{% url 'accounts:account-login' %}" method="POST">
+				<div class="form-group required">
+					<label>Email</label>
+					<input class="form-control" type="email" name="email" required="required"/>
+					<div class="valid-feedback">Готово!</div>
+				</div>
+				<div class="form-group required">
+					<label>Пароль</label>
+					<input class="form-control" type="password" name="password" required="required"/>
+					<div class="valid-feedback">Готово!</div>
+				</div>
+				<button class="btn btn-primary btn-lg" type="submit" aria-labelledby="in">
+					<span>Войти</span>
+				</button>
+				<a class="open_other_modal" href="#" data-target="#custom_modal-2">Забыли пароль?</a>
+				<a class="register-link" href="{% url 'accounts:account-create' %}">Регистрация</a>
+				<div class="load">
+					<img src="/static/images/loader.gif" alt=""/>
+				</div>
+				<div class="success">
+					<svg role="img" width="57" height="57">
+						<use xlink:href="/static/images/sprite.svg#done_icon"></use>
+					</svg>
+					<b>Заявка успешно отправлена</b>
+				</div>
+			</form>
+		</div>
+		<div class="custom_modal" id="custom_modal-2">
+			<a class="modal_close" href="#"></a>
+			<b class="modal_title">Восстановление пароля</b>
+			<form action="{% url 'accounts:password_reset' %}" method="POST">
+				<div class="form-group required">
+					{% csrf_token %}
+					<label>Email</label>
+					<input class="form-control" type="email" name="email" required="required"/>
+					<div class="valid-feedback">Готово!</div>
+				</div>
+				<button class="btn btn-primary btn-lg" type="submit" aria-labelledby="pass">
+					<span>Восстановить пароль</span>
+				</button>
+				<a class="open_other_modal" href="#" data-target="#custom_modal-1">Войти в личный кабинет</a>
+				<div class="load">
+					<img src="/static/images/loader.gif" alt=""/>
+				</div>
+				<div class="success">
+					<svg role="img" width="57" height="57">
+						<use xlink:href="/static/images/sprite.svg#done_icon"></use>
+					</svg>
+					<b>Заявка успешно отправлена</b>
+				</div>
+			</form>
+		</div>
+		<div class="custom_modal" id="custom_modal-3">
+			<a class="modal_close" href="#"></a>
+			<b class="modal_title">Регистрация</b>
+			<form action="{% url 'accounts:account-register' %}" method="POST" data-ym="reg">
+                {% csrf_token %}
+				<div class="form-group required">
+					<label>Email</label>
+					<input class="form-control" type="email" name="email" required="required"/>
+					<div class="valid-feedback">Готово!</div>
+				</div>
+				<label class="acceptance_checkbox">
+					<input type="checkbox" name="agree" checked="checked"/>
+					<s class="new_checkbox">
+						<svg role="img" width="8" height="6">
+							<use xlink:href="/static/images/sprite.svg#checkbox_arrow"></use>
+						</svg>
+					</s>
+					<span class="text">Согласен на
+						<a href="{% url 'personal-data' %}">обработку данных</a>
+					</span>
+				</label>
+        		<div class="form-group g-recaptcha" data-sitekey="{% recaptcha_site_key %}"></div>
+				<button class="btn btn-primary btn-lg" type="submit" aria-labelledby="register">
+					<span>Зарегистрироваться</span>
+				</button>
+				<a class="open_other_modal" href="#" data-target="#custom_modal-1">Я уже зарегистррован на сайте</a>
+				<div class="load">
+					<img src="/static/images/loader.gif" alt=""/>
+				</div>
+				<div class="success">
+					<svg role="img" width="57" height="57">
+						<use xlink:href="/static/images/sprite.svg#done_icon"></use>
+					</svg>
+					<b>Заявка успешно отправлена</b>
+				</div>
+			</form>
+		</div>
+		<div class="custom_modal" id="custom_modal-4">
+			<a class="modal_close" href="#"></a>
+			<b class="modal_title">Задать вопрос</b>
+			<form action="{% url 'feedback-question' %}" method="POST">
+				<div class="form-group required">
+					<label>Имя</label>
+					<input class="form-control" name="name" type="text" required="required"/>
+					<div class="valid-feedback">Готово!</div>
+				</div>
+				<div class="form-group required">
+					<label>Телефон для связи</label>
+					<input class="form-control" name="phone" type="tel" required="required"/>
+					<div class="valid-feedback">Готово!</div>
+				</div>
+				<div class="form-group required">
+					<label>Email для ответа</label>
+					<input class="form-control" name="email" type="email" required="required"/>
+					<div class="valid-feedback">Готово!</div>
+				</div>
+				<div class="form-group required">
+					<label>Сообщение менеджеру</label>
+					<textarea class="form-control" name="message" required="required"></textarea>
+					<div class="valid-feedback">Готово!</div>
+				</div>
+				<label class="acceptance_checkbox">
+					<input type="checkbox" name="agree" checked="checked"/>
+					<s class="new_checkbox">
+						<svg role="img" width="8" height="6">
+							<use xlink:href="/static/images/sprite.svg#checkbox_arrow"></use>
+						</svg>
+					</s>
+					<span class="text">Согласен на
+						<a href="#">обработку данных</a>
+					</span>
+				</label>
+				<button class="btn btn-primary btn-lg" type="submit" aria-labelledby="call">
+					<span>Отправить заявку</span>
+				</button>
+				<div class="load">
+					<img src="/static/images/loader.gif" alt=""/>
+				</div>
+				<div class="success">
+					<svg role="img" width="57" height="57">
+						<use xlink:href="/static/images/sprite.svg#done_icon"></use>
+					</svg>
+					<b>Заявка успешно отправлена</b>
+				</div>
+			</form>
+		</div>
+	{% if settings.banner_img %}
+		<div class="custom_modal" id="bothersome-modal">
+			<div class="bothersome-modal">
+				<a class="modal_close" href="#"></a>
+				<a href="https://komsis.su/brands/termo-zont/" target="_blank">
+
+					<img src="{{settings.banner_img.url}}" alt="Смеситель бесплатно" class="bothersome__img">
+
+				</a>
+			</div>
+		</div>
+	{% endif %}
+
+		<div class="custom_modal" id="banner-modal" data-start="06.09.2023" data-end="06.12.2023" style="overflow: hidden;">
+			<div class="bothersome-modal">
+				<a class="modal_close" href="#"></a>
+				<!--<a href="https://vk.com/wall-175270028_476" target="_blank">-->
+					<img src="{% static 'images/rfday.jpg' %}" alt="Праздничные выходные" class="bothersome__img" style="max-width: 100%;">
+				<!--</a>-->
+			</div>
+		</div>
+
+		<input type="hidden" value="{{ days }}">
+        {% block modals %}{% endblock %}
+
+		<form class="csrf_token">{% csrf_token %}</form>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js"></script>
+        <script src='{% static "js/vendors.bundle.js" %}' defer></script>
+        <script src='{% static "js/main.bundle.js" %}' defer></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js" defer></script>
+
+
+        <script src='{% static "js/shop.js" %}?v=8' defer></script>
+		<script src="/sw.js?v=2" sync></script>
+		<script src={% static "js/search.js" %}></script>
+		<script>
+			var clipboard = new ClipboardJS('.copy-btn');
+
+			clipboard.on('success', function(e) {
+				let def = e.trigger.querySelector('.copy-dropdown__default');
+				let success = e.trigger.querySelector('.copy-dropdown__success');
+				def.style.display = 'none';
+				success.style.display = 'block';
+				setTimeout(event => {
+					def.style.display = 'block';
+					success.style.display = 'none';
+				}, 3000)
+				e.clearSelection();
+			});
+		</script>
+        <!-- Admin scripts -->
+        {{ settings.scripts|safe }}
+
+		{% block scripts %}{% endblock %}
+		<div class="socials-container">
+			<div class="socials-messenger">
+				<div title="Чат с менеджером" class="messenger-btn"><img src="https://volgo-prime.ru/img/icons/chat.svg" alt="Чат с менеджером" /></div>
+				<div id="messenger-links" class="messenger-links">
+					<a title="Whatsapp" href="whatsapp://send?phone=+79114474045" target="_blank"><img src="{% static "images/whatsapp.svg" %}" alt="Whatsapp" /></a>
+					<a title="Viber" href="viber://chat?number=%2B79114474045" target="_blank"><img src="{% static "images/viber.svg" %}" alt="Viber" /></a>
+					<a title="Telegram" href="https://t.me/+79114474045" target="_blank"><img src="{% static "images/telegram.svg" %}" alt="Telegram" /></a>
+					<a title="Вконтакте" href="https://vk.com/im?media=&sel=-175270028" target="_blank"><img src="{% static "images/vk.svg" %}" alt="Вконтакте" /></a>
+				</div>
+			</div>
+		</div>
+	</div>
+	</body>
+</html>

@@ -1,0 +1,255 @@
+{% extends "base.html" %}
+{% load thumbnail utils posts pages case %}
+
+{% block content %}
+
+<div class="main-page">
+    {% if settings.slider_items.all %}
+    <section class="short-slider-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="short-slider wide-slider">
+                        {% for item in slider %}
+                            <a href="{{ item.link }}" class="short-slider__slide"
+                                style="background-image: url(https://komsis.su/{{ item.image.url }});"></a>
+                        {% endfor %}
+                    </div>
+                    <div class="short-slider mobile-slider">
+                        {% for item in mobile_slider %}
+                            <a href="{{ item.link }}" class="short-slider__slide"
+                                style="background-image: url({{ item.mobile_image.url }});"></a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+    <section class="index-categories">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="ytp-container">
+                        {% for ytp_container in index_page_blocks %}
+                            <a class="ytp-container-item {% if not ytp_container.is_clickable %}disabled{% endif %}" {% if ytp_container.is_clickable %}href="{{ ytp_container.href }}"{% endif %}>
+                                <span class="ytp-container-background">
+                                    {% if ytp_container.image_right_top %}
+                                        <img src="{{ ytp_container.image_right_top.url }}" class='svg-right-top ytp-container-image' width="37" height="46"></img>
+                                    {% endif %}
+                                    {% if ytp_container.image_right_bottom %}
+                                        <img src="{{ ytp_container.image_right_bottom.url }}" alt="" class='svg-right-bottom ytp-container-image' width="69" height="72">
+                                    {% endif %}
+                                    {% if ytp_container.image_left_bottom %}
+                                        <img src="{{ ytp_container.image_left_bottom.url }}" alt="" class='svg-left-bottom ytp-container-image' width="31" height="37">
+                                    {% endif %}
+                                </span>
+                                <span class="ytp-container-item__title">{{ ytp_container.title }}</span>
+                            </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="categories-container desktop">
+                        {% for direction in directions %}
+                        <a href="/tags/dir_{{ direction.id }}"
+                           class="category-block"
+                           style="background-image: url(https://komsis.su/{{ direction.thumbnail.url }});">
+								<span class="category-block__mask-wrapper">
+									<b class="category-block__title">{{ direction.get_title|safe }}</b>
+									<span class="category-block__desc">{{ direction.products_count }} {% word direction.products_count %}</span>
+									<span class="category-block__arrow">
+										<svg role="img" width="26" height="9">
+											<use xlink:href="/static/images/sprite.svg#direction-arrow"></use>
+										</svg>
+									</span>
+								</span>
+                        </a>
+                        {% endfor %}
+                    </div>
+                    <div class="categories-container mobile">
+                        {% for direction in directions %}
+                        <a href="/tags/dir_{{ direction.id }}"
+                           class="category-block"
+                           style="background-image: url(https://komsis.su/{{ direction.get_mobile_thumbnail.url }});">
+								<span class="category-block__mask-wrapper">
+									<b class="category-block__title">{{ direction.get_mobile_title|safe }}</b>
+									<span class="category-block__desc">{{ direction.products_count }} {% word direction.products_count %}</span>
+									<span class="category-block__arrow">
+										<svg role="img" width="26" height="9">
+											<use xlink:href="/static/images/sprite.svg#direction-arrow"></use>
+										</svg>
+									</span>
+								</span>
+                        </a>
+                        {% endfor %}
+                    </div>
+                    <a href="{% url 'catalog' %}" class="index-categories__more">Смотреть весь каталог</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% if sale_products or new_products or hit_products %}
+    <section class="products-tabs-section">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="products-tabs">
+                        <ul class="nav products-tabs__labels" role="tablist">
+                            {% if sale_products %}
+                            <li class="nav-item products-tabs__label">
+                                <a class="active" id="sale" data-toggle="tab" href="#tab-1" role="tab"
+                                   aria-controls="tab-1" aria-selected="true">Распродажа</a>
+                            </li>
+                            {% endif %}
+                            {% if new_products %}
+                            <li class="nav-item products-tabs__label">
+                                <a class="" id="label-2" data-toggle="tab" href="#tab-2" role="tab"
+                                   aria-controls="tab-2"
+                                   aria-selected="{% if sale_products %}false{% else %}true{% endif %}">Новинки</a>
+                            </li>
+                            {% endif %}
+                            {% if hit_products %}
+                            <li class="nav-item products-tabs__label">
+                                <a class="" id="label-3" data-toggle="tab" href="#tab-3" role="tab"
+                                   aria-controls="tab-3"
+                                   aria-selected="{% if sale_products or new_products %}false{% else %}true{% endif %}">Популярные</a>
+                            </li>
+                            {% endif %}
+                        </ul>
+
+                        <div class="tab-content products-tabs__tabs">
+                            {% if sale_products %}
+                            <div class="products-tabs__tab tab-pane fade show active" id="tab-1" role="tabpanel"
+                                 aria-labelledby="sale">
+                                <div class="row">
+                                    <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+                                        <a href="{% url 'products' %}?sale=on&salemode"
+                                           class="catalog-inviter catalog-inviter_color_light-blue">
+                                            {% comment %}<a href="{% url 'actions' %}"
+                                                 class="catalog-inviter catalog-inviter_color_light-blue">{% endcomment %}
+                                            <span class="catalog-inviter__icon">
+														<img src="/static/images/inviter-icon.svg" alt="inviter-icon">
+													</span>
+                                            <span class="catalog-inviter__title">Товары со скидкой</span>
+                                            <span class="catalog-inviter__fake-link">Смотреть все</span>
+                                        </a>
+                                    </div>
+                                    {% for product in sale_products %}
+                                    <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+                                        {% include 'catalog/product-card.html' %}
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if new_products %}
+                            <div class="products-tabs__tab tab-pane fade{% if not sale_products %} show active{% endif %}"
+                                 id="tab-2" role="tabpanel" aria-labelledby="label-2">
+                                <div class="row">
+                                    <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+                                        <a href="category-list/new/"
+                                           class="catalog-inviter catalog-inviter_color_dark-blue">
+													<span class="catalog-inviter__icon">
+														<img src="/static/images/inviter-icon.svg" alt="inviter-icon">
+													</span>
+                                            <span class="catalog-inviter__title">Новые поступления</span>
+                                            <span class="catalog-inviter__fake-link">Смотреть все</span>
+                                        </a>
+                                    </div>
+                                    {% for product in new_products %}
+                                    <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+                                        {% include 'catalog/product-card.html' %}
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if hit_products %}
+                            <div class="products-tabs__tab tab-pane fade{% if not sale_products and not new_products %} show active{% endif %}"
+                                 id="tab-3" role="tabpanel" aria-labelledby="label-3">
+                                <div class="row">
+                                    <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+                                        <a href="category-list/hit/"
+                                           class="catalog-inviter catalog-inviter_color_yellow">
+												<span class="catalog-inviter__icon">
+													<img src="/static/images/inviter-icon-dark.svg" alt="inviter-icon">
+												</span>
+                                            <span class="catalog-inviter__title">Популярные товары</span>
+                                            <span class="catalog-inviter__fake-link">Смотреть все</span>
+                                        </a>
+                                    </div>
+                                    {% for product in hit_products %}
+                                    <div class="col-12 col-md-6 col-lg-4 col-xl-3">
+                                        {% include 'catalog/product-card.html' %}
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+    {% if brands %}
+    <section class="section-brands">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <b class="section-brands__title">
+                        <svg role="img" width="32" height="34">
+                            <use xlink:href="/static/images/static-sprite.svg#brands-title-icon"></use>
+                        </svg>
+                        Бренды
+                    </b>
+                    <div class="section-brands__container">
+                        <div class="row">
+                            {% for brand in brands %}
+                            <div class="col-6 col-md-4 col-lg-3 col-xl-2">
+                                <a class="partner-block" href="{{ brand.get_absolute_url }}">
+                                    <img class="partner-block__partner-logo" src="https://komsis.su/{{ brand.thumbnail.url }}"
+                                         alt="{{ brand.get_alt }}"/>
+                                    <span class="partner-block__text">Подробнее</span>
+                                </a>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <a href="{% url 'brands' %}" class="section-brands__button">смотреть все</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+    {% if settings.seo_text %}
+    <section class="seo-scroller">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 col-lg-6">
+                    <div class="seo-scroller__seo-images">
+                        <img src="https://komsis.su/{{ settings.seo_img1.url }}" alt="{{ settings.seo_img1|alt }}"/>
+                        <img src="https://komsis.su/{{ settings.seo_img2.url }}" alt="{{ settings.seo_img2|alt }}"/>
+                        <img src="https://komsis.su/{{ settings.seo_img3.url }}" alt="{{ settings.seo_img3|alt }}"/>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6">
+                    <div class="seo-scroller__seo-text">
+                        <div class="content-text">
+                            {{ settings.seo_text|safe }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% endif %}
+</div>
+
+{% endblock %}

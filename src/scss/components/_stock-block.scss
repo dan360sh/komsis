@@ -1,0 +1,81 @@
+.stock-block{
+	display: block;
+	position: relative;
+	height: 300px;
+	max-width: 570px;
+	border: 1px solid #e5e5e5;
+	&:hover &{
+		&__hover-layer{
+			opacity: 1;
+		}
+	}
+	&__img{
+		height: 100%;
+		width: 100%;
+	}
+	&__hover-layer{
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		position: absolute;
+		top: 10px;
+		left: 10px;
+		width: calc(100% - 20px);
+		height: calc(100% - 20px);
+		padding: 20px 40px;
+		background-color: rgba(1, 116, 216, 0.98);
+		color: #fff;
+		opacity: 0;
+		transition: opacity .2s linear;
+	}
+	&__date{
+		display: block;
+		color: #8dcaff;
+		font-size: 14px;
+		font-weight: 400;
+	}
+	&__title{
+		display: block;
+		padding: 16px 0 0;
+		color: #fff;
+		font-size: 18px;
+		font-weight: 500;
+	}
+	&__text{
+		color: #fff;
+		font-size: 16px;
+		font-weight: 400;
+		line-height: 25px;
+		   padding: 6px 0 0;
+	}
+	&__button{
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		
+		margin: 30px 0 0;
+		width: 113px;
+		height: 38px;
+		border-radius: 4px;
+		background-color: #fff;
+		border: 1px solid #fff;
+		color: #0275d8;
+		font-size: 16px;
+		font-weight: 400;
+		line-height: 21px;
+		transition: .3s;
+		&:hover{
+			background-color: transparent;
+			color: #fff;
+		}
+	}
+}
+
+
+@media (max-width : 1199px) {
+	.stock-block{
+		&__hover-layer{
+			display: none;
+		}
+	}
+}

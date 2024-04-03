@@ -1,0 +1,1 @@
+$(".article-card-info").dotdotdot()

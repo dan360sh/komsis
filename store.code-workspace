@@ -1,0 +1,12 @@
+{
+	"folders": [
+		{
+			"path": "../store"
+		},
+		{
+			"name": "SSH FS - jango",
+			"uri": "ssh://jango/"
+		}
+	],
+	"settings": {}
+}

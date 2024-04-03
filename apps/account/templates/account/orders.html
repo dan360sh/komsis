@@ -1,0 +1,161 @@
+{% extends "./base-account.html" %}
+
+{% block extra_title %}
+    <span class="extra-title" id='extra-header'>
+        <span class="account-status-title tool-tip floating-status">
+            <span class="account-status-value">{{ account.status.title }}</span>
+            <img class="account-status-img" src="{{ account.status.image.url }}" alt="">
+            <span class="tooltiptext glass right">
+                {% if not account.status.is_last %}
+                    Ваш статус {{ account.status.title }}, <br>{{ account.get_remainder_to_next_status }} руб. до перехода на новый уровень!
+                {% else %}
+                    Ваш статус {{ account.status.title }}
+                {% endif %}
+            </span>
+        </span>
+        {% if current_page == 'jurical' %}
+            <h5>
+                <span class='main'>
+                    {{ account.company_title }},
+                    ИНН {{ account.company_inn }},
+                    {{ account.contract_name }},
+                </span>
+                <span class="extra-info">
+                    Баланс: {{ account.contract_balance }},
+                </span>
+            </h4>
+            <p>
+            {% if account.manager %}
+                    <span class='manager-title'>Менеджер:</span> {{ account.manager }}
+                    (<a href="tel:{{ account.manager.phone }}">позвонить</a>/<a href="mailto:{{ account.manager.email }}">написать</a>)
+                {% else %}
+                    Менеджер: -
+                {% endif %}
+            </p>
+        {% else %}
+            <h5>
+                {{ account.full_name }},
+                Бонусы: {{ account.points_total|default:"-" }},
+            </h4>
+        {% endif %}
+    </span>
+{% endblock %}
+
+
+
+
+{% block content_account %}
+    <span class="extra-title" id='title-orders'>
+        <span class="account-status-title tool-tip floating-status">
+            <span class="account-status-value">{{ account.status.title }}</span>
+            <img class="account-status-img" src="{{ account.status.image.url }}" alt="">
+            <span class="tooltiptext glass right">
+                {% if not account.status.is_last %}
+                    Ваш статус {{ account.status.title }}, {{ account.get_remainder_to_next_status }} руб. до перехода на новый уровень!
+                {% else %}
+                    Ваш статус {{ account.status.title }}
+                {% endif %}
+            </span>
+        </span>
+        {% if current_page == 'jurical' %}
+            <h5>
+                <span class='main'>
+                    {{ account.company_title }},
+                    ИНН {{ account.company_inn }},
+                    {{ account.contract_name }},
+                </span>
+                <span class="extra-user-info">
+                    Баланс: {{ account.contract_balance }},
+                </span>
+            </h4>
+            <p>
+                {% if account.manager %}
+                    <span class='manager-title'>Менеджер:</span> {{ account.manager }}
+                    (<a href="tel:{{ account.manager.phone }}">позвонить</a>/<a href="mailto:{{ account.manager.email }}">написать</a>)
+                {% else %}
+                    Менеджер: -
+                {% endif %}
+            </p>
+        {% else %}
+            <h5>
+                {{ account.full_name }},
+                Бонусы: {{ account.points_total|default:"-" }},
+            </h4>
+        {% endif %}
+    </span>
+    {% if orders %}
+        <form class="order-filter" id='filter-orders'>
+            <div class="order-inputs">
+                <select name="status" id="status" class="status-picker">
+                    <option value="" disable selected>Статус заказа</option>
+                    {% for option in order_states %}
+                        <option value="{{ option.id }}">{{ option.title }}</option>
+                    {% endfor %}
+                </select>
+                <input type="text" autocomplete="off" name="start_date" id="start_date" class='date-picker' placeholder='Дата от'>
+                <input type="text" autocomplete="off" name="end_date" id="end_date" class='date-picker' placeholder='Дата до'>
+                <input type="text" name="comment" id="comment" class="comment-text" placeholder='Поиск по комментарию'>
+            </div>
+            <div class="controls">
+                <input type="submit" class=' simple-button' value='Показать' href="{% url 'accounts:account-orders' %}">
+                <input id="reset_order_filter" type="reset" value="Сбросить">
+            </div>
+            <div class="error-message" style='display: none;'></div>
+        </form>
+        {% include 'account/includes/order_list.html' %}
+    {% else %}
+        <div class="notify">
+            <div class="notify-body">
+                <div class="notify-text">
+                    <p class="notify-title">История заказов пуста</p>
+                    <p class="notify-desc">Вы пока не совершили ни одного заказа</p>
+                </div>
+            </div>
+            <a class="notify-button btn btn-primary" href="{% url 'catalog' %}">Перейти в каталог</a>
+        </div>
+    {% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+    {% load static %}
+    <script src="{% static 'js/account.js' %}"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6/jquery.min.js" type="text/javascript"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js" type="text/javascript"></script>
+    <link href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="Stylesheet" type="text/css" />
+    <script>
+        $('#start_date').datepicker({
+            dateFormat : "dd.mm.yy",
+            monthNames : ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
+            dayNamesMin : ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'],
+        });
+        $('#end_date').datepicker({
+            dateFormat : "dd.mm.yy",
+            monthNames : ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'],
+            dayNamesMin : ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'],
+        })
+    </script>
+    <style>
+        .ui-state-default, .ui-widget-content .ui-state-default,
+        .ui-widget-header .ui-state-default {
+            background: #156dbc;
+            color: white;
+            font-weight: 600;
+        }
+        .ui-widget-header {
+            border: 1px solid #aaaaaa/*{borderColorHeader}*/;
+            background: #156dbc;
+            color: white !important;
+            font-weight: bold;
+        }
+        .ui-state-hover, .ui-widget-content .ui-state-hover, .ui-widget-header .ui-state-hover {
+            background: #ffe000;
+            color:black;
+        }
+        .ui-state-highlight, .ui-widget-content .ui-state-highlight {
+            border: 2px solid orange;
+        }
+    </style>
+{% endblock %}
+
+

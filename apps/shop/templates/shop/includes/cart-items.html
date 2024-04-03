@@ -1,0 +1,114 @@
+{% load utils %}
+
+{% for item in cart.items %}
+    <form class="cart-item {% if item.is_count_overflowed %}is_overflowed{% endif %}"
+    action="{% url 'cart-update' %}" method="POST" {% if item.is_count_overflowed %}is_overflowed{% endif %}>
+        <input type="hidden" name="product-id" value="{{ item.product.id }}"/>
+        {% if item.color %}
+            <input type="hidden" name="product-color" value="{{ item.color.id }}"/>
+        {% endif %}
+        {% if item.option %}
+            <input type="hidden" name="product-option" value="{{ item.option.id }}"/>
+        {% endif %}
+
+        <div class="cart-table-row">
+            <div class="cart-table-col cart-table-col_product">
+                <a class="cart-item-link" href="{{ item.product.get_absolute_url }}">
+                    {% if item.product.thumbnail %}
+                        <div class="cart-item-thumb">
+                            <img class="cart-item-thumb__image" src="https://komsis.su/{{ item.product.thumbnail.url }}" alt="{{ item.product.title }}"/>
+                        </div>
+                    {% else %}
+                        <div class="cart-item-thumb cart-item-thumb_no-photo">
+                            <svg class="cart-item-thumb__icon" role="img">
+                                <use xlink:href="/static/images/sprite.svg#no_photo"></use>
+                            </svg>
+                        </div>
+                    {% endif %}
+                    <p class="cart-item-title">
+                        {{ item.product.title }} {% if item.option %}{{ item.option.title }}{% endif %}
+                        {% if item.product.code %}
+                            <span class="cart-item-title__code">Артикул: {{ item.product.code }}</span>
+                        {% endif %}
+                        <span class="user-note-overflow {% if item.is_count_overflowed %}display{% endif %}">
+                            <span>
+                                Количество товара превышает его остаток!
+                            </span>
+                            <span style="display: block;">
+                                Цена действительна на {{ item.product.count }} {{ item.product.unit }}
+                            </span>
+                        </span>
+                    </p>
+                </a>
+            </div>
+            <div class="cart-table-col cart-table-col_price">
+                <div class="cart-prices">
+                        {% on_sale as sale %}
+                        {% get_product_price as price %}
+                        {% if sale %}
+                            {% get_old_price as old_price %}
+                            <p class="cart-item-old-price">{{ old_price|format_number }} руб.</p>
+                            <p class="cart-item-price cart-item-price_sale">
+                            {% if item.option %}
+                                {% get_option_price as option_price %}{{ option_price|format_number }}
+                            {% else %}
+                                {{ price|format_number }}
+                            {% endif %} руб.</p>
+                        {% else %}
+                            <p class="cart-item-price">
+                                {% if item.option %}
+                                    {% get_option_price as option_price %}{{ option_price|format_number }}
+                                {% else %}
+                                    {{ price|format_number }}
+                                {% endif %}
+                                руб.
+                             / {{ item.product.unit }}
+                            </p>
+                        {% endif %}
+                </div>
+            </div>
+            <div class="cart-table-col cart-table-col_count">
+                <div class="amount">
+					<div class="product-counter">
+						<div class="product-counter__button product-counter__button_minus">
+							<svg role="img" width="4" height="6">
+								<use xlink:href="/static/images/sprite.svg#product-amount-arrow"></use>
+							</svg>
+						</div>
+						<div class="product-counter__field-wrapper">
+							<input class="product-counter__original-input change-count" type="number" name="product-count"
+                                   min="{% if item.option %}{{ item.option.step }}{% else %}{{ item.product.step }}{% endif %}"
+                                   max="
+                                    {% if item.option %}
+                                        {{ item.product.get_available_count|floatformat }}
+                                    {% else %}
+                                        {{ item.product.get_available_count|floatformat }}
+                                    {% endif %}"
+                                   data-step="{% if item.option %}{{ item.option.step }}{% else %}{{ item.product.step }}{% endif %}"
+                                   data-unit="{{ item.unit }}"
+                                   value="{{ item.count }}"/>
+							<span class="product-counter__fake-input">{{ item.count }}</span>
+						</div>
+						<div class="product-counter__button product-counter__button_plus">
+							<svg role="img" width="4" height="6">
+								<use xlink:href="/static/images/sprite.svg#product-amount-arrow"></use>
+							</svg>
+						</div>
+						<span class="product-counter__notification product-counter__notification_min">Выбрано минимальное значение</span>
+						<span class="product-counter__notification product-counter__notification_max">Выбрано максимальное значение</span>
+					</div>
+                </div>
+            </div>
+            <div class="cart-table-col cart-table-col_total">
+                <div class="cart-item-total-wrap">
+                    {% get_item_total_price as total %}
+                    <span class="cart-item-total">{{ total|format_number }}</span>
+                    <span class="cart-item-currency">руб.</span>
+                </div>
+            </div>
+            <div class="cart-table-col cart-table-col_delete">
+                <button class="cart-item-delete" type="button"></button>
+            </div>
+        </div>
+    </form>
+{% endfor %}

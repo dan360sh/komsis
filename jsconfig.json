@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+        "baseUrl": "./src/js",
+        "paths": {
+            "~/*" : ["*"]
+        },
+        "module": "es6",
+        "target": "es5"
+    }
+}

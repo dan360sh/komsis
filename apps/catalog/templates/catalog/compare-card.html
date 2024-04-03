@@ -1,0 +1,11 @@
+{% extends 'catalog/product-card.html' %}
+
+{% block top %}
+    <button class="product-card-remove compare-remove" type="button" data-url="{% url 'compare-delete' %}"></button>
+    <button class="product-card-restore compare-restore" type="button" data-url="{% url 'compare-restore' %}" >
+        <svg role="img" width="20" height="19">
+            <use xlink:href="/static/images/sprite.svg#arrow_reload"></use>
+        </svg>
+    </button>
+{% endblock %}
+{% block compare_button %}{% endblock  %}

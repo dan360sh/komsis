@@ -1,0 +1,52 @@
+.nav-close{
+	position: fixed;
+	top: 0;
+	z-index: 600;
+	display: inline-block;
+	margin: 0;
+	width: calc(100% - 270px);
+	height: 100%;
+	background-color: rgba(81, 76, 71, 0.5);
+	transform: translateX(-110%);
+	transition: .3s linear;
+	overflow-y: auto;
+
+	span{
+		display: block;
+		position: absolute;
+		right: 0;
+		top: 0;
+		width: 50px;
+		height: 50px;
+		background-color: $color-general;
+		
+
+		&:before, &:after{
+			content: '';
+			display: block;
+			position: absolute;
+			top: 24px;
+			left: 16px;
+			width: 20px;
+			height: 2px;
+			background: #fff;
+		}
+
+		&:before{
+			transform: rotate(45deg);
+		}
+
+		&:after{
+			transform: rotate(-45deg);
+		}
+	}
+}
+
+@media (max-width: 1199px){
+	.nav-close{
+		&.opened{
+			transform: translateX(0);
+			display: block;
+		}
+	}
+}

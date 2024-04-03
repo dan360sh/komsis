@@ -1,0 +1,36 @@
+.product-price{
+	&__status{
+		display: block;
+		font-size: 14px;
+		font-weight: 400;
+		&_available{
+			color: #5cb85c;
+		}
+	}
+	&__price{
+		color: #373a3c;
+		font-size: 22px;
+		font-weight: 700;
+		&_sell-price{
+			color: #d9534f;
+		}
+	}
+	&__old_price{
+		display: inline-block;
+		color: #999;
+		font-size: 15px;
+		font-weight: 400;
+	}
+	
+}
+
+@media(max-width: 575px){
+	.product-price{
+		padding-bottom: 10px;
+		&__price{
+			&_sell-price{
+				font-size: 20px;
+			}
+		}
+	}
+}

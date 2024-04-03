@@ -1,0 +1,22 @@
+{% load utils %}
+
+{% if cart.count %}
+    <div class="order-table">
+        <div class="order-table__header">
+            <div class="order-table__row">
+                <div class="info">Ваш заказ</div>
+                <div class="price">Цена</div>
+                <div class="amount">Количество</div>
+                <div class="total-price">Сумма</div>
+                <div class="delete-item"></div>
+            </div>
+        </div>
+        <div class="order-table__body">
+                {% include "shop/includes/cart-items.html" with request=request %}
+        </div>
+        <div class="order-table__total">Итого: 
+            {% count_cart as cart_total %}
+            <b>{{ cart_total }} руб.</b>
+        </div>
+    </div>
+{% endif %}

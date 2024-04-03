@@ -1,0 +1,7 @@
+{% extends "base-page.html" %}
+{% load posts %}
+
+
+{% block page_content %}
+    {{ object.content.render }}
+{% endblock %}

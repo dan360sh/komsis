@@ -1,0 +1,35 @@
+.simple-button{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 3px 5px;
+	border-radius: 6px;
+	background-color: $color-blue-light;
+	border: 1px solid $color-blue-light;
+	color: #fff;
+	font-family: "MADE Evolve Sans";
+	font-size: 13px;
+	font-weight: 700;
+	text-transform: uppercase;
+	transition: .3s;
+	cursor: pointer;
+	&:hover{
+		color: #333;
+		background-color: $color-yellow;
+		border-color: $color-yellow;
+	}
+	&_inverse{
+		background-color: $color-yellow;
+		border-color: $color-yellow;
+		color: #333;
+		&:hover{
+			color: #fff;
+			background-color: $color-blue-light;
+			border-color: $color-blue-light;
+		}
+	}
+	&_default-size{
+		width: 200px;
+		height: 45px;
+	}
+}

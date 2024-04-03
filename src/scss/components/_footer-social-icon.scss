@@ -1,0 +1,14 @@
+.footer-social-icon{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 40px;
+	height: 40px;
+	border-radius: 6px;
+	border: 1px solid #cfcfcf;
+	transition: .2s;
+	> svg{
+		fill: $color-blue-light;
+		transition: .2s;
+	}
+}

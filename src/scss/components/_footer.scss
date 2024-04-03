@@ -1,0 +1,135 @@
+.footer {
+    flex: 0 1 auto;
+	background-color: #fff;
+	border-top: 2px solid #dbdbdb;
+	&-block{
+		padding: 35px 0;
+		&__title{
+			display: block;
+			padding: 0 0 3px;
+			color: $color-blue-light;
+			font-size: 16px;
+			font-weight: 700;
+		}
+		&__menu{
+			li{
+				a{
+					padding: 7px 0;
+					transition: .2s;
+					span{
+						border-bottom: 1px solid transparent;
+					}
+					&:hover{
+						color: $color-blue-light;
+						span{
+							border-color: $color-yellow;
+						}
+					}
+				}
+			}
+		}
+		&__req{
+			display: block;
+			padding: 5px 0;
+			&_mail{
+				text-decoration: underline;
+			}
+		}
+		&__menu li a, 
+		&__req, 
+		&__req a{
+			display: block;
+			color: #656565;
+			font-size: 15px;
+			line-height: 19px;
+		}
+	}
+	&-callback{
+		margin: 15px 0 0;
+		width: 170px;
+		height: 40px;
+	}
+	&__lower-part{
+		margin-top: 10px;
+		border-top: 1px solid #e1e1e1;
+		&-wrapper{
+			display: flex;
+			justify-content: space-between;
+			flex-wrap: wrap;
+			height: 58px;
+		}
+		&-left{
+			display: flex;
+			align-items: center;
+			p{
+				padding-right: 40px;
+			}
+			a{
+				text-decoration: underline;
+				transition: .3s;
+				&:hover{
+					color: $color-blue-light;
+					text-decoration: none;
+				}
+			}
+			p, a{
+				display: block;
+				color: #b6b6b6;
+				font-size: 13px;
+				line-height: 16px;
+			}
+		}
+	}
+	&__made-by{
+		display: flex;
+		align-items: center;
+		color: #b6b6b6;
+		font-size: 13px;
+		line-height: 16px;
+		transition: .3s;
+		> svg{
+			margin-left: 10px;
+		}
+		&:hover{
+			color: #9bbf2e;
+		}
+	}
+}
+
+
+
+
+
+
+@media (max-width : 991px) {
+	.footer{
+		&__lower-part{
+			&-wrapper{
+				height: auto;
+				flex-direction: column;
+				justify-content: center;
+				padding: 10px 0;
+			}
+			&-left{
+				flex-direction: column;
+				p, a{
+					padding: 4px 0;
+					text-align: center;
+				}
+			}
+		}
+		
+		&__made-by{
+			padding: 4px 0;
+			justify-content: center;
+		}
+	}
+}
+
+@media (max-width : 767px) {
+	.footer{
+		&-block{
+			padding: 15px 0 8px;
+		}
+	}
+}

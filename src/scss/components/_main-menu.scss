@@ -1,0 +1,20 @@
+.main-menu {
+    &-wrapper {
+        min-height: 100%;
+        padding: 0;
+    }
+}
+
+@media (min-width: 768px){
+	.navbar-expand-md{
+		.navbar-nav {
+			.nav-link{
+				padding: 5px 12px;
+				padding-right: 30px;
+				padding-left: 0;
+				color: #656565;
+				font-size: 14px;
+			}
+		}
+	}
+}

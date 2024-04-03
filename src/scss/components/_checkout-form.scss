@@ -1,0 +1,272 @@
+.checkout-form {
+  box-shadow: none;
+  padding: 0;
+  width: 100%;
+  transition: .3s;
+
+  &.loading {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  &__form-part {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 0 0 15px;
+    margin-bottom: 10px;
+
+    &-title {
+      color: #373a3c;
+      font-size: 21px;
+      font-weight: 700;
+      border-bottom: 1px solid #ddd;
+      background-color: #eceeef;
+      padding: 10px 25px;
+      margin-bottom: 20px;
+
+      span {
+        color: $color-general;
+        padding-right: 2px;
+      }
+
+      b {
+        font-weight: 700;
+      }
+    }
+
+    &-body {
+      padding: 0 50px;
+    }
+  }
+
+  &__payment-type {
+    padding: 12px 50px 15px;
+
+    .payment_checkbox {
+      cursor: pointer;
+
+      input {
+        display: none;
+      }
+
+      input:checked + .new_checkbox {
+        @extend .theme-button_active;
+      }
+
+      .new_checkbox {
+        @extend .theme-button;
+      }
+
+      input:not(:checked) + .new_checkbox {
+        &:hover {
+          border-color: $color-yellow !important;
+        }
+      }
+    }
+  }
+
+  &__courier-info {
+    &-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      border-bottom: 1px dotted #9b9b9b;
+      margin-bottom: 10px;
+      padding: 9px 0 0;
+
+      span {
+        display: block;
+        margin: 0 0 -5px;
+        background-color: #fff;
+        color: #3a372e;
+        font-size: 16px;
+        font-weight: 400;
+        max-width: 45%;
+
+        &.title {
+          color: #999;
+        }
+
+        &:last-child {
+          text-align: left;
+        }
+      }
+    }
+  }
+
+  &__delivery-types {
+    padding: 4px 50px;
+
+    .nav-tabs {
+      padding-bottom: 20px;
+      border: none;
+
+      .nav-link {
+        color: $color-blue-light;
+        font-size: 16px;
+        line-height: 21px;
+        border-radius: 4px;
+        transition: .3s;
+        cursor: pointer;
+
+        &.active {
+          background-color: $color-blue-light;
+          color: #fff;
+        }
+
+        &:not(.active):hover {
+          border: 1px solid $color-yellow;
+          background-color: transparent;
+          color: $color-blue-light;
+        }
+      }
+    }
+
+    .tab-pane {
+      display: none;
+      padding: 0;
+
+      &.active {
+        display: block;
+      }
+
+      .form_group {
+        padding: 0 0 16px;
+      }
+
+      .inputs_row {
+        display: flex;
+        justify-content: space-between;
+
+        &.double {
+          .form_group, .inputs_row {
+            width: calc(100% / 2 - 15px);
+            min-width: calc(100% / 2 - 15px);
+          }
+        }
+
+        &.triple {
+          .form_group, .inputs_row {
+            width: calc(100% / 3 - 5px);
+            min-width: calc(100% / 3 - 5px);
+          }
+        }
+      }
+    }
+  }
+
+  &__map-container {
+    height: 400px;
+    margin: 10px 0 20px;
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: space-between;
+    padding: 22px 0;
+
+    .policy {
+      width: 330px;
+      max-width: 100%;
+      color: #4d4d4d;
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 22px;
+
+      a {
+        color: $color-general;
+        text-decoration: underline;
+
+        &:hover {
+          text-decoration: none;
+        }
+      }
+    }
+
+    .button {
+      max-width: 100%;
+
+      input[type="submit"] {
+        width: 370px;
+        height: 50px;
+        max-width: 100%;
+      }
+
+      .error_text {
+        display: block;
+        color: #dc3545;
+        font-size: 15px;
+        font-weight: 400;
+        line-height: 22px;
+        padding-top: 10px;
+      }
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .checkout-form {
+    &__form-part {
+      &-title {
+        font-size: 16px;
+        padding: 10px 15px;
+      }
+
+      &-body {
+        padding: 0 15px;
+      }
+    }
+
+    &__payment-type {
+      padding: 5px 15px;
+
+      .payment_checkbox {
+        width: 100%;
+      }
+    }
+
+    &__courier-info {
+      &-row {
+        border: none;
+        flex-direction: column;
+        align-items: flex-start;
+        margin: 0 0 5px;
+
+        span {
+          max-width: none;
+        }
+      }
+    }
+
+    &__delivery-types {
+      padding: 0 15px;
+
+      .nav-tabs {
+        .nav-item {
+          border: none !important;
+        }
+
+        .nav-link {
+          text-align: center;
+          border: none;
+        }
+      }
+    }
+
+    &__map-container {
+      height: 230px;
+      margin: 10px 0 5px;
+    }
+
+    &__footer {
+      flex-direction: column-reverse;
+      align-items: center;
+      text-align: center;
+      padding: 10px 0 0;
+
+      .policy {
+        padding: 5px 0 0;
+      }
+    }
+  }
+}

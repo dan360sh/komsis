@@ -1,0 +1,41 @@
+.catalog-card{
+	border: 1px solid #ebebeb;
+	background-color: #fff;
+	margin: 0 0 9px;
+	padding: 28px 40px;
+	&__title{
+		display: block;
+		color: $color-general;
+		font-size: 16px;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.9px;
+	}
+	&__link{
+		display: block;
+		padding: 3px 0;
+		color: #333;
+		font-size: 15px;
+		font-weight: 400;
+		transition: .2s;
+		&:hover{
+			color: $color-general;
+		}
+	}
+	&__container{
+		padding: 13px 0 0
+	}
+}
+
+
+@media(max-width: 575px){
+	.catalog-card{
+		padding: 15px 25px;
+		&__container{
+			padding: 0;
+		}
+		&__link{
+			padding: 5px 0 0;
+		}
+	}
+}
